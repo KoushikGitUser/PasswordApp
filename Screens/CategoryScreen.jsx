@@ -30,6 +30,7 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import { Cog, LockKeyhole, LockKeyholeOpen, RotateCw } from "lucide-react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { BlurView } from "@react-native-community/blur";
+import { isAutofillSupported, isAutofillEnabled } from "../Services/autofill";
 
 const CategoryScreen = ({
   navigation,
@@ -48,6 +49,7 @@ const CategoryScreen = ({
   const [disableAutoLockModalVisible, setDisableAutoLockModalVisible] =
     useState(false);
   const [authNotAvailableModal, setAuthNotAvailableModal] = useState(false);
+  const [autofillOnboardVisible, setAutofillOnboardVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,6 +60,15 @@ const CategoryScreen = ({
     const focusListener = navigation.addListener("focus", fetchData);
     return focusListener;
   }, [navigation]);
+
+  useEffect(() => {
+    (async () => {
+      const supported = await isAutofillSupported();
+      if (!supported) return;
+      const enabled = await isAutofillEnabled();
+      if (!enabled) setAutofillOnboardVisible(true);
+    })();
+  }, []);
 
   const checkFingerprintForDisableAutoLock = async () => {
     const securityLevel = await LocalAuthentication.getEnrolledLevelAsync();
@@ -187,6 +198,55 @@ const CategoryScreen = ({
           <Text style={styles.loaderText}>Exporting Backup...</Text>
         </View>
       )}
+
+      <Modal
+        animationType="slide"
+        transparent
+        visible={autofillOnboardVisible}
+        onRequestClose={() => setAutofillOnboardVisible(false)}
+      >
+        <View style={styles.onboardBackdrop}>
+          <TouchableOpacity
+            style={styles.onboardDismissArea}
+            activeOpacity={1}
+            onPress={() => setAutofillOnboardVisible(false)}
+          />
+          <View style={styles.onboardSheet}>
+
+            <View style={styles.onboardIconWrap}>
+              <MaterialCommunityIcons
+                name="form-textbox-password"
+                size={36}
+                color="#00c76b"
+              />
+            </View>
+            <Text style={styles.onboardTitle}>Fill Passwords anywhere</Text>
+            <Text style={styles.onboardBody}>
+              Set Passwords App as your default Autofill service and your saved
+              logins will appear on any app or browser login screen.
+            </Text>
+            <View style={styles.onboardBtnRow}>
+              <TouchableOpacity
+                style={[styles.onboardBtn, styles.onboardCancelBtn]}
+                activeOpacity={0.85}
+                onPress={() => setAutofillOnboardVisible(false)}
+              >
+                <Text style={styles.onboardCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.onboardBtn, styles.onboardGoBtn]}
+                activeOpacity={0.85}
+                onPress={() => {
+                  setAutofillOnboardVisible(false);
+                  navigation.navigate("settings", { blinkAutofill: true });
+                }}
+              >
+                <Text style={styles.onboardGoText}>Go</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       <Modal
         animationType="slide"
@@ -724,6 +784,91 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     flexDirection: "row",
+  },
+  onboardBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.65)",
+    justifyContent: "flex-end",
+  },
+  onboardDismissArea: {
+    flex: 1,
+  },
+  onboardSheet: {
+    backgroundColor: "#171717",
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    paddingHorizontal: 22,
+    paddingTop: 30,
+    paddingBottom: 30,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: "#2c2c2c",
+    alignItems: "center",
+  },
+  onboardHandle: {
+    alignSelf: "center",
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: "#555",
+    marginBottom: 20,
+  },
+  onboardIconWrap: {
+    width: 68,
+    height: 68,
+    borderRadius: 50,
+    backgroundColor: "#001e10",
+    borderWidth: 1,
+    borderColor: "#005c31",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  onboardTitle: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "800",
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  onboardBody: {
+    color: "lightgrey",
+    fontSize: 14,
+    textAlign: "center",
+    lineHeight: 21,
+    marginBottom: 24,
+    paddingHorizontal: 6,
+  },
+  onboardBtnRow: {
+    flexDirection: "row",
+    width: "100%",
+    gap: 12,
+  },
+  onboardBtn: {
+    flex: 1,
+    paddingVertical: 16,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  onboardCancelBtn: {
+    backgroundColor: "#2c2c2c",
+    borderWidth: 1,
+    borderColor: "#363636",
+  },
+  onboardCancelText: {
+    color: "white",
+    fontSize: 15,
+    fontWeight: "800",
+  },
+  onboardGoBtn: {
+    backgroundColor: "white",
+  },
+  onboardGoText: {
+    color: "#007a47",
+    fontSize: 15,
+    fontWeight: "800",
   },
 });
 

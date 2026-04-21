@@ -24,6 +24,11 @@ import {
   commitBackupPayload,
   finishImportFlow,
 } from "../importBackup";
+import {
+  isAutofillSupported,
+  isAutofillEnabled,
+  openAutofillPicker,
+} from "../Services/autofill";
 import { setSkipLock, clearPasswords } from "../utils";
 import { deleteAllCertificates } from "../utilsForCertificate";
 import { generateBackup } from "../backUpGenerator";
@@ -79,15 +84,57 @@ const Settings = ({
   const [downloading, setDownloading] = useState(false);
   const [downloadedTo, setDownloadedTo] = useState("");
   const [decrypting, setDecrypting] = useState(false);
+  const [autofillSupported, setAutofillSupported] = useState(false);
+  const [autofillOn, setAutofillOn] = useState(false);
 
   const blinkAutoLock = route.params?.blinkAutoLock || false;
+  const blinkAutofill = route.params?.blinkAutofill || false;
 
   const opacity = useRef(new Animated.Value(1)).current;
+  const autofillOpacity = useRef(new Animated.Value(1)).current;
   const blinkRef = useRef(null);
 
   useEffect(() => {
     checkIfPinSet();
   }, []);
+
+  const refreshAutofillStatus = async () => {
+    const supported = await isAutofillSupported();
+    setAutofillSupported(supported);
+    if (supported) {
+      setAutofillOn(await isAutofillEnabled());
+    } else {
+      setAutofillOn(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshAutofillStatus();
+    const unsub = navigation.addListener("focus", refreshAutofillStatus);
+    return unsub;
+  }, [navigation]);
+
+  const handleAutofillTap = async () => {
+    if (!autofillSupported) {
+      triggerToast(
+        "Not supported",
+        "Autofill requires Android 8 or newer.",
+        "alert",
+        3500
+      );
+      return;
+    }
+    try {
+      await openAutofillPicker();
+    } catch (e) {
+      triggerToast(
+        "Could not open settings",
+        e?.message || "Open your phone's Settings > Passwords manually.",
+        "error",
+        4000
+      );
+    }
+  };
 
   const checkIfPinSet = async () => {
     const storedPin = await SecureStore.getItemAsync("userSecurityPIN");
@@ -121,6 +168,29 @@ const Settings = ({
       blink();
     }
   }, [blinkAutoLock]);
+
+  useEffect(() => {
+    if (!blinkAutofill) return;
+    let count = 0;
+    const blink = () => {
+      Animated.sequence([
+        Animated.timing(autofillOpacity, {
+          toValue: 0,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(autofillOpacity, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        count += 1;
+        if (count < 3) blink();
+      });
+    };
+    blink();
+  }, [blinkAutofill]);
 
   const handlePinDigitChange = (text, index) => {
     if (text.length > 1) {
@@ -715,24 +785,69 @@ const Settings = ({
                 💡 Tip: Tap any password card to view, edit, or delete it.
               </Text>
 
+              <Text style={styles.sectionTitle}>🪄 Autofill</Text>
+              <Text style={styles.paragraph}>
+                This app can fill your saved logins on any other app or
+                website — just like Google Passwords or Bitwarden. To enable
+                it, tap the "Enable Autofill" card above and pick this app as
+                your default autofill service in the system dialog.
+              </Text>
+
+              <Text style={styles.sectionTitle}>🔗 Linking passwords to apps</Text>
+              <Text style={styles.paragraph}>
+                Autofill knows which saved password belongs to which login
+                screen using two keys on each record: a list of Android
+                package names (e.g. com.instagram.android) and a list of
+                website domains (e.g. instagram.com). Open any password, tap
+                edit, and use LINKED APPS / LINKED WEBSITES to add these.
+                "Add from installed apps" opens a picker of every app you
+                have installed, so you don't have to type the package id by
+                hand.
+              </Text>
+
+              <Text style={styles.paragraph}>
+                If a login screen has no linked match yet, the autofill
+                suggestion shows a "Search in Passwords" row — tapping it
+                opens your vault, and picking a record auto-links that app
+                for next time.
+              </Text>
+
+              <Text style={styles.sectionTitle}>🔐 Biometric before fill</Text>
+              <Text style={styles.paragraph}>
+                Every autofill action is gated behind your phone's biometric
+                or device credential — fingerprint, face, or PIN. Nobody
+                holding your unlocked phone can dump your passwords into a
+                foreign login form without passing that check. If your
+                device has no biometric enrolled, autofill still works but
+                without the extra prompt.
+              </Text>
+
+              <Text style={styles.sectionTitle}>💾 Save prompts</Text>
+              <Text style={styles.paragraph}>
+                When you sign up or log in somewhere Android doesn't have
+                a match for, it will offer to save the credentials to this
+                app. You'll see a dialog with the detected username, a
+                masked password, the source app or website, an editable
+                label, and a category chip that we pre-pick based on the
+                app (Instagram → Social, your bank → Banking, etc). Tap
+                "Save password" and biometric-confirm.
+              </Text>
+
               <Text style={styles.sectionTitle}>
                 💾 Backup and Import Your Data
               </Text>
               <Text style={styles.paragraph}>
-                To protect your important passwords and certificates, this app
-                provides a simple backup system. You can generate a backup file
-                that safely stores all your saved passwords by clicking the
-                cloud export icon at the top, certificates, and associated data.
-                This backup file can be shared securely. Please note: Images
-                linked to certificates are saved inside the app’s storage. If
-                you uninstall the app, these images will be deleted from your
-                device. To fully protect your data, make sure to keep a backup
-                file and save important certificate images separately to your
-                gallery if needed. When you reinstall the app or set it up on a
-                new device, you can easily import your backup file by clicking
-                the cloud import icon at the top to restore all your saved data.
-                Now after restoring edit the certificates and change or update
-                the images by the images that you kept as backup on your device.
+                To protect your data, this app supports encrypted JSON
+                backups. From Settings → Generate Backup, after biometric
+                you'll pick a passphrase — we use AES-256-GCM with
+                PBKDF2-SHA256 to encrypt the file. Only someone with that
+                exact passphrase can restore it. The passphrase is not
+                stored anywhere — if you forget it, the backup file cannot
+                be decrypted. Images linked to certificates are saved
+                inside the app's storage; if you uninstall, those images
+                are lost, so keep an extra copy in your gallery if they
+                matter. To restore on a new device, import the backup via
+                Settings → Import Backup and enter the passphrase.
               </Text>
 
               <Text style={styles.footer}>
@@ -1767,6 +1882,73 @@ const Settings = ({
             </TouchableOpacity>
           </>
         )}
+
+        {/* Autofill */}
+        <View style={{ marginTop: 20 }} />
+
+        <Animated.View style={{ opacity: autofillOpacity }}>
+        <TouchableOpacity
+          onPress={handleAutofillTap}
+          activeOpacity={0.8}
+          style={[
+            styles.settingsMain,
+            {
+              paddingVertical: 18,
+              borderRadius: 30,
+              backgroundColor: autofillOn ? "#001e10" : "#1c1c1c",
+              borderWidth: 1,
+              borderColor: autofillOn ? "#005c31" : "#242424",
+            },
+          ]}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 20,
+              marginLeft: 10,
+              alignItems: "center",
+              flex: 1,
+            }}
+          >
+            <MaterialCommunityIcons
+              name={autofillOn ? "form-textbox-password" : "form-textbox"}
+              size={26}
+              color={autofillOn ? "#00c76b" : "lightgrey"}
+            />
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  color: autofillOn ? "#00c76b" : "lightgrey",
+                  fontSize: 17,
+                  fontWeight: "700",
+                }}
+              >
+                {autofillOn ? "Autofill Enabled" : "Enable Autofill"}
+              </Text>
+              <Text
+                style={{
+                  color: autofillOn ? "#7ad9a6" : "#7a7a7a",
+                  fontSize: 12,
+                  marginTop: 2,
+                }}
+                numberOfLines={2}
+              >
+                {autofillSupported
+                  ? autofillOn
+                    ? "Passwords is set as your default autofill service."
+                    : "Fill saved passwords in other apps and browsers."
+                  : "Requires Android 8 or newer."}
+              </Text>
+            </View>
+          </View>
+          <MaterialIcons
+            name="arrow-forward-ios"
+            size={18}
+            color={autofillOn ? "#00c76b" : "lightgrey"}
+            style={{ marginRight: 10 }}
+          />
+        </TouchableOpacity>
+        </Animated.View>
 
         {/* Danger Zone */}
         <View style={{ marginTop: 20 }} />

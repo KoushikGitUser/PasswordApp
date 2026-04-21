@@ -1,17 +1,39 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { View, ActivityIndicator } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "./Navigation/AppNavigator";
-import Toast from "react-native-toast-message";
 import Toaster from "./Components/UniversalToaster/Toaster";
+import { runBootMigration } from "./Services/migration";
 
 export default function App() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      await runBootMigration();
+      setReady(true);
+    })();
+  }, []);
+
+  if (!ready) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "black",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator color="#00c787" size="large" />
+      </View>
+    );
+  }
+
   return (
-    <>
-      <NavigationContainer>
-        <Toaster/>
-        <AppNavigator />
-      </NavigationContainer>
-    </>
+    <NavigationContainer>
+      <Toaster />
+      <AppNavigator />
+    </NavigationContainer>
   );
 }

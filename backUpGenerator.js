@@ -1,8 +1,8 @@
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { encryptPayload } from "./Services/backupCrypto";
+import { readPasswordsJson } from "./utils";
 
-const STORAGE_KEY = "passwords";
 const CERT_INFO_KEY = "CERTIFICATE_INFO";
 const CERT_IMAGE_KEY = "CERTIFICATE_IMAGE";
 
@@ -11,7 +11,7 @@ export const generateBackup = async (passphrase) => {
     throw new Error("INVALID_PASSPHRASE");
   }
   try {
-    const passwords = await SecureStore.getItemAsync(STORAGE_KEY);
+    const passwords = await readPasswordsJson();
     const certificateInfos = await SecureStore.getItemAsync(CERT_INFO_KEY);
     const certificateImagePaths = await AsyncStorage.getItem(CERT_IMAGE_KEY);
 

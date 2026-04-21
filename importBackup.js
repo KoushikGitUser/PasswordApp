@@ -2,7 +2,11 @@ import * as DocumentPicker from "expo-document-picker";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from "expo-file-system";
-import { setSkipLock } from "./utils";
+import {
+  setSkipLock,
+  normalizePasswordRecord,
+  replacePasswords,
+} from "./utils";
 import {
   decryptEnvelope,
   isEncryptedEnvelope,
@@ -65,10 +69,10 @@ export const decryptBackupEnvelope = (envelope, passphrase) => {
 
 export const commitBackupPayload = async (payload) => {
   try {
-    await SecureStore.setItemAsync(
-      STORAGE_KEY,
-      JSON.stringify(payload.passwords || [])
+    const normalizedPasswords = (payload.passwords || []).map((p) =>
+      normalizePasswordRecord(p || {})
     );
+    await replacePasswords(normalizedPasswords);
     await SecureStore.setItemAsync(
       CERT_INFO_KEY,
       JSON.stringify(payload.certificateInfos || [])

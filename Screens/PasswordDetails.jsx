@@ -42,6 +42,7 @@ import {
 } from "lucide-react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BlurView } from "@react-native-community/blur";
+import AppPickerSheet from "../Components/AppPickerSheet";
 
 const PasswordDetails = ({ route, navigation }) => {
   const { index, passCategory } = route.params;
@@ -57,6 +58,13 @@ const PasswordDetails = ({ route, navigation }) => {
   const [initialPassword, setInitialPassword] = useState("");
   const [initialCategory, setInitialCategory] = useState("");
   const [initialPin, setInitialPin] = useState("");
+  const [linkedPackages, setLinkedPackages] = useState([]);
+  const [linkedDomains, setLinkedDomains] = useState([]);
+  const [initialLinkedPackages, setInitialLinkedPackages] = useState([]);
+  const [initialLinkedDomains, setInitialLinkedDomains] = useState([]);
+  const [newPackage, setNewPackage] = useState("");
+  const [newDomain, setNewDomain] = useState("");
+  const [appPickerVisible, setAppPickerVisible] = useState(false);
   const [backToInitial, setBackToInitial] = useState(1);
   const [secureEntry, setSecureEntry] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -89,6 +97,14 @@ const PasswordDetails = ({ route, navigation }) => {
       setInitialPassword(item.password);
       setInitialUsername(item.username);
       setInitialPin(item?.pin);
+      const pkgs = Array.isArray(item.packageNames) ? item.packageNames : [];
+      const doms = Array.isArray(item.domains) ? item.domains : [];
+      setLinkedPackages(pkgs);
+      setLinkedDomains(doms);
+      setInitialLinkedPackages(pkgs);
+      setInitialLinkedDomains(doms);
+      setNewPackage("");
+      setNewDomain("");
     };
     fetch();
   }, [backToInitial]);
@@ -145,24 +161,103 @@ const PasswordDetails = ({ route, navigation }) => {
     }
   };
 
+  const sameStringArray = (a, b) => {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i += 1) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  };
+
+  const normalizeDomain = (s) =>
+    s
+      .trim()
+      .toLowerCase()
+      .replace(/^https?:\/\//, "")
+      .replace(/^www\./, "")
+      .split("/")[0]
+      .split("?")[0];
+
+  const isValidDomain = (d) =>
+    /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d) && !d.startsWith("-") && !d.endsWith("-");
+
+  const normalizePackageId = (s) => s.trim().toLowerCase();
+
+  const isValidPackage = (p) =>
+    /^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+$/.test(p);
+
+  const addDomain = () => {
+    const d = normalizeDomain(newDomain);
+    if (!isValidDomain(d)) {
+      triggerToast("Invalid", "Enter a domain like instagram.com", "error", 3000);
+      return;
+    }
+    if (linkedDomains.includes(d)) {
+      setNewDomain("");
+      return;
+    }
+    setLinkedDomains([...linkedDomains, d]);
+    setNewDomain("");
+  };
+
+  const removeDomain = (d) => {
+    setLinkedDomains(linkedDomains.filter((x) => x !== d));
+  };
+
+  const addPackage = () => {
+    const p = normalizePackageId(newPackage);
+    if (!isValidPackage(p)) {
+      triggerToast(
+        "Invalid",
+        "Enter a package id like com.instagram.android",
+        "error",
+        3000
+      );
+      return;
+    }
+    if (linkedPackages.includes(p)) {
+      setNewPackage("");
+      return;
+    }
+    setLinkedPackages([...linkedPackages, p]);
+    setNewPackage("");
+  };
+
+  const addPackageFromPicker = (packageName) => {
+    const p = normalizePackageId(packageName || "");
+    if (!p || linkedPackages.includes(p)) return;
+    setLinkedPackages([...linkedPackages, p]);
+  };
+
+  const removePackage = (p) => {
+    setLinkedPackages(linkedPackages.filter((x) => x !== p));
+  };
+
   const handleUpdate = async () => {
+    const linksChanged =
+      !sameStringArray(linkedDomains, initialLinkedDomains) ||
+      !sameStringArray(linkedPackages, initialLinkedPackages);
+
     if (
       username == initialUsername &&
       passName == initialPassName &&
       password == initialPassword &&
-      pin == initialPin
+      pin == initialPin &&
+      !linksChanged
     ) {
       setNotUpdatedModalVisible(true);
     } else {
       setModalVisible(false);
-      navigation.goBack();
       await updatePassword(index, {
         passName,
         username,
         password,
         category,
         pin,
+        domains: linkedDomains,
+        packageNames: linkedPackages,
       });
+      navigation.goBack();
       triggerToast(
         "Updated",
         "Successfully updated the password",
@@ -174,8 +269,8 @@ const PasswordDetails = ({ route, navigation }) => {
 
   const handleDelete = async () => {
     setDeletePassModalVisible(false);
-    navigation.goBack();
     await deletePassword(index);
+    navigation.goBack();
     triggerToast(
       "Deleted",
       "Successfully deleted the password",
@@ -358,6 +453,12 @@ const PasswordDetails = ({ route, navigation }) => {
         paddingHorizontal: 20,
       }}
     >
+      <AppPickerSheet
+        visible={appPickerVisible}
+        onClose={() => setAppPickerVisible(false)}
+        onPick={addPackageFromPicker}
+        existingPackages={linkedPackages}
+      />
       <Modal
         animationType="slide"
         transparent
@@ -536,6 +637,86 @@ const PasswordDetails = ({ route, navigation }) => {
                 style={styles.input}
               />
             )}
+
+            <Text style={styles.linkSectionLabel}>LINKED APPS</Text>
+            {linkedPackages.length === 0 ? (
+              <Text style={styles.linkEmptyHint}>
+                No apps linked yet. Add a package id to enable autofill for that
+                app (e.g. com.instagram.android).
+              </Text>
+            ) : (
+              <View style={styles.chipWrap}>
+                {linkedPackages.map((p) => (
+                  <View key={p} style={styles.chip}>
+                    <Text style={styles.chipText} numberOfLines={1}>
+                      {p}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => removePackage(p)}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    >
+                      <Ionicons name="close" size={14} color="lightgrey" />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            )}
+            <TouchableOpacity
+              onPress={() => setAppPickerVisible(true)}
+              style={styles.linkAddFullBtn}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="add-circle" size={20} color="#00c76b" />
+              <Text style={styles.linkAddFullBtnText}>
+                Add from installed apps
+              </Text>
+            </TouchableOpacity>
+
+            <Text style={[styles.linkSectionLabel, { marginTop: 18 }]}>
+              LINKED WEBSITES
+            </Text>
+            {linkedDomains.length === 0 ? (
+              <Text style={styles.linkEmptyHint}>
+                No websites linked yet. Add a domain to enable autofill on that
+                site (e.g. instagram.com).
+              </Text>
+            ) : (
+              <View style={styles.chipWrap}>
+                {linkedDomains.map((d) => (
+                  <View key={d} style={styles.chip}>
+                    <Text style={styles.chipText} numberOfLines={1}>
+                      {d}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => removeDomain(d)}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    >
+                      <Ionicons name="close" size={14} color="lightgrey" />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            )}
+            <View style={styles.linkAddRow}>
+              <TextInput
+                placeholderTextColor="#7a7a7a"
+                placeholder="example.com"
+                value={newDomain}
+                onChangeText={setNewDomain}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="url"
+                style={styles.linkAddInput}
+                onSubmitEditing={addDomain}
+              />
+              <TouchableOpacity
+                onPress={addDomain}
+                style={styles.linkAddBtn}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="add" size={20} color="black" />
+              </TouchableOpacity>
+            </View>
 
             {/* <View style={styles.pickerWrapper}>
               <Picker
@@ -1200,6 +1381,85 @@ const styles = StyleSheet.create({
     backgroundColor: "#2c2c2c",
     borderWidth: 1,
     borderColor: "#363636",
+  },
+  linkSectionLabel: {
+    color: "lightgrey",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 1,
+    marginTop: 10,
+    marginBottom: 8,
+  },
+  linkEmptyHint: {
+    color: "#7a7a7a",
+    fontSize: 12,
+    lineHeight: 17,
+    marginBottom: 10,
+  },
+  chipWrap: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginBottom: 10,
+  },
+  chip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: "#2c2c2c",
+    borderWidth: 1,
+    borderColor: "#363636",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 50,
+    maxWidth: "100%",
+  },
+  chipText: {
+    color: "white",
+    fontSize: 13,
+    fontWeight: "600",
+    maxWidth: 200,
+  },
+  linkAddRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  linkAddInput: {
+    flex: 1,
+    backgroundColor: "#202020",
+    borderWidth: 1,
+    borderColor: "#333",
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    color: "white",
+    fontSize: 14,
+  },
+  linkAddBtn: {
+    backgroundColor: "white",
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  linkAddFullBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    backgroundColor: "#001e10",
+    borderWidth: 1,
+    borderColor: "#005c31",
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+  },
+  linkAddFullBtnText: {
+    color: "#00c76b",
+    fontSize: 14,
+    fontWeight: "700",
   },
   blurContainer: {
     position: "absolute",

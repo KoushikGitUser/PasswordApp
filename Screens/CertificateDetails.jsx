@@ -36,6 +36,7 @@ import * as ImagePicker from "expo-image-picker";
 import { ChevronDown } from "lucide-react-native";
 import Toaster from "../Components/UniversalToaster/Toaster";
 import { BlurView } from "@react-native-community/blur";
+import { ScrollView } from "react-native-gesture-handler";
 
 const CertificateDetails = ({ navigation, route }) => {
   const { index, categories } = route.params;
@@ -121,10 +122,6 @@ const CertificateDetails = ({ navigation, route }) => {
       console.error("Error saving image:", error);
       Alert.alert("Error", "Failed to save image.");
     }
-  };
-
-  const truncateUsername = (name) => {
-    return name.length > 16 ? name.slice(0, 16) + "..." : name;
   };
 
   const handleSave = async () => {
@@ -297,7 +294,7 @@ const CertificateDetails = ({ navigation, route }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -363,7 +360,7 @@ const CertificateDetails = ({ navigation, route }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#343434ff" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#343434ff", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => setDeletePassModalVisible(false)}
                 >
                   <Text
@@ -375,7 +372,7 @@ const CertificateDetails = ({ navigation, route }) => {
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red" }]}
+                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
                   onPress={checkFingerprintForDeletion}
                 >
                   <Text
@@ -509,7 +506,7 @@ const CertificateDetails = ({ navigation, route }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#343434ff" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#343434ff", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => {
                     setBackToInitial(backToInitial + 1);
                     setPickedImage(null);
@@ -525,7 +522,7 @@ const CertificateDetails = ({ navigation, route }) => {
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#ffffffff" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={checkFingerprintForUpdation}
                 >
                   <Text
@@ -603,121 +600,135 @@ const CertificateDetails = ({ navigation, route }) => {
         onRequestClose={() => setIsImageVisible(false)}
       />
 
-      <View style={styles.passmain}>
-        <View
-          style={[
-            styles.passviewflex,
-            {
-              width: "95%",
-              paddingBottom: 20,
-              borderBottomWidth: 0,
-              borderBottomWidth: 0.5,
-              borderBottomColor: "#5d5d5dff",
-            },
-          ]}
-        >
-          <View style={styles.pic}>
-            <Text
-              style={{
-                fontSize: 30,
-                fontWeight: 800,
-                color:
+      <ScrollView
+        style={{ width: "100%" }}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.passmain}>
+          <View
+            style={[
+              styles.passviewflex,
+              {
+                width: "95%",
+                paddingBottom: 20,
+                borderBottomWidth: 0.5,
+                borderBottomColor: "#5d5d5dff",
+              },
+            ]}
+          >
+            <View style={styles.pic}>
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: 800,
+                  color:
+                    categories === "Landscape"
+                      ? landscape
+                      : categories === "Portrait"
+                      ? portrait
+                      : file,
+                }}
+              >
+                V
+              </Text>
+            </View>
+            <View style={styles.name_and_user}>
+              <Text style={styles.texts}>Name</Text>
+              <Text
+                style={[styles.texts, { color: "lightgrey" }]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {name}
+              </Text>
+            </View>
+            <View style={styles.categoryPillContainer}>
+              <View style={styles.categoryPill}>
+                {categories == "Landscape" ? (
+                  <FontAwesome6 name="vcard" size={20} color="#6ac3dcff" />
+                ) : categories == "Portrait" ? (
+                  <Ionicons name="id-card-outline" size={22} color="#6bc499ff" />
+                ) : (
+                  <Feather name="file-text" size={22} color="#b59769ff" />
+                )}
+              </View>
+            </View>
+          </View>
+
+          <View
+            style={[
+              styles.passviewflex,
+              {
+                width: "95%",
+                paddingTop: 20,
+              },
+            ]}
+          >
+            <View style={styles.pic}>
+              <Fontisto
+                name="key"
+                size={24}
+                color={
                   categories === "Landscape"
                     ? landscape
                     : categories === "Portrait"
                     ? portrait
-                    : file,
-              }}
-            >
-              V
-            </Text>
-          </View>
-          <View style={styles.name_and_user}>
-            <Text style={styles.texts}>Name</Text>
-            <Text style={[styles.texts, { color: "lightgrey" }]}>
-              {truncateUsername(name)}{" "}
-            </Text>
-          </View>
-          <View style={[styles.categoryPill, { marginLeft: "auto" }]}>
-            {categories == "Landscape" ? (
-              <FontAwesome6 name="vcard" size={20} color="#6ac3dcff" />
-            ) : categories == "Portrait" ? (
-              <Ionicons name="id-card-outline" size={22} color="#6bc499ff" />
-            ) : (
-              <Feather name="file-text" size={22} color="#b59769ff" />
-            )}
-          </View>
-        </View>
-
-        <View
-          style={[
-            styles.passviewflex,
-            {
-              width: "95%",
-              paddingTop: 20,
-            },
-          ]}
-        >
-          <View style={styles.pic}>
-            <Fontisto
-              name="key"
-              size={24}
-              color={
-                categories === "Landscape"
-                  ? landscape
-                  : categories === "Portrait"
-                  ? portrait
-                  : file
-              }
-            />
-          </View>
-          <View style={styles.name_and_user}>
-            <Text style={styles.texts}>Number</Text>
-            <TouchableOpacity
-              onPress={() => {
-                if (showPass) {
-                  setShowPass(false);
-                } else {
-                  checkFingerprint();
+                    : file
                 }
-              }}
-              style={[
-                styles.passTextView,
-                {
-                  paddingVertical: showPass ? 5 : 1,
-                  paddingHorizontal: showPass ? 20 : 8,
-                },
-              ]}
-            >
-              {showPass ? (
-                <Text style={[styles.texts, { color: "red" }]}>{pinNum}</Text>
-              ) : (
-                <Text style={[styles.texts, { color: "red" }]}>••••••</Text>
-              )}
-            </TouchableOpacity>
+              />
+            </View>
+            <View style={styles.name_and_user}>
+              <Text style={styles.texts}>Number</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  if (showPass) {
+                    setShowPass(false);
+                  } else {
+                    checkFingerprint();
+                  }
+                }}
+                style={[
+                  styles.passTextView,
+                  {
+                    paddingVertical: showPass ? 5 : 1,
+                    paddingHorizontal: showPass ? 20 : 8,
+                  },
+                ]}
+              >
+                {showPass ? (
+                  <Text style={[styles.texts, { color: "red" }]}>{pinNum}</Text>
+                ) : (
+                  <Text style={[styles.texts, { color: "red" }]}>••••••</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={styles.categoryPillContainer}>
+              <TouchableOpacity
+                onPress={() => copyToClipboard(pinNum, "password")}
+                style={styles.categoryPill}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="copy" size={20} color="lightgrey" />
+              </TouchableOpacity>
+            </View>
           </View>
           <TouchableOpacity
-            onPress={() => copyToClipboard(pinNum, "password")}
-            style={[styles.categoryPill, { marginLeft: "auto" }]}
-            activeOpacity={0.7}
+            onPress={() => setIsImageVisible(true)}
+            style={styles.showImageMain}
           >
-            <Ionicons name="copy" size={20} color="lightgrey" />
+            <Image style={styles.showImages} source={{ uri: showImage }} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleDownloadImage}
+            style={styles.downloadBtn}
+          >
+            <Text style={{ fontSize: 16, fontWeight: 800 }}>Download Image</Text>
+            <Feather name="download" size={24} color="black" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => setIsImageVisible(true)}
-          style={styles.showImageMain}
-        >
-          <Image style={styles.showImages} source={{ uri: showImage }} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleDownloadImage}
-          style={styles.downloadBtn}
-        >
-          <Text style={{ fontSize: 16, fontWeight: 800 }}>Download Image</Text>
-          <Feather name="download" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
+        <View style={{height:100}} />
+      </ScrollView>
       <View style={styles.buttonsmain}>
         <TouchableOpacity
           onPress={() => setDeletePassModalVisible(true)}
@@ -727,7 +738,7 @@ const CertificateDetails = ({ navigation, route }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setEditModalVisible(true)}
-          style={[styles.button, { backgroundColor: "#ffffffff" }]}
+          style={[styles.button, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
         >
           <Text style={[styles.texts, { color: "black" }]}>Edit</Text>
         </TouchableOpacity>
@@ -749,7 +760,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   categoryPill: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 80,
     justifyContent: "center",
@@ -757,6 +768,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#2c2c2c",
     borderWidth: 1,
     borderColor: "#363636",
+  },
+  categoryPillContainer: {
+    flexShrink: 0,
+    marginLeft: 8,
   },
   blurContainer: {
     position: "absolute",
@@ -829,15 +844,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#3d3d3dff",
     alignItems: "center",
+    flexShrink: 0,
   },
   categorySelector: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     paddingVertical: 12,
+    paddingHorizontal: 20,
   },
   categoryOption: {
     paddingVertical: 15,
@@ -845,6 +864,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 8,
     backgroundColor: "#2a2a2a",
+            borderWidth: 1,
+    borderColor: "#3d3d3d",
   },
   categoryOptionSelected: {
     backgroundColor: "#353535ff",
@@ -857,6 +878,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     elevation: 5,
+    borderWidth: 0.5,
+    borderColor: "#3d3d3d",
   },
   passTextView: {
     backgroundColor: "#391414",
@@ -870,13 +893,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
     gap: 5,
-    width: "60%",
+    flex: 1,
+    minWidth: 0,
   },
   passviewflex: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    gap: 20,
+    gap: 12,
   },
   texts: {
     color: "white",
@@ -884,11 +908,14 @@ const styles = StyleSheet.create({
     fontWeight: 800,
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     fontSize: 16,
-    paddingVertical: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     color: "white",
   },
   modalbtn: {
@@ -898,7 +925,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 18,
     borderRadius: 54,
-    backgroundColor: "white",
+    backgroundColor: "#383838",
   },
   buttonRow: {
     flexDirection: "row",
@@ -920,9 +947,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   buttonsmain: {
-    width: "100%",
+    position: "absolute",
+    bottom: 55,
+    left: 20,
+    right: 20,
     height: "auto",
-    marginTop: 40,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -935,6 +964,8 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     paddingVertical: 18,
     borderRadius: 55,
+    borderWidth: 0.5,
+    borderColor: "#ff9999",
   },
   statusbar: {
     width: "100%",

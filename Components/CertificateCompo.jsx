@@ -11,9 +11,6 @@ import Feather from "@expo/vector-icons/Feather";
 
 const CertificateCompo = ({ categories, title, index, imagePath }) => {
   const navigation = useNavigation();
-  const truncateUsername = (name) => {
-    return name.length > 16 ? name.slice(0, 16) + "..." : name;
-  };
 
   return (
     <View style={styles.categoryMain}>
@@ -34,21 +31,17 @@ const CertificateCompo = ({ categories, title, index, imagePath }) => {
         style={styles.longCard}
       >
         <Image source={{ uri: imagePath }} style={styles.image} />
-        <View
-          style={{
-            width: "75%",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <View
-            style={[styles.catIconandNum, { justifyContent: "flex-start" }]}
-          >
-            <Text style={{ color: "white", fontSize: 18, fontWeight: 800 }}>
-              {truncateUsername(title)}
+        <View style={styles.contentSection}>
+          <View style={styles.titleSection}>
+            <Text
+              style={styles.titleText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {title}
             </Text>
           </View>
-          <View style={[styles.catIconandNum]}>
+          <View style={styles.rightSection}>
             <View style={styles.categoryPill}>
               {categories == "Landscape" ? (
                 <FontAwesome6 name="vcard" size={20} color="#6ac3dcff" />
@@ -58,10 +51,7 @@ const CertificateCompo = ({ categories, title, index, imagePath }) => {
                 <Feather name="file-text" size={22} color="#b59769ff" />
               )}
             </View>
-
-            <View style={[styles.catIconandNum, { gap: 10 }]}>
-              <MaterialIcons name="arrow-forward-ios" size={20} color="white" />
-            </View>
+            <MaterialIcons name="arrow-forward-ios" size={20} color="white" />
           </View>
         </View>
       </TouchableOpacity>
@@ -87,6 +77,31 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 2,
     borderColor: "#c3c3c3ff",
+    flexShrink: 0,
+  },
+  contentSection: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    minWidth: 0,
+    gap: 10,
+  },
+  titleSection: {
+    flex: 1,
+    minWidth: 0,
+  },
+  titleText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: 800,
+    width: "100%",
+  },
+  rightSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    flexShrink: 0,
   },
   paragraph: {
     fontSize: 16,
@@ -132,18 +147,18 @@ const styles = StyleSheet.create({
   longCard: {
     width: "100%",
     borderRadius: 55,
-    paddingHorizontal: 15,
+    paddingHorizontal: 12,
     paddingVertical: 15,
     margin: "auto",
     backgroundColor: "#1c1c1c",
-    gap: 20,
+    gap: 12,
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1.5,
     borderColor: "#242424ff",
   },
   categoryPill: {
-    paddingHorizontal: 25,
+    paddingHorizontal: 18,
     paddingVertical: 8,
     borderRadius: 80,
     justifyContent: "center",
@@ -179,13 +194,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 30,
     elevation: 5,
+    borderWidth: 0.5,
+    borderColor: "#3d3d3d",
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     fontSize: 16,
-    paddingVertical: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     color: "white",
   },
   modalbtn: {
@@ -195,7 +215,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 15,
     borderRadius: 14,
-    backgroundColor: "white",
+    backgroundColor: "#383838",
   },
   buttonRow: {
     flexDirection: "row",

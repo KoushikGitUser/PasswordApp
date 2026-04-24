@@ -55,7 +55,7 @@ const PasswordCard = ({
         }
         style={styles.main}
       >
-        <View style={styles.inn}>
+        <View style={styles.leftSection}>
           <View
             style={[
               styles.pic,
@@ -111,16 +111,24 @@ const PasswordCard = ({
             </Text>
           </View>
           <View style={styles.name_and_user}>
-            <Text style={{ fontSize: 17, fontWeight: 800, color: "white" }}>
-              {truncateUsername(passName, "passName")}
+            <Text
+              style={styles.passNameText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {passName}
             </Text>
-            <Text style={{ fontSize: 17, fontWeight: 500, color: "lightgrey" }}>
+            <Text
+              style={styles.userNameText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {truncateUsername(userName, "userName")}
             </Text>
           </View>
         </View>
 
-        <View style={[styles.inn, { gap: 10 }]}>
+        <View style={styles.rightSection}>
           <View style={styles.categoryPill}>
             {category === "Banking" ? (
               <Ionicons name="card-outline" size={22} color="orange" />
@@ -136,8 +144,8 @@ const PasswordCard = ({
               <KeyRound size={22} color="#00cfbb" strokeWidth={2.1} />
             )}
           </View>
-
-          <MaterialIcons name="keyboard-arrow-right" size={28} color="white" />
+                <MaterialIcons name="arrow-forward-ios" size={20} color="white" />
+      
         </View>
       </TouchableOpacity>
     </View>
@@ -150,13 +158,26 @@ const styles = StyleSheet.create({
     margin: "auto",
     backgroundColor: "#1c1c1c",
     paddingVertical: 12,
-    paddingHorizontal: 15,
+    paddingHorizontal: 12,
     borderRadius: 53,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     borderWidth: 1.5,
     borderColor: "#242424ff",
+  },
+  leftSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    flex: 1,
+    minWidth: 0,
+  },
+  rightSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    flexShrink: 0,
   },
   inn: {
     flexDirection: "row",
@@ -169,6 +190,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
     gap: 5,
+    flex: 1,
+    minWidth: 0,
+  },
+  passNameText: {
+    fontSize: 17,
+    fontWeight: 800,
+    color: "white",
+    width: "100%",
+  },
+  userNameText: {
+    fontSize: 17,
+    fontWeight: 500,
+    color: "lightgrey",
+    width: "100%",
   },
   pic: {
     width: 50,
@@ -178,9 +213,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    flexShrink: 0,
   },
   categoryPill: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 18,
     paddingVertical: 8,
     borderRadius: 80,
     justifyContent: "center",

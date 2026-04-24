@@ -26,7 +26,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import * as LocalAuthentication from "expo-local-authentication";
 import { fetchCertificates } from "../utilsForCertificate";
 import { saveAutoLockSetting } from "../autolockService";
-import { ChevronDown, Eye, EyeOff } from "lucide-react-native";
+import { ChevronDown, Eye, EyeOff, Search } from "lucide-react-native";
 import { BlurView } from "@react-native-community/blur";
 
 const Homescreen = ({
@@ -105,6 +105,8 @@ const Homescreen = ({
 
   useEffect(() => {
     const fetchData = async () => {
+      // Delay fetching to allow navigation animation to complete
+      await new Promise(resolve => setTimeout(resolve, 500));
       const stored = await getPasswords();
       setPasswords(stored);
       setPasswordsForIndex(stored);
@@ -288,7 +290,7 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -331,7 +333,7 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#ffffffff" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={() => {
                     setEnableAutoLock(true);
                     saveAutoLockSetting(true);
@@ -399,7 +401,7 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn]}
+                  style={[styles.modalbtn, { borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => setExitAppModalVisible(false)}
                 >
                   <Text
@@ -411,7 +413,7 @@ const Homescreen = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#ff0000ff" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#ff0000ff", borderWidth: 0.5, borderColor: "#ff9999" }]}
                   onPress={() => {
                     BackHandler.exitApp();
                     setExitAppModalVisible(false);
@@ -445,7 +447,7 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn]}
+                  style={[styles.modalbtn,{borderWidth:0.5,borderColor:"#525252"}]}
                   onPress={() => setDeleteAllModalVisible(false)}
                 >
                   <Text
@@ -457,7 +459,7 @@ const Homescreen = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red" }]}
+                  style={[styles.modalbtn, { backgroundColor: "red",borderWidth:0.5,borderColor:"#ff9999" }]}
                   onPress={checkFingerprint}
                 >
                   <Text
@@ -488,7 +490,7 @@ const Homescreen = ({
                   setSecureEntry(true);
                 }
               }}
-              style={{ marginBottom: 20 }}
+              style={{ marginBottom: 20,backgroundColor:"#2a2a2a",borderRadius:40,width:90,paddingVertical:7,margin:"auto",borderWidth:1,borderColor:"#3a3a3a" }}
             >
               {secureEntry ? (
                 <EyeOff
@@ -508,14 +510,14 @@ const Homescreen = ({
             </TouchableOpacity>
 
             <TextInput
-              placeholderTextColor="lightgrey"
+              placeholderTextColor="#636363"
               placeholder="Name/Label"
               value={passName}
               onChangeText={setPassName}
               style={styles.input}
             />
             <TextInput
-              placeholderTextColor="lightgrey"
+              placeholderTextColor="#636363"
               placeholder={
                 categories == "Banking"
                   ? "Username/Card No."
@@ -534,7 +536,7 @@ const Homescreen = ({
               style={styles.input}
             />
             <TextInput
-              placeholderTextColor="lightgrey"
+              placeholderTextColor="#636363"
               placeholder="Password"
               value={password}
               onChangeText={setPassword}
@@ -543,7 +545,7 @@ const Homescreen = ({
             />
             {category == "Banking" ? (
               <TextInput
-                placeholderTextColor="lightgrey"
+                placeholderTextColor="#636363"
                 placeholder="PIN"
                 value={pin}
                 onChangeText={setPin}
@@ -571,7 +573,7 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn]}
+                  style={[styles.modalbtn, { borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => {
                     setModalVisible(false);
                     setSecureEntry(true);
@@ -589,7 +591,7 @@ const Homescreen = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, {backgroundColor:"#ffffffff" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={handleAdd}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "black" }}>
@@ -809,6 +811,7 @@ const Homescreen = ({
           >
             {returnSearchBarOrDeleteButton() && (
               <View style={styles.searchmain}>
+                <Search color="grey" style={{marginRight:10}} />
                 <TextInput
                   placeholderTextColor="grey"
                   placeholder="Search your password"
@@ -932,10 +935,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     paddingVertical: 12,
+    paddingHorizontal: 20,
   },
   categoryOption: {
     paddingVertical: 15,
@@ -943,6 +949,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 8,
     backgroundColor: "#2a2a2a",
+        borderWidth: 1,
+    borderColor: "#3d3d3d",
   },
   categoryOptionSelected: {
     backgroundColor: "#353535ff",
@@ -968,6 +976,7 @@ const styles = StyleSheet.create({
   searchpass: {
     width: "80%",
     color: "white",
+    marginRight:"auto"
   },
   bullet: {
     fontSize: 16,
@@ -992,6 +1001,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 15,
+    borderWidth:1,
+    borderColor:"#444444"
   },
   footer: {
     fontSize: 16,
@@ -1004,7 +1015,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 60,
     right: 20,
-    backgroundColor: "#ffffffff",
+    backgroundColor: "#cfcfcf",
+    borderWidth:1,
+    borderColor:"#fff",
     width: "auto",
     height: "auto",
     paddingHorizontal: 25,
@@ -1035,6 +1048,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     flexDirection: "row",
+    borderWidth: 0.5,
+    borderColor: "#ff9999",
   },
   pickerMain: {},
   fabIcon: {
@@ -1058,13 +1073,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     elevation: 5,
+    borderWidth: 0.5,
+    borderColor: "#3d3d3d",
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     fontSize: 16,
-    paddingVertical: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     color: "white",
   },
   modalbtn: {
@@ -1075,6 +1095,7 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     borderRadius: 54,
     backgroundColor: "#343434ff",
+
   },
   buttonRow: {
     flexDirection: "row",

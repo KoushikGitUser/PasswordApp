@@ -266,7 +266,7 @@ const CategoryScreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -299,7 +299,7 @@ const CategoryScreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => setExitAppModalVisible(false)}
                 >
                   <Text
@@ -311,7 +311,7 @@ const CategoryScreen = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red" }]}
+                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
                   onPress={() => {
                     BackHandler.exitApp();
                     setExitAppModalVisible(false);
@@ -493,87 +493,96 @@ const CategoryScreen = ({
         </View>
       </View>
 
-      <TouchableOpacity
-        style={styles.fabFirst}
-        onPress={fetchPasswords}
-        activeOpacity={0.7}
+      <ScrollView
+        style={styles.scrollContent}
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
       >
-        <Ionicons name="reload-circle" size={35} color="orange" />
-      </TouchableOpacity>
+        <View style={styles.categoryMain}>
+          <CategoryCompo category="All" quantity={passwords?.length} />
+          <CategoryCompo
+            category="Banking"
+            quantity={categoryCounts["Banking"] || 0}
+          />
+        </View>
+        <View style={styles.categoryMain}>
+          <CategoryCompo
+            category="Mail or ID"
+            quantity={categoryCounts["Mail or ID"] || 0}
+          />
+          <CategoryCompo
+            category="Social"
+            quantity={categoryCounts["Social"] || 0}
+          />
+        </View>
+        <View style={styles.categoryMain}>
+          <CategoryCompo
+            category="Developer"
+            quantity={categoryCounts["Developer"] || 0}
+          />
+          <CategoryCompo category="Wifi" quantity={categoryCounts["Wifi"] || 0} />
+        </View>
 
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={handleLockNow}
-        activeOpacity={0.7}
-      >
-        <Ionicons name="lock-closed" style={{ marginRight: 5 }}
-                size={30} color="#00c76b" />
-      </TouchableOpacity>
-
-      <View style={styles.categoryMain}>
-        <CategoryCompo category="All" quantity={passwords?.length} />
-        <CategoryCompo
-          category="Banking"
-          quantity={categoryCounts["Banking"] || 0}
-        />
-      </View>
-      <View style={styles.categoryMain}>
-        <CategoryCompo
-          category="Mail or ID"
-          quantity={categoryCounts["Mail or ID"] || 0}
-        />
-        <CategoryCompo
-          category="Social"
-          quantity={categoryCounts["Social"] || 0}
-        />
-      </View>
-      <View style={styles.categoryMain}>
-        <CategoryCompo
-          category="Developer"
-          quantity={categoryCounts["Developer"] || 0}
-        />
-        <CategoryCompo category="Wifi" quantity={categoryCounts["Wifi"] || 0} />
-      </View>
-
-      <View style={styles.categoryMain}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("certificate")}
-          style={styles.longCard}
-        >
-          <View style={[styles.catIconandNum, { width: "100%" }]}>
-            <View
-              style={[
-                styles.catIconandNum,
-                { gap: 8, alignItems: "center" },
-              ]}
-            >
-              <View style={[styles.idIconPill, { backgroundColor: "#0f2b34" }]}>
-                <FontAwesome6 name="vcard" size={22} color="#6ac3dcff" />
+        <View style={styles.categoryMain}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("certificate")}
+            style={styles.longCard}
+          >
+            <View style={[styles.catIconandNum, { width: "100%" }]}>
+              <View
+                style={[
+                  styles.catIconandNum,
+                  { gap: 8, alignItems: "center" },
+                ]}
+              >
+                <View style={[styles.idIconPill, { backgroundColor: "#0f2b34" }]}>
+                  <FontAwesome6 name="vcard" size={22} color="#6ac3dcff" />
+                </View>
+                <View style={[styles.idIconPill, { backgroundColor: "#0f3324" }]}>
+                  <Ionicons name="id-card-outline" size={22} color="#6bc499ff" />
+                </View>
+                <View style={[styles.idIconPill, { backgroundColor: "#2b2419" }]}>
+                  <Feather name="file-text" size={22} color="#b59769ff" />
+                </View>
               </View>
-              <View style={[styles.idIconPill, { backgroundColor: "#0f3324" }]}>
-                <Ionicons name="id-card-outline" size={22} color="#6bc499ff" />
-              </View>
-              <View style={[styles.idIconPill, { backgroundColor: "#2b2419" }]}>
-                <Feather name="file-text" size={22} color="#b59769ff" />
+
+              <View style={[styles.catIconandNum, { gap: 5 }]}>
+                <Text style={{ color: "lightgrey", fontSize: 16, fontWeight: 800 }}>
+                  {certificatesQuantity}
+                </Text>
+                <MaterialIcons
+                  name="arrow-forward-ios"
+                  size={20}
+                  color="lightgrey"
+                />
               </View>
             </View>
-
-            <View style={[styles.catIconandNum, { gap: 5 }]}>
-              <Text style={{ color: "lightgrey", fontSize: 16, fontWeight: 800 }}>
-                {certificatesQuantity}
+            <View style={styles.idTitlePill}>
+              <Text style={{ color: "white", fontSize: 17, fontWeight: 800 }}>
+                ID Cards and Certificates
               </Text>
-              <MaterialIcons
-                name="arrow-forward-ios"
-                size={20}
-                color="lightgrey"
-              />
             </View>
-          </View>
-          <View style={styles.idTitlePill}>
-            <Text style={{ color: "white", fontSize: 17, fontWeight: 800 }}>
-              ID Cards and Certificates
-            </Text>
-          </View>
+          </TouchableOpacity>
+        </View>
+        <View style={{height:50}} />
+      </ScrollView>
+
+      <View style={styles.fabContainer}>
+        <TouchableOpacity
+          style={styles.fabFirst}
+          onPress={fetchPasswords}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="reload-circle" size={35} color="orange" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={handleLockNow}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="lock-closed" style={{ marginRight: 5 }}
+                  size={30} color="#00c76b" />
         </TouchableOpacity>
       </View>
     </View>
@@ -685,6 +694,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
+    borderWidth: 0.5,
+    borderColor: "#4c4c4cff",
   },
   idTitlePill: {
     width: "100%",
@@ -695,6 +706,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     borderRadius: 50,
     backgroundColor: "#242424",
+    borderWidth: 0.5,
+    borderColor: "#4c4c4cff",
   },
   categoryMain: {
     width: "100%",
@@ -726,13 +739,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     elevation: 5,
+    borderWidth: 0.5,
+    borderColor: "#3d3d3d",
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     fontSize: 16,
-    paddingVertical: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     color: "white",
   },
   modalbtn: {
@@ -742,7 +760,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 18,
     borderRadius: 54,
-    backgroundColor: "white",
+    backgroundColor: "#383838",
   },
   buttonRow: {
     flexDirection: "row",
@@ -750,15 +768,26 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 30,
   },
-  fabFirst: {
+  fabContainer: {
     position: "absolute",
-    bottom: 50,
-    left: 23,
+    bottom: 5,
+    left: 0,
+    right: 0,
+    width: "100%",
+    height: 130,
+    backgroundColor: "black",
+    paddingHorizontal: 23,
+    paddingBottom: 30,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  fabFirst: {
     backgroundColor: "#231100ff",
     borderWidth:0.5,
     borderColor:"#643100",
     width: 100,
-    height: "60",
+    height: 60,
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
@@ -769,9 +798,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   fab: {
-    position: "absolute",
-    bottom: 50,
-    right: 23,
     backgroundColor: "#001e10",
     borderWidth:0.5,
     borderColor:"#005c31",
@@ -863,12 +889,21 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   onboardGoBtn: {
-    backgroundColor: "white",
+    backgroundColor: "#cfcfcf",
+    borderWidth: 1,
+    borderColor: "#fff",
   },
   onboardGoText: {
     color: "#007a47",
     fontSize: 15,
     fontWeight: "800",
+  },
+  scrollContent: {
+    flex: 1,
+    width: "100%",
+  },
+  scrollContentContainer: {
+    paddingBottom: 130,
   },
 });
 

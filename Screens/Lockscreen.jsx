@@ -214,7 +214,7 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -359,7 +359,7 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={handleVerifyPin}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "black" }}>
@@ -445,6 +445,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     elevation: 5,
+    borderWidth: 0.5,
+    borderColor: "#3d3d3d",
   },
   modalbtn: {
     width: "100%",
@@ -453,7 +455,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 18,
     borderRadius: 54,
-    backgroundColor: "white",
+    backgroundColor: "#383838",
   },
   buttonRow: {
     flexDirection: "row",

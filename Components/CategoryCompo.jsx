@@ -31,7 +31,8 @@ const CategoryCompo = ({category,quantity}) => {
                   ? "#001229ff"
                   : category === "Social"?"#001e10":"#001f1c"}]}>
         <View style={[styles.catIconandNum,{width:"100%"}]}>
-            <View style={[styles.iconPill,{backgroundColor: category === "Banking"
+            <View style={[styles.iconPill,{
+              backgroundColor: category === "Banking"
                   ? "#3a1c00"
                   : category === "Mail or ID"
                   ? "#430000"
@@ -39,13 +40,24 @@ const CategoryCompo = ({category,quantity}) => {
                   ? "#3d0027"
                   : category === "Wifi"
                   ? "#002248"
-                  : category === "Social"?"#00351c":"#003d38"}]}>
-              {category === "Banking"? <Ionicons name="card-outline" size={24} color="orange" />
-                : category === "Mail or ID"? <UserRound size={24} color="red" strokeWidth={2.1} />
-                : category === "Developer"? <FontAwesome6 name="code" size={22} color="#e00092" />
-                : category === "Wifi"? <Wifi size={22} color="#0098ff" strokeWidth={3} />
-                : category === "Social"? <Globe size={23} color="#00c76b" strokeWidth={2.2} />
-                : <KeyRound size={23} color="#00cfbb" strokeWidth={2.1} />}
+                  : category === "Social"?"#00351c":"#003d38",
+              borderWidth: 0.5,
+              borderColor: category === "Banking"
+                  ? "#643100"
+                  : category === "Mail or ID"
+                  ? "#780000"
+                  : category === "Developer"
+                  ? "#62003f"
+                  : category === "Wifi"
+                  ? "#003a80"
+                  : category === "Social"? "#005c31":"#006d60"
+            }]}>
+              {category === "Banking"? <Ionicons name="card-outline" size={28} color="orange" />
+                : category === "Mail or ID"? <UserRound size={27} color="red" strokeWidth={2.1} />
+                : category === "Developer"? <FontAwesome6 name="code" size={25} color="#e00092" />
+                : category === "Wifi"? <Wifi size={27} color="#0098ff" strokeWidth={3} />
+                : category === "Social"? <Globe size={27} color="#00c76b" strokeWidth={2.2} />
+                : <KeyRound size={27} color="#00cfbb" strokeWidth={2.1} />}
             </View>
             <View  style={[styles.catIconandNum,{gap:5}]}>
                 <Text style={{color: category === "Banking"
@@ -70,7 +82,8 @@ const CategoryCompo = ({category,quantity}) => {
             </View>
 
         </View>
-        <View style={[styles.titlePill, {backgroundColor: category === "Banking"
+        <View style={[styles.titlePill, {
+          backgroundColor: category === "Banking"
                   ? "#3a1c00"
                   : category === "Mail or ID"
                   ? "#430000"
@@ -78,7 +91,18 @@ const CategoryCompo = ({category,quantity}) => {
                   ? "#3d0027"
                   : category === "Wifi"
                   ? "#002248"
-                  : category === "Social"?"#00351c":"#003d38"}]}>
+                  : category === "Social"?"#00351c":"#003d38",
+          borderWidth: 0.5,
+          borderColor: category === "Banking"
+                  ? "#643100"
+                  : category === "Mail or ID"
+                  ? "#780000"
+                  : category === "Developer"
+                  ? "#62003f"
+                  : category === "Wifi"
+                  ? "#003a80"
+                  : category === "Social"? "#005c31":"#006d60"
+        }]}>
             <Text style={{color:  category === "Banking"
                   ? "orange"
                   : category === "Mail or ID"
@@ -187,8 +211,8 @@ const styles = StyleSheet.create({
     borderRadius:50,
   },
   iconPill:{
-    paddingHorizontal:25,
-    paddingVertical:8,
+    paddingHorizontal:22,
+    paddingVertical:5,
     borderRadius:50,
     justifyContent:"center",
     alignItems:"center",
@@ -199,13 +223,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 30,
     elevation: 5,
+    borderWidth: 0.5,
+    borderColor: "#3d3d3d",
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     fontSize: 16,
-    paddingVertical: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     color: "white",
   },
   modalbtn: {
@@ -215,7 +244,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 15,
     borderRadius: 14,
-    backgroundColor: "white",
+    backgroundColor: "#383838",
   },
   buttonRow: {
     flexDirection: "row",

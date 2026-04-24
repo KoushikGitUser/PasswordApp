@@ -29,8 +29,8 @@ import {
   isAutofillEnabled,
   openAutofillPicker,
 } from "../Services/autofill";
-import { setSkipLock, clearPasswords } from "../utils";
-import { deleteAllCertificates } from "../utilsForCertificate";
+import { setSkipLock, clearPasswords, getPasswords } from "../utils";
+import { deleteAllCertificates, fetchCertificates } from "../utilsForCertificate";
 import { generateBackup } from "../backUpGenerator";
 import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
@@ -632,7 +632,7 @@ const Settings = ({
     } catch (err) {
       finishImportFlow();
       if (err.message === "WRONG_PASSPHRASE") {
-        setImportError("Wrong passphrase. Try again.");
+        setImportError("Wrong Password. Try again.");
       } else if (err.message === "UNSUPPORTED_FORMAT") {
         setImportError("This backup file format is not supported.");
       } else {
@@ -667,14 +667,15 @@ const Settings = ({
         visible={backupLoader}
         onRequestClose={() => {}}
       >
-        <BlurView blurType="dark" blurAmount={15} style={styles.blurContainer}>
-          <View style={styles.exportLoaderCenter}>
-            <View style={[styles.modalContent, styles.exportLoaderCard]}>
+        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
+          <View style={styles.modalContent}>
+            <View style={{ alignItems: "center" }}>
               <ActivityIndicator size="large" color="#00c787" />
-              <Text style={styles.exportLoaderTitle}>Encrypting backup</Text>
-              <Text style={styles.exportLoaderText}>
-                Deriving the encryption key. This can take a few seconds on
-                your device — please keep the app open.
+              <Text style={{ color: "white", fontSize: 18, fontWeight: 800, marginTop: 20 }}>
+                Encrypting backup
+              </Text>
+              <Text style={{ color: "lightgrey", fontSize: 14, textAlign: "center", marginTop: 10, lineHeight: 20 }}>
+                Deriving the encryption key. This can take a while — please keep the app open.
               </Text>
             </View>
           </View>
@@ -699,7 +700,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -862,7 +863,7 @@ const Settings = ({
             <View style={[styles.buttonRow, { justifyContent: "center" }]}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => setInfoModalVisible(false)}
                 >
                   <Text
@@ -907,7 +908,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => setImportModalVisible(false)}
                 >
                   <Text
@@ -919,7 +920,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={() => {
                     checkFingerprintForImport();
                     setImportModalVisible(false);
@@ -952,7 +953,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={() => openPinModal("set")}
                 >
                   <Text
@@ -1001,7 +1002,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => {
                     setPinInputModalVisible(false);
                     setPinDigits(["", "", "", "", "", ""]);
@@ -1014,7 +1015,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={handleSetPin}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "black" }}>
@@ -1045,7 +1046,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => setDeletePinModalVisible(false)}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
@@ -1055,7 +1056,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red" }]}
+                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
                   onPress={handleDeletePin}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
@@ -1089,7 +1090,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => setDeleteAllDataModalVisible(false)}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
@@ -1099,7 +1100,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red" }]}
+                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
                   onPress={handleDeleteAllDataConfirm}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
@@ -1149,7 +1150,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => {
                     setDeleteAllPinInputModalVisible(false);
                     setDeleteAllPinDigits(["", "", "", "", "", ""]);
@@ -1162,7 +1163,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red" }]}
+                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
                   onPress={handleVerifyDeleteAllPin}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
@@ -1277,25 +1278,25 @@ const Settings = ({
               Protect Your Backup
             </Text>
             <Text style={{ color: "white", fontSize: 14, marginBottom: 16, lineHeight: 20 }}>
-              Choose a passphrase to encrypt this backup. You'll need the exact
-              same passphrase to restore it later.
+              Choose a Password to encrypt this backup. You'll need the exact
+              same Password to restore it later.
             </Text>
             <Text
               style={{
-                color: "#ff9b9b",
+                color: "#ff0000",
                 fontSize: 13,
                 marginBottom: 18,
                 lineHeight: 18,
               }}
             >
-              This passphrase is NOT stored anywhere. If you forget it, the
+              This Password is NOT stored anywhere. If you forget it, the
               backup file cannot be recovered.
             </Text>
 
             <View style={styles.passInputRow}>
               <TextInput
                 style={styles.passInput}
-                placeholder="Passphrase (min 12 characters)"
+                placeholder="Password (Min 12 characters)"
                 placeholderTextColor="#7a7a7a"
                 value={exportPassphrase}
                 onChangeText={setExportPassphrase}
@@ -1320,7 +1321,7 @@ const Settings = ({
             <View style={styles.passInputRow}>
               <TextInput
                 style={styles.passInput}
-                placeholder="Confirm passphrase"
+                placeholder="Confirm Password"
                 placeholderTextColor="#7a7a7a"
                 value={exportPassphraseConfirm}
                 onChangeText={setExportPassphraseConfirm}
@@ -1331,7 +1332,7 @@ const Settings = ({
             </View>
 
             <Text style={styles.fileNameHint}>
-              File name (optional) — leave blank for an auto-dated name.
+              File name (optional) — leave blank for default name.
             </Text>
             <View style={styles.passInputRow}>
               <TextInput
@@ -1362,7 +1363,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => {
                     setExportPassphraseModalVisible(false);
                     setExportPassphrase("");
@@ -1432,14 +1433,14 @@ const Settings = ({
               Decrypt Backup
             </Text>
             <Text style={{ color: "white", fontSize: 14, marginBottom: 16, lineHeight: 20 }}>
-              This backup file is encrypted. Enter the passphrase you used when
+              This backup file is encrypted. Enter the Password you used when
               exporting it.
             </Text>
 
             <View style={styles.passInputRow}>
               <TextInput
                 style={styles.passInput}
-                placeholder="Passphrase"
+                placeholder="Password"
                 placeholderTextColor="#7a7a7a"
                 value={importPassphrase}
                 onChangeText={(t) => {
@@ -1476,7 +1477,7 @@ const Settings = ({
               <View style={styles.decryptingRow}>
                 <ActivityIndicator color="#00c787" />
                 <Text style={styles.decryptingText}>
-                  Decrypting… this can take a few seconds.
+                  Decrypting… this can take a while.
                 </Text>
               </View>
             ) : null}
@@ -1559,7 +1560,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => setbackUpModalVisible(false)}
                 >
                   <Text
@@ -1571,7 +1572,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={() => {
                     checkFingerprintForExport();
                     setbackUpModalVisible(false);
@@ -1627,7 +1628,11 @@ const Settings = ({
         </Text>
       </View>
 
-      <ScrollView style={{ width: "100%", paddingHorizontal: 20 }}>
+      <ScrollView
+        style={{ width: "100%", paddingHorizontal: 20 }}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Backup Category */}
         <TouchableOpacity
           onPress={() => {
@@ -1668,7 +1673,16 @@ const Settings = ({
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => {
+          onPress={async () => {
+            // Check if there's any data to backup
+            const passwords = await getPasswords();
+            const certificates = await fetchCertificates();
+
+            if (passwords.length === 0 && certificates.length === 0) {
+              triggerToast("Nothing exists to backup", "info");
+              return;
+            }
+
             setbackUpModalVisible(true);
           }}
           style={[
@@ -1894,7 +1908,7 @@ const Settings = ({
             styles.settingsMain,
             {
               paddingVertical: 18,
-              borderRadius: 30,
+              borderRadius: 35,
               backgroundColor: autofillOn ? "#001e10" : "#1c1c1c",
               borderWidth: 1,
               borderColor: autofillOn ? "#005c31" : "#242424",
@@ -1963,7 +1977,8 @@ const Settings = ({
               paddingVertical: 18,
               borderRadius: 30,
               backgroundColor: "red",
-              borderWidth: 0,
+              borderWidth: 0.5,
+              borderColor: "#ff9999",
             },
           ]}
         >
@@ -1999,8 +2014,8 @@ const Settings = ({
           style={[
             styles.settingsMain,
             {
-              paddingVertical: 18,
-              borderRadius: 30,
+              paddingVertical: 15,
+              borderRadius: 50,
             },
           ]}
         >
@@ -2025,6 +2040,7 @@ const Settings = ({
             </Text>
           </View>
         </TouchableOpacity>
+        <View style={{height:100}} />
       </ScrollView>
     </View>
   );
@@ -2149,6 +2165,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     flexDirection: "row",
+    borderWidth: 0.5,
+    borderColor: "#ff9999",
   },
   pickerMain: {},
   fabIcon: {
@@ -2173,13 +2191,18 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingTop:30,
     elevation: 5,
+    borderWidth: 0.5,
+    borderColor: "#3d3d3d",
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     fontSize: 16,
-    paddingVertical: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     color: "white",
   },
   modalbtn: {
@@ -2230,10 +2253,10 @@ const styles = StyleSheet.create({
   passInputRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#383838",
-    borderWidth: 1,
+    backgroundColor: "#2c2c2c",
+    borderWidth: 0.6,
     borderColor: "#505050",
-    borderRadius: 14,
+    borderRadius: 54,
     paddingHorizontal: 14,
     marginBottom: 10,
   },
@@ -2263,33 +2286,8 @@ const styles = StyleSheet.create({
   fileNameHint: {
     color: "lightgrey",
     fontSize: 12,
-    marginTop: 6,
+    marginTop: 25,
     marginBottom: 6,
-  },
-  exportLoaderCenter: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  exportLoaderCard: {
-    alignItems: "center",
-    paddingVertical: 30,
-    paddingHorizontal: 26,
-    width: "88%",
-    maxWidth: 340,
-  },
-  exportLoaderTitle: {
-    color: "white",
-    fontSize: 17,
-    fontWeight: "800",
-    marginTop: 16,
-  },
-  exportLoaderText: {
-    color: "lightgrey",
-    fontSize: 13,
-    textAlign: "center",
-    marginTop: 10,
-    lineHeight: 19,
   },
   sheetBackdrop: {
     flex: 1,
@@ -2330,7 +2328,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 14,
     backgroundColor: "#202020",
-    borderRadius: 18,
+    borderRadius: 58,
     borderWidth: 1,
     borderColor: "#2e2e2e",
     padding: 14,
@@ -2339,7 +2337,7 @@ const styles = StyleSheet.create({
   fileIconWrap: {
     width: 56,
     height: 56,
-    borderRadius: 14,
+    borderRadius: 54,
     backgroundColor: "#001e10",
     borderWidth: 1,
     borderColor: "#005c31",
@@ -2384,7 +2382,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
-    backgroundColor: "white",
+    backgroundColor: "#cfcfcf",
+    borderWidth: 1,
+    borderColor: "#fff",
     paddingVertical: 16,
     borderRadius: 50,
   },
@@ -2394,9 +2394,11 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   sheetCloseBtn: {
-    paddingVertical: 14,
+    paddingVertical: 16,
     alignItems: "center",
-    marginTop: 6,
+    marginTop: 14,
+    backgroundColor:"#303030",
+    borderRadius:50
   },
   sheetCloseText: {
     color: "lightgrey",

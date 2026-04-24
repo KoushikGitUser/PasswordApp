@@ -79,9 +79,9 @@ const AppPickerSheet = ({ visible, onClose, onPick, existingPackages = [] }) => 
           </Text>
         </View>
         {alreadyAdded ? (
-          <Ionicons name="checkmark-circle" size={20} color="#00c76b" />
+          <Ionicons name="checkmark-circle" size={30} color="#00ff88" />
         ) : (
-          <Ionicons name="add" size={22} color="lightgrey" />
+          <Ionicons name="add" size={28} color="lightgrey" />
         )}
       </TouchableOpacity>
     );
@@ -212,10 +212,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: "#1c1c1c",
+    backgroundColor: "#272727",
     borderWidth: 1,
     borderColor: "#242424",
-    borderRadius: 22,
+    borderRadius: 52,
     paddingVertical: 12,
     paddingHorizontal: 14,
     marginBottom: 10,
@@ -223,8 +223,8 @@ const styles = StyleSheet.create({
   icon: {
     width: 40,
     height: 40,
-    borderRadius: 10,
-    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    backgroundColor: "#4f4f4f",
   },
   iconFallback: {
     justifyContent: "center",

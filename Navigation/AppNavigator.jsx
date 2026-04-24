@@ -110,7 +110,7 @@ const AppNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        animation:"fade"
+        animation:"reveal_from_bottom"
       }}
       initialRouteName="lockscreen"
     >

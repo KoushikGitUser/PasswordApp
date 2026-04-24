@@ -43,6 +43,8 @@ import {
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BlurView } from "@react-native-community/blur";
 import AppPickerSheet from "../Components/AppPickerSheet";
+import { ScrollView } from "react-native-gesture-handler";
+import Toaster from "../Components/UniversalToaster/Toaster";
 
 const PasswordDetails = ({ route, navigation }) => {
   const { index, passCategory } = route.params;
@@ -133,7 +135,7 @@ const PasswordDetails = ({ route, navigation }) => {
             "Copied",
             "Password copied to clipboard",
             "success",
-            4000
+            4000,
           );
         }
       }
@@ -179,17 +181,23 @@ const PasswordDetails = ({ route, navigation }) => {
       .split("?")[0];
 
   const isValidDomain = (d) =>
-    /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d) && !d.startsWith("-") && !d.endsWith("-");
+    /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d) &&
+    !d.startsWith("-") &&
+    !d.endsWith("-");
 
   const normalizePackageId = (s) => s.trim().toLowerCase();
 
-  const isValidPackage = (p) =>
-    /^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+$/.test(p);
+  const isValidPackage = (p) => /^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+$/.test(p);
 
   const addDomain = () => {
     const d = normalizeDomain(newDomain);
     if (!isValidDomain(d)) {
-      triggerToast("Invalid", "Enter a domain like instagram.com", "error", 3000);
+      triggerToast(
+        "Invalid",
+        "Enter a domain like instagram.com",
+        "error",
+        3000,
+      );
       return;
     }
     if (linkedDomains.includes(d)) {
@@ -211,7 +219,7 @@ const PasswordDetails = ({ route, navigation }) => {
         "Invalid",
         "Enter a package id like com.instagram.android",
         "error",
-        3000
+        3000,
       );
       return;
     }
@@ -262,7 +270,7 @@ const PasswordDetails = ({ route, navigation }) => {
         "Updated",
         "Successfully updated the password",
         "success",
-        4000
+        4000,
       );
     }
   };
@@ -275,7 +283,7 @@ const PasswordDetails = ({ route, navigation }) => {
       "Deleted",
       "Successfully deleted the password",
       "success",
-      4000
+      4000,
     );
   };
 
@@ -479,7 +487,7 @@ const PasswordDetails = ({ route, navigation }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -545,7 +553,7 @@ const PasswordDetails = ({ route, navigation }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => setDeletePassModalVisible(false)}
                 >
                   <Text
@@ -557,7 +565,7 @@ const PasswordDetails = ({ route, navigation }) => {
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red" }]}
+                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
                   onPress={checkFingerprintForDeletion}
                 >
                   <Text
@@ -577,6 +585,7 @@ const PasswordDetails = ({ route, navigation }) => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
+        <Toaster />
         <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
           <View style={styles.modalContent}>
             <TouchableOpacity
@@ -587,7 +596,16 @@ const PasswordDetails = ({ route, navigation }) => {
                   setSecureEntry(true);
                 }
               }}
-              style={{ marginBottom: 20 }}
+              style={{
+                marginBottom: 20,
+                backgroundColor: "#2a2a2a",
+                borderRadius: 40,
+                width: 90,
+                paddingVertical: 7,
+                margin: "auto",
+                borderWidth: 1,
+                borderColor: "#3a3a3a",
+              }}
             >
               {secureEntry ? (
                 <EyeOff
@@ -605,118 +623,124 @@ const PasswordDetails = ({ route, navigation }) => {
                 />
               )}
             </TouchableOpacity>
-            <TextInput
-              placeholderTextColor="lightgrey"
-              placeholder="Name/Label"
-              value={passName}
-              onChangeText={setPassName}
-              style={styles.input}
-            />
-            <TextInput
-              placeholderTextColor="lightgrey"
-              placeholder="Username"
-              value={username}
-              onChangeText={setUsername}
-              style={styles.input}
-            />
-            <TextInput
-              placeholderTextColor="lightgrey"
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={secureEntry}
-              style={styles.input}
-            />
-            {category == "Banking" && (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={{ maxHeight: 350 }}
+            >
               <TextInput
                 placeholderTextColor="lightgrey"
-                placeholder="PIN"
-                value={pin}
-                onChangeText={setPin}
+                placeholder="Name/Label"
+                value={passName}
+                onChangeText={setPassName}
+                style={styles.input}
+              />
+              <TextInput
+                placeholderTextColor="lightgrey"
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+                style={styles.input}
+              />
+              <TextInput
+                placeholderTextColor="lightgrey"
+                placeholder="Password"
+                value={password}
+                onChangeText={setPassword}
                 secureTextEntry={secureEntry}
                 style={styles.input}
               />
-            )}
+              {category == "Banking" && (
+                <TextInput
+                  placeholderTextColor="lightgrey"
+                  placeholder="PIN"
+                  value={pin}
+                  onChangeText={setPin}
+                  secureTextEntry={secureEntry}
+                  style={styles.input}
+                />
+              )}
 
-            <Text style={styles.linkSectionLabel}>LINKED APPS</Text>
-            {linkedPackages.length === 0 ? (
-              <Text style={styles.linkEmptyHint}>
-                No apps linked yet. Add a package id to enable autofill for that
-                app (e.g. com.instagram.android).
-              </Text>
-            ) : (
-              <View style={styles.chipWrap}>
-                {linkedPackages.map((p) => (
-                  <View key={p} style={styles.chip}>
-                    <Text style={styles.chipText} numberOfLines={1}>
-                      {p}
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() => removePackage(p)}
-                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                    >
-                      <Ionicons name="close" size={14} color="lightgrey" />
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </View>
-            )}
-            <TouchableOpacity
-              onPress={() => setAppPickerVisible(true)}
-              style={styles.linkAddFullBtn}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="add-circle" size={20} color="#00c76b" />
-              <Text style={styles.linkAddFullBtnText}>
-                Add from installed apps
-              </Text>
-            </TouchableOpacity>
-
-            <Text style={[styles.linkSectionLabel, { marginTop: 18 }]}>
-              LINKED WEBSITES
-            </Text>
-            {linkedDomains.length === 0 ? (
-              <Text style={styles.linkEmptyHint}>
-                No websites linked yet. Add a domain to enable autofill on that
-                site (e.g. instagram.com).
-              </Text>
-            ) : (
-              <View style={styles.chipWrap}>
-                {linkedDomains.map((d) => (
-                  <View key={d} style={styles.chip}>
-                    <Text style={styles.chipText} numberOfLines={1}>
-                      {d}
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() => removeDomain(d)}
-                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                    >
-                      <Ionicons name="close" size={14} color="lightgrey" />
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </View>
-            )}
-            <View style={styles.linkAddRow}>
-              <TextInput
-                placeholderTextColor="#7a7a7a"
-                placeholder="example.com"
-                value={newDomain}
-                onChangeText={setNewDomain}
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="url"
-                style={styles.linkAddInput}
-                onSubmitEditing={addDomain}
-              />
+              <Text style={styles.linkSectionLabel}>LINKED APPS</Text>
+              {linkedPackages.length === 0 ? (
+                <Text style={styles.linkEmptyHint}>
+                  No apps linked yet. Add a package id to enable autofill for
+                  that app (e.g. com.instagram.android).
+                </Text>
+              ) : (
+                <View style={styles.chipWrap}>
+                  {linkedPackages.map((p) => (
+                    <View key={p} style={styles.chip}>
+                      <Text style={styles.chipText} numberOfLines={1}>
+                        {p}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => removePackage(p)}
+                        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                      >
+                        <Ionicons name="close" size={14} color="lightgrey" />
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </View>
+              )}
               <TouchableOpacity
-                onPress={addDomain}
-                style={styles.linkAddBtn}
+                onPress={() => setAppPickerVisible(true)}
+                style={styles.linkAddFullBtn}
                 activeOpacity={0.7}
               >
-                <Ionicons name="add" size={20} color="black" />
+                <Ionicons name="add-circle" size={20} color="#00c76b" />
+                <Text style={styles.linkAddFullBtnText}>
+                  Add from installed apps
+                </Text>
               </TouchableOpacity>
-            </View>
+
+              <Text style={[styles.linkSectionLabel, { marginTop: 18 }]}>
+                LINKED WEBSITES
+              </Text>
+              {linkedDomains.length === 0 ? (
+                <Text style={styles.linkEmptyHint}>
+                  No websites linked yet. Add a domain to enable autofill on
+                  that site (e.g. instagram.com).
+                </Text>
+              ) : (
+                <View style={styles.chipWrap}>
+                  {linkedDomains.map((d) => (
+                    <View key={d} style={styles.chip}>
+                      <Text style={styles.chipText} numberOfLines={1}>
+                        {d}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => removeDomain(d)}
+                        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                      >
+                        <Ionicons name="close" size={14} color="lightgrey" />
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </View>
+              )}
+              <View style={styles.linkAddRow}>
+                <TextInput
+                  placeholderTextColor="#7a7a7a"
+                  placeholder="example.com"
+                  value={newDomain}
+                  onChangeText={setNewDomain}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardType="url"
+                  style={styles.linkAddInput}
+                  onSubmitEditing={addDomain}
+                />
+                <TouchableOpacity
+                  onPress={addDomain}
+                  style={styles.linkAddBtn}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="add" size={20} color="black" />
+                </TouchableOpacity>
+              </View>
+              <View style={{ height: 50 }} />
+            </ScrollView>
 
             {/* <View style={styles.pickerWrapper}>
               <Picker
@@ -736,7 +760,7 @@ const PasswordDetails = ({ route, navigation }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn]}
+                  style={[styles.modalbtn, { borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => {
                     setModalVisible(false);
                     setBackToInitial(backToInitial + 1);
@@ -753,7 +777,7 @@ const PasswordDetails = ({ route, navigation }) => {
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
                   onPress={checkFingerprintForUpdation}
-                  style={[styles.modalbtn, { backgroundColor: "#ffffffff" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                 >
                   <Text
                     style={{ fontSize: 15, fontWeight: 800, color: "black" }}
@@ -834,27 +858,27 @@ const PasswordDetails = ({ route, navigation }) => {
                   category === "Banking"
                     ? "#643100"
                     : category === "Mail or ID"
-                    ? "#780000"
-                    : category === "Developer"
-                    ? "#62003f"
-                    : category === "Wifi"
-                    ? "#003a80"
-                    : category === "Social"
-                    ? "#005c31"
-                    : "#006d60",
+                      ? "#780000"
+                      : category === "Developer"
+                        ? "#62003f"
+                        : category === "Wifi"
+                          ? "#003a80"
+                          : category === "Social"
+                            ? "#005c31"
+                            : "#006d60",
                 borderWidth: 0.5,
                 backgroundColor:
                   category === "Banking"
                     ? "#1c0e00"
                     : category === "Mail or ID"
-                    ? "#200000"
-                    : category === "Developer"
-                    ? "#1e0013"
-                    : category === "Wifi"
-                    ? "#000e1f"
-                    : category === "Social"
-                    ? "#001e10"
-                    : "#001f1c",
+                      ? "#200000"
+                      : category === "Developer"
+                        ? "#1e0013"
+                        : category === "Wifi"
+                          ? "#000e1f"
+                          : category === "Social"
+                            ? "#001e10"
+                            : "#001f1c",
               },
             ]}
           >
@@ -866,14 +890,14 @@ const PasswordDetails = ({ route, navigation }) => {
                   category === "Banking"
                     ? "orange"
                     : category === "Mail or ID"
-                    ? "red"
-                    : category === "Developer"
-                    ? "#e00092"
-                    : category === "Wifi"
-                    ? "#0098ff"
-                    : category === "Social"
-                    ? "#00c76b"
-                    : "#00cfbb",
+                      ? "red"
+                      : category === "Developer"
+                        ? "#e00092"
+                        : category === "Wifi"
+                          ? "#0098ff"
+                          : category === "Social"
+                            ? "#00c76b"
+                            : "#00cfbb",
               }}
             >
               {firstLetter}
@@ -881,7 +905,9 @@ const PasswordDetails = ({ route, navigation }) => {
           </View>
           <View style={styles.name_and_user}>
             <Text style={styles.texts}>Name/Label</Text>
-            <TouchableOpacity onPress={() => setIsPassNameExpanded(!isPassNameExpanded)}>
+            <TouchableOpacity
+              onPress={() => setIsPassNameExpanded(!isPassNameExpanded)}
+            >
               <Text style={[styles.texts, { color: "lightgrey" }]}>
                 {isPassNameExpanded ? passName : truncatePassName(passName)}
               </Text>
@@ -929,27 +955,27 @@ const PasswordDetails = ({ route, navigation }) => {
                   category === "Banking"
                     ? "#643100"
                     : category === "Mail or ID"
-                    ? "#780000"
-                    : category === "Developer"
-                    ? "#62003f"
-                    : category === "Wifi"
-                    ? "#003a80"
-                    : category === "Social"
-                    ? "#005c31"
-                    : "#006d60",
+                      ? "#780000"
+                      : category === "Developer"
+                        ? "#62003f"
+                        : category === "Wifi"
+                          ? "#003a80"
+                          : category === "Social"
+                            ? "#005c31"
+                            : "#006d60",
                 borderWidth: 0.5,
                 backgroundColor:
                   category === "Banking"
                     ? "#1c0e00"
                     : category === "Mail or ID"
-                    ? "#200000"
-                    : category === "Developer"
-                    ? "#1e0013"
-                    : category === "Wifi"
-                    ? "#000e1f"
-                    : category === "Social"
-                    ? "#001e10"
-                    : "#001f1c",
+                      ? "#200000"
+                      : category === "Developer"
+                        ? "#1e0013"
+                        : category === "Wifi"
+                          ? "#000e1f"
+                          : category === "Social"
+                            ? "#001e10"
+                            : "#001f1c",
               },
             ]}
           >
@@ -959,14 +985,14 @@ const PasswordDetails = ({ route, navigation }) => {
                 category === "Banking"
                   ? "orange"
                   : category === "Mail or ID"
-                  ? "red"
-                  : category === "Developer"
-                  ? "#e00092"
-                  : category === "Wifi"
-                  ? "#0098ff"
-                  : category === "Social"
-                  ? "#00c76b"
-                  : "#00cfbb"
+                    ? "red"
+                    : category === "Developer"
+                      ? "#e00092"
+                      : category === "Wifi"
+                        ? "#0098ff"
+                        : category === "Social"
+                          ? "#00c76b"
+                          : "#00cfbb"
               }
               strokeWidth={2.5}
             />
@@ -976,17 +1002,19 @@ const PasswordDetails = ({ route, navigation }) => {
               {category == "Banking"
                 ? "Username/Card No."
                 : category == "Mail or ID"
-                ? category
-                : category == "Social"
-                ? "Username"
-                : category == "Developer"
-                ? "Username"
-                : category == "Wifi"
-                ? "Wifi Name"
-                : "Username/Card No./ID"}
+                  ? category
+                  : category == "Social"
+                    ? "Username"
+                    : category == "Developer"
+                      ? "Username"
+                      : category == "Wifi"
+                        ? "Wifi Name"
+                        : "Username/Card No./ID"}
             </Text>
-            <TouchableOpacity onPress={() => setIsUsernameExpanded(!isUsernameExpanded)}>
-              <Text style={[styles.texts, { color: "lightgrey", }]}>
+            <TouchableOpacity
+              onPress={() => setIsUsernameExpanded(!isUsernameExpanded)}
+            >
+              <Text style={[styles.texts, { color: "lightgrey" }]}>
                 {isUsernameExpanded ? username : truncateUsername(username)}
               </Text>
             </TouchableOpacity>
@@ -1017,27 +1045,27 @@ const PasswordDetails = ({ route, navigation }) => {
                   category === "Banking"
                     ? "#643100"
                     : category === "Mail or ID"
-                    ? "#780000"
-                    : category === "Developer"
-                    ? "#62003f"
-                    : category === "Wifi"
-                    ? "#003a80"
-                    : category === "Social"
-                    ? "#005c31"
-                    : "#006d60",
+                      ? "#780000"
+                      : category === "Developer"
+                        ? "#62003f"
+                        : category === "Wifi"
+                          ? "#003a80"
+                          : category === "Social"
+                            ? "#005c31"
+                            : "#006d60",
                 borderWidth: 0.5,
                 backgroundColor:
                   category === "Banking"
                     ? "#1c0e00"
                     : category === "Mail or ID"
-                    ? "#200000"
-                    : category === "Developer"
-                    ? "#1e0013"
-                    : category === "Wifi"
-                    ? "#000e1f"
-                    : category === "Social"
-                    ? "#001e10"
-                    : "#001f1c",
+                      ? "#200000"
+                      : category === "Developer"
+                        ? "#1e0013"
+                        : category === "Wifi"
+                          ? "#000e1f"
+                          : category === "Social"
+                            ? "#001e10"
+                            : "#001f1c",
               },
             ]}
           >
@@ -1047,20 +1075,22 @@ const PasswordDetails = ({ route, navigation }) => {
                 category === "Banking"
                   ? "orange"
                   : category === "Mail or ID"
-                  ? "red"
-                  : category === "Developer"
-                  ? "#e00092"
-                  : category === "Wifi"
-                  ? "#0098ff"
-                  : category === "Social"
-                  ? "#00c76b"
-                  : "#00cfbb"
+                    ? "red"
+                    : category === "Developer"
+                      ? "#e00092"
+                      : category === "Wifi"
+                        ? "#0098ff"
+                        : category === "Social"
+                          ? "#00c76b"
+                          : "#00cfbb"
               }
               strokeWidth={2}
             />
           </View>
           <View style={[styles.name_and_user, { width: "65%" }]}>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+            >
               <Text style={styles.texts}>Password</Text>
               <TouchableOpacity
                 onPress={checkFingerprintForSharingPass}
@@ -1123,27 +1153,27 @@ const PasswordDetails = ({ route, navigation }) => {
                     category === "Banking"
                       ? "#643100"
                       : category === "Mail or ID"
-                      ? "#780000"
-                      : category === "Developer"
-                      ? "#62003f"
-                      : category === "Wifi"
-                      ? "#003a80"
-                      : category === "Social"
-                      ? "#005c31"
-                      : "#006d60",
+                        ? "#780000"
+                        : category === "Developer"
+                          ? "#62003f"
+                          : category === "Wifi"
+                            ? "#003a80"
+                            : category === "Social"
+                              ? "#005c31"
+                              : "#006d60",
                   borderWidth: 0.5,
                   backgroundColor:
                     category === "Banking"
                       ? "#1c0e00"
                       : category === "Mail or ID"
-                      ? "#200000"
-                      : category === "Developer"
-                      ? "#1e0013"
-                      : category === "Wifi"
-                      ? "#000e1f"
-                      : category === "Social"
-                      ? "#001e10"
-                      : "#001f1c",
+                        ? "#200000"
+                        : category === "Developer"
+                          ? "#1e0013"
+                          : category === "Wifi"
+                            ? "#000e1f"
+                            : category === "Social"
+                              ? "#001e10"
+                              : "#001f1c",
                 },
               ]}
             >
@@ -1154,14 +1184,14 @@ const PasswordDetails = ({ route, navigation }) => {
                   category === "Banking"
                     ? "orange"
                     : category === "Mail or ID"
-                    ? "red"
-                    : category === "Developer"
-                    ? "#e00092"
-                    : category === "Wifi"
-                    ? "#0098ff"
-                    : category === "Social"
-                    ? "#00c76b"
-                    : "#00cfbb"
+                      ? "red"
+                      : category === "Developer"
+                        ? "#e00092"
+                        : category === "Wifi"
+                          ? "#0098ff"
+                          : category === "Social"
+                            ? "#00c76b"
+                            : "#00cfbb"
                 }
               />
             </View>
@@ -1214,27 +1244,27 @@ const PasswordDetails = ({ route, navigation }) => {
                   category === "Banking"
                     ? "#643100"
                     : category === "Mail or ID"
-                    ? "#780000"
-                    : category === "Developer"
-                    ? "#62003f"
-                    : category === "Wifi"
-                    ? "#003a80"
-                    : category === "Social"
-                    ? "#005c31"
-                    : "#006d60",
+                      ? "#780000"
+                      : category === "Developer"
+                        ? "#62003f"
+                        : category === "Wifi"
+                          ? "#003a80"
+                          : category === "Social"
+                            ? "#005c31"
+                            : "#006d60",
                 borderWidth: 0.5,
                 backgroundColor:
                   category === "Banking"
                     ? "#1c0e00"
                     : category === "Mail or ID"
-                    ? "#200000"
-                    : category === "Developer"
-                    ? "#1e0013"
-                    : category === "Wifi"
-                    ? "#000e1f"
-                    : category === "Social"
-                    ? "#001e10"
-                    : "#001f1c",
+                      ? "#200000"
+                      : category === "Developer"
+                        ? "#1e0013"
+                        : category === "Wifi"
+                          ? "#000e1f"
+                          : category === "Social"
+                            ? "#001e10"
+                            : "#001f1c",
               },
             ]}
           >
@@ -1244,14 +1274,14 @@ const PasswordDetails = ({ route, navigation }) => {
                 category === "Banking"
                   ? "orange"
                   : category === "Mail or ID"
-                  ? "red"
-                  : category === "Developer"
-                  ? "#e00092"
-                  : category === "Wifi"
-                  ? "#0098ff"
-                  : category === "Social"
-                  ? "#00c76b"
-                  : "#00cfbb"
+                    ? "red"
+                    : category === "Developer"
+                      ? "#e00092"
+                      : category === "Wifi"
+                        ? "#0098ff"
+                        : category === "Social"
+                          ? "#00c76b"
+                          : "#00cfbb"
               }
               strokeWidth={2}
             />
@@ -1266,33 +1296,33 @@ const PasswordDetails = ({ route, navigation }) => {
                     category === "Banking"
                       ? "orange"
                       : category === "Mail or ID"
-                      ? "red"
-                      : category === "Developer"
-                      ? "#a8006e"
-                      : category === "Wifi"
-                      ? "#0072ff"
-                      : "#00c76b",
+                        ? "red"
+                        : category === "Developer"
+                          ? "#a8006e"
+                          : category === "Wifi"
+                            ? "#0072ff"
+                            : "#00c76b",
                   borderWidth: 0.5,
                   borderColor:
                     category === "Banking"
                       ? "#ba5a00"
                       : category === "Mail or ID"
-                      ? "#930000"
-                      : category === "Developer"
-                      ? "#7e0052"
-                      : category === "Wifi"
-                      ? "#0051b2"
-                      : "#00713c",
+                        ? "#930000"
+                        : category === "Developer"
+                          ? "#7e0052"
+                          : category === "Wifi"
+                            ? "#0051b2"
+                            : "#00713c",
                   backgroundColor:
                     category === "Banking"
                       ? "#2d1600"
                       : category === "Mail or ID"
-                      ? "#391414"
-                      : category === "Developer"
-                      ? "#29001a"
-                      : category === "Wifi"
-                      ? "#00152e"
-                      : "#002d18",
+                        ? "#391414"
+                        : category === "Developer"
+                          ? "#29001a"
+                          : category === "Wifi"
+                            ? "#00152e"
+                            : "#002d18",
                 },
               ]}
             >
@@ -1351,7 +1381,7 @@ const PasswordDetails = ({ route, navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setModalVisible(true)}
-          style={[styles.button, { backgroundColor: "#ffffffff" }]}
+          style={[styles.button, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
         >
           <Text style={[styles.texts, { color: "black" }]}>Edit</Text>
         </TouchableOpacity>
@@ -1430,14 +1460,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#202020",
     borderWidth: 1,
     borderColor: "#333",
-    borderRadius: 14,
+    borderRadius: 54,
     paddingHorizontal: 14,
     paddingVertical: 10,
     color: "white",
     fontSize: 14,
   },
   linkAddBtn: {
-    backgroundColor: "white",
+    backgroundColor: "#cfcfcf",
+    borderWidth: 1,
+    borderColor: "#fff",
     width: 40,
     height: 40,
     borderRadius: 50,
@@ -1452,7 +1484,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#001e10",
     borderWidth: 1,
     borderColor: "#005c31",
-    borderRadius: 14,
+    borderRadius: 54,
     paddingVertical: 12,
     paddingHorizontal: 14,
   },
@@ -1508,6 +1540,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     elevation: 5,
+    borderWidth: 0.5,
+    borderColor: "#3d3d3d",
   },
   passTextView: {
     backgroundColor: "#391414",
@@ -1525,7 +1559,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
     gap: 10,
-    flex:1
+    flex: 1,
   },
   passviewflex: {
     flexDirection: "row",
@@ -1548,11 +1582,14 @@ const styles = StyleSheet.create({
     fontWeight: 800,
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 0.5,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     fontSize: 16,
-    paddingVertical: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     color: "white",
   },
   modalbtn: {
@@ -1600,6 +1637,8 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     paddingVertical: 18,
     borderRadius: 50,
+    borderWidth: 0.5,
+    borderColor: "#ff9999",
   },
   qrModalContainer: {
     flex: 1,
@@ -1608,8 +1647,8 @@ const styles = StyleSheet.create({
   },
   qrBottomSheet: {
     backgroundColor: "#1a1a1aff",
-    borderTopLeftRadius: 60,
-    borderTopRightRadius: 60,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
     height: "60%",
     position: "relative",
     borderWidth: 1,

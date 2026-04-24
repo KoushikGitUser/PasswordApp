@@ -214,7 +214,7 @@ const CertificatesImages = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "white" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -291,7 +291,7 @@ const CertificatesImages = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#343434ff" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#343434ff", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => setDeleteAllModalVisible(false)}
                 >
                   <Text
@@ -303,7 +303,7 @@ const CertificatesImages = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red" }]}
+                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
                   onPress={checkFingerprintForDeleteAll}
                 >
                   <Text
@@ -361,7 +361,16 @@ const CertificatesImages = ({
           <View style={styles.modalContent}>
             <TouchableOpacity
               onPress={() => setSecureEntry(!secureEntry)}
-              style={{ marginBottom: 20 }}
+                 style={{
+                marginBottom: 20,
+                backgroundColor: "#2a2a2a",
+                borderRadius: 40,
+                width: 90,
+                paddingVertical: 7,
+                margin: "auto",
+                borderWidth: 1,
+                borderColor: "#3a3a3a",
+              }}
             >
               {secureEntry ? (
                 <EyeOff
@@ -381,14 +390,14 @@ const CertificatesImages = ({
             </TouchableOpacity>
 
             <TextInput
-              placeholderTextColor="lightgrey"
+              placeholderTextColor="#5d5d5d"
               placeholder="Name/Label"
               value={passName}
               onChangeText={setPassName}
               style={styles.input}
             />
             <TextInput
-              placeholderTextColor="lightgrey"
+              placeholderTextColor="#5d5d5d"
               placeholder="Number"
               value={number}
               secureTextEntry={secureEntry}
@@ -441,7 +450,7 @@ const CertificatesImages = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#343434ff" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#343434ff", borderWidth: 0.5, borderColor: "#525252" }]}
                   onPress={() => {
                     setModalVisible(false);
                     if (!autoLockDisabled) {
@@ -458,7 +467,7 @@ const CertificatesImages = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#ffffffff" }]}
+                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
                   onPress={handleSave}
                 >
                   <Text
@@ -651,10 +660,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     paddingVertical: 12,
+    paddingHorizontal: 20,
   },
   categoryOption: {
     paddingVertical: 15,
@@ -662,6 +674,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 8,
     backgroundColor: "#2a2a2a",
+    borderWidth:0.5,
+    borderColor:"#434343"
   },
   categoryOptionSelected: {
     backgroundColor: "#353535ff",
@@ -752,13 +766,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     elevation: 5,
+    borderWidth: 0.5,
+    borderColor: "#3d3d3d",
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     fontSize: 16,
-    paddingVertical: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     color: "white",
   },
   modalbtn: {
@@ -768,7 +787,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 15,
     borderRadius: 54,
-    backgroundColor: "white",
+    backgroundColor: "#cfcfcf",
+    borderWidth: 1,
+    borderColor: "#fff",
   },
   buttonRow: {
     flexDirection: "row",
@@ -793,12 +814,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     flexDirection: "row",
     gap: 5,
+    borderWidth: 0.5,
+    borderColor: "#ff9999",
   },
   fab: {
     position: "absolute",
     bottom: 50,
     right: 20,
-    backgroundColor: "#ffffffff",
+    backgroundColor: "#cfcfcf",
+    borderWidth: 1,
+    borderColor: "#fff",
     width: "auto",
     height: "auto",
     paddingHorizontal: 25,
@@ -818,11 +843,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: "#505050",
+    backgroundColor: "#2a2a2a",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
     marginBottom: 15,
     fontSize: 16,
-    paddingVertical: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     color: "white",
   },
   modalbtn: {
@@ -832,7 +860,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 18,
     borderRadius: 54,
-    backgroundColor: "white",
+    backgroundColor: "#383838",
   },
   buttonRow: {
     flexDirection: "row",

@@ -126,7 +126,7 @@ const Toaster = () => {
         <CircleX style={{ marginTop: 5 }} color="#D00B0B" strokeWidth={1.25} />
       )}
 
-      <Animated.View>
+      <Animated.View style={{width:"100%"}}>
         <Text style={[styles.textTitle,{fontFamily:'Mukta-Bold'}]}>{toast.title}</Text>
         {toast.description !== "" && (
           <Text style={[styles.textDesc,{fontFamily:'Mukta-Regular'}]}>{toast.description}</Text>
@@ -164,7 +164,9 @@ const styles = StyleSheet.create({
   textDesc: {
     color: "#a3a3a3ff",
     fontSize: 14,
-    fontWeight:"800"
+    fontWeight:"800",
+    maxWidth:"85%",
+
   },
 });
 

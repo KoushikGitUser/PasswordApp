@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     borderWidth: 1.5,
-    borderColor: "#242424ff",
+    borderColor: "rgb(45, 45, 45)",
   },
   leftSection: {
     flexDirection: "row",
@@ -214,6 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexShrink: 0,
+    elevation:10
   },
   categoryPill: {
     paddingHorizontal: 18,
@@ -223,7 +224,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#2c2c2c",
     borderWidth:1,
-    borderColor:"#363636"
+    borderColor:"#363636",
+    elevation:10,
   },
 });
 

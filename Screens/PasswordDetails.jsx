@@ -45,6 +45,7 @@ import { BlurView } from "@react-native-community/blur";
 import AppPickerSheet from "../Components/AppPickerSheet";
 import { ScrollView } from "react-native-gesture-handler";
 import Toaster from "../Components/UniversalToaster/Toaster";
+import { buttonStyles } from "../styles/buttonStyles";
 
 const PasswordDetails = ({ route, navigation }) => {
   const { index, passCategory } = route.params;
@@ -487,7 +488,7 @@ const PasswordDetails = ({ route, navigation }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -519,7 +520,7 @@ const PasswordDetails = ({ route, navigation }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => {
                     setNotUpdatedModalVisible(false);
                   }}
@@ -553,7 +554,7 @@ const PasswordDetails = ({ route, navigation }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => setDeletePassModalVisible(false)}
                 >
                   <Text
@@ -565,7 +566,7 @@ const PasswordDetails = ({ route, navigation }) => {
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
+                  style={[styles.modalbtn, buttonStyles.redButton]}
                   onPress={checkFingerprintForDeletion}
                 >
                   <Text
@@ -605,6 +606,7 @@ const PasswordDetails = ({ route, navigation }) => {
                 margin: "auto",
                 borderWidth: 1,
                 borderColor: "#3a3a3a",
+                elevation:10
               }}
             >
               {secureEntry ? (
@@ -760,7 +762,7 @@ const PasswordDetails = ({ route, navigation }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn,buttonStyles.cancelButton, {  }]}
                   onPress={() => {
                     setModalVisible(false);
                     setBackToInitial(backToInitial + 1);
@@ -777,7 +779,7 @@ const PasswordDetails = ({ route, navigation }) => {
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
                   onPress={checkFingerprintForUpdation}
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                 >
                   <Text
                     style={{ fontSize: 15, fontWeight: 800, color: "black" }}
@@ -1363,7 +1365,7 @@ const PasswordDetails = ({ route, navigation }) => {
                   frameSize={150}
                   contentCells={5}
                   dotColor="#000000ff"
-                  backgroundColor="#f5f5f5ff"
+                  backgroundColor="#e0e0e0"
                   contentStyle={styles.box}
                 />
               </View>
@@ -1375,13 +1377,13 @@ const PasswordDetails = ({ route, navigation }) => {
       <View style={styles.buttonsmain}>
         <TouchableOpacity
           onPress={() => setDeletePassModalVisible(true)}
-          style={styles.button}
+          style={[styles.button,buttonStyles.redButton]}
         >
           <Text style={styles.texts}>Delete</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setModalVisible(true)}
-          style={[styles.button, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+          style={[styles.button,buttonStyles.whiteButton]}
         >
           <Text style={[styles.texts, { color: "black" }]}>Edit</Text>
         </TouchableOpacity>
@@ -1411,6 +1413,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#2c2c2c",
     borderWidth: 1,
     borderColor: "#363636",
+        elevation:10,
   },
   linkSectionLabel: {
     color: "lightgrey",
@@ -1510,12 +1513,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    elevation:10,
   },
   iconsShareAndCopy: {
     display: "flex",
     flexDirection: "comlumn",
     gap: 15,
     marginLeft: "auto",
+        elevation:10,
   },
   iconsShareAndCopy: {
     display: "flex",
@@ -1553,6 +1558,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+        elevation:10,
   },
   name_and_user: {
     flexDirection: "column",
@@ -1575,6 +1581,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 5,
     borderRadius: 50,
+    elevation:10
   },
   texts: {
     color: "white",
@@ -1584,13 +1591,14 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#2a2a2a",
     borderRadius: 50,
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderColor: "#3d3d3d",
     marginBottom: 15,
     fontSize: 16,
     paddingVertical: 12,
     paddingHorizontal: 20,
     color: "white",
+    elevation:10
   },
   modalbtn: {
     width: "100%",
@@ -1688,13 +1696,16 @@ const styles = StyleSheet.create({
     color: "#dfdfdfff",
   },
   qrCodeContainer: {
-    padding: 18,
-    backgroundColor: "#f5f5f5ff",
-    borderRadius: 35,
+    padding: 18, 
+    backgroundColor: "#e0e0e0",
+    borderRadius: 35, 
     elevation: 10,
     marginTop: 10,
-    borderWidth: 12,
-    borderColor: "#797979ff",
+    borderWidth: 3,
+    outlineWidth:10,
+    outlineColor:"#959595",
+    borderColor: "#ffffff",
+    
   },
   navbar: {
     position: "absolute",

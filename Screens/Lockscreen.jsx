@@ -23,6 +23,7 @@ import {
   MAX_FAILS,
 } from "../Services/pinLockout";
 import Toaster from "../Components/UniversalToaster/Toaster";
+import { buttonStyles } from "../styles/buttonStyles";
 
 const formatCountdown = (ms) => {
   const totalSec = Math.max(0, Math.ceil(ms / 1000));
@@ -214,7 +215,7 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -359,7 +360,7 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={handleVerifyPin}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "black" }}>

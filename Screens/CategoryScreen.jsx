@@ -31,6 +31,7 @@ import { Cog, LockKeyhole, LockKeyholeOpen, RotateCw } from "lucide-react-native
 import Feather from "@expo/vector-icons/Feather";
 import { BlurView } from "@react-native-community/blur";
 import { isAutofillSupported, isAutofillEnabled } from "../Services/autofill";
+import { buttonStyles } from "../styles/buttonStyles";
 
 const CategoryScreen = ({
   navigation,
@@ -266,7 +267,7 @@ const CategoryScreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -299,7 +300,7 @@ const CategoryScreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => setExitAppModalVisible(false)}
                 >
                   <Text
@@ -311,7 +312,7 @@ const CategoryScreen = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
+                  style={[styles.modalbtn, buttonStyles.redButton]}
                   onPress={() => {
                     BackHandler.exitApp();
                     setExitAppModalVisible(false);
@@ -523,7 +524,7 @@ const CategoryScreen = ({
           <CategoryCompo category="Wifi" quantity={categoryCounts["Wifi"] || 0} />
         </View>
 
-        <View style={styles.categoryMain}>
+        {/* <View style={styles.categoryMain}>
           <TouchableOpacity
             onPress={() => navigation.navigate("certificate")}
             style={styles.longCard}
@@ -563,7 +564,7 @@ const CategoryScreen = ({
               </Text>
             </View>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={{height:50}} />
       </ScrollView>
 
@@ -634,8 +635,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
-    borderWidth: 0.5,
-    borderColor: "#383838ff",
+    borderWidth: 1,
+    borderColor: "rgb(63, 63, 63)",
   },
   paragraph: {
     fontSize: 16,
@@ -889,9 +890,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   onboardGoBtn: {
-    backgroundColor: "#cfcfcf",
-    borderWidth: 1,
-    borderColor: "#fff",
+    ...buttonStyles.whiteButton,
   },
   onboardGoText: {
     color: "#007a47",

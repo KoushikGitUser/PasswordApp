@@ -29,6 +29,7 @@ import * as LocalAuthentication from "expo-local-authentication";
 import { saveAutoLockSetting } from "../autolockService";
 import { ChevronDown, Eye, EyeOff } from "lucide-react-native";
 import { BlurView } from "@react-native-community/blur";
+import { buttonStyles } from "../styles/buttonStyles";
 
 const CertificatesImages = ({
   navigation,
@@ -214,7 +215,7 @@ const CertificatesImages = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -291,7 +292,7 @@ const CertificatesImages = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#343434ff", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => setDeleteAllModalVisible(false)}
                 >
                   <Text
@@ -303,7 +304,7 @@ const CertificatesImages = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
+                  style={[styles.modalbtn, buttonStyles.redButton]}
                   onPress={checkFingerprintForDeleteAll}
                 >
                   <Text
@@ -450,7 +451,7 @@ const CertificatesImages = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#343434ff", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => {
                     setModalVisible(false);
                     if (!autoLockDisabled) {
@@ -467,7 +468,7 @@ const CertificatesImages = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={handleSave}
                 >
                   <Text

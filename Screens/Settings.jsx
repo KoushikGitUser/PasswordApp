@@ -38,6 +38,7 @@ import * as Sharing from "expo-sharing";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRoute } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { buttonStyles } from "../styles/buttonStyles";
 import { Info, RefreshCw, ShieldCheck, ShieldX, Trash } from "lucide-react-native";
 import { BlurView } from "@react-native-community/blur";
 import * as SecureStore from "expo-secure-store";
@@ -700,7 +701,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -863,7 +864,7 @@ const Settings = ({
             <View style={[styles.buttonRow, { justifyContent: "center" }]}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => setInfoModalVisible(false)}
                 >
                   <Text
@@ -908,7 +909,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => setImportModalVisible(false)}
                 >
                   <Text
@@ -920,7 +921,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={() => {
                     checkFingerprintForImport();
                     setImportModalVisible(false);
@@ -953,7 +954,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={() => openPinModal("set")}
                 >
                   <Text
@@ -1002,7 +1003,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => {
                     setPinInputModalVisible(false);
                     setPinDigits(["", "", "", "", "", ""]);
@@ -1015,7 +1016,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={handleSetPin}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "black" }}>
@@ -1046,7 +1047,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => setDeletePinModalVisible(false)}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
@@ -1056,7 +1057,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
+                  style={[styles.modalbtn, buttonStyles.redButton]}
                   onPress={handleDeletePin}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
@@ -1090,7 +1091,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => setDeleteAllDataModalVisible(false)}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
@@ -1100,7 +1101,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
+                  style={[styles.modalbtn, buttonStyles.redButton]}
                   onPress={handleDeleteAllDataConfirm}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
@@ -1150,7 +1151,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => {
                     setDeleteAllPinInputModalVisible(false);
                     setDeleteAllPinDigits(["", "", "", "", "", ""]);
@@ -1163,7 +1164,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
+                  style={[styles.modalbtn, buttonStyles.redButton]}
                   onPress={handleVerifyDeleteAllPin}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
@@ -1250,7 +1251,7 @@ const Settings = ({
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.sheetCloseBtn}
+              style={[styles.sheetCloseBtn,buttonStyles.cancelButton,]}
               onPress={dismissExportResult}
             >
               <Text style={styles.sheetCloseText}>Close</Text>
@@ -1363,7 +1364,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => {
                     setExportPassphraseModalVisible(false);
                     setExportPassphrase("");
@@ -1380,11 +1381,12 @@ const Settings = ({
                 <TouchableOpacity
                   style={[
                     styles.modalbtn,
+                    buttonStyles.whiteButton,
                     {
                       backgroundColor:
                         exportPassphrase.length >= 12 &&
                         exportPassphrase === exportPassphraseConfirm
-                          ? "white"
+                          ? "#d3d3d3"
                           : "#5a5a5a",
                     },
                   ]}
@@ -1487,6 +1489,7 @@ const Settings = ({
                 <TouchableOpacity
                   style={[
                     styles.modalbtn,
+                    buttonStyles.cancelButton,
                     { backgroundColor: "#383838", opacity: decrypting ? 0.5 : 1 },
                   ]}
                   onPress={cancelImportFlow}
@@ -1501,8 +1504,9 @@ const Settings = ({
                 <TouchableOpacity
                   style={[
                     styles.modalbtn,
+                    buttonStyles.whiteButton,
                     {
-                      backgroundColor: decrypting ? "#5a5a5a" : "white",
+                      backgroundColor: decrypting ? "#5a5a5a" : "#d1d1d1",
                     },
                   ]}
                   onPress={handleConfirmImport}
@@ -1560,7 +1564,7 @@ const Settings = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => setbackUpModalVisible(false)}
                 >
                   <Text
@@ -1572,7 +1576,7 @@ const Settings = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={() => {
                     checkFingerprintForExport();
                     setbackUpModalVisible(false);
@@ -1976,10 +1980,8 @@ const Settings = ({
             {
               paddingVertical: 18,
               borderRadius: 30,
-              backgroundColor: "red",
-              borderWidth: 0.5,
-              borderColor: "#ff9999",
             },
+            buttonStyles.redButton,
           ]}
         >
           <View
@@ -2151,7 +2153,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 50,
     left: 20,
-    backgroundColor: "red",
+    ...buttonStyles.redButton,
     width: "auto",
     height: "auto",
     paddingHorizontal: 20,
@@ -2165,8 +2167,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     flexDirection: "row",
-    borderWidth: 0.5,
-    borderColor: "#ff9999",
   },
   pickerMain: {},
   fabIcon: {
@@ -2259,12 +2259,14 @@ const styles = StyleSheet.create({
     borderRadius: 54,
     paddingHorizontal: 14,
     marginBottom: 10,
+        elevation:10,
   },
   passInput: {
     flex: 1,
     color: "white",
     fontSize: 15,
     paddingVertical: 14,
+
   },
   eyeBtn: {
     paddingHorizontal: 10,
@@ -2382,9 +2384,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
-    backgroundColor: "#cfcfcf",
-    borderWidth: 1,
-    borderColor: "#fff",
+    ...buttonStyles.whiteButton,
     paddingVertical: 16,
     borderRadius: 50,
   },
@@ -2394,7 +2394,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   sheetCloseBtn: {
-    paddingVertical: 16,
+    paddingVertical: 18,
     alignItems: "center",
     marginTop: 14,
     backgroundColor:"#303030",

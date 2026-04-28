@@ -14,14 +14,14 @@ const CategoryCompo = ({category,quantity}) => {
   return (
     <View style={{width:"47%",}}>
      <TouchableOpacity onPress={() => navigation.navigate("homescreen", { category: category })} style={[styles.categoryCompoMain,{borderColor: category === "Banking"
-                  ? "#643100"
+                  ? "#8a4300"
                   : category === "Mail or ID"
-                  ? "#780000"
+                  ? "#950000"
                   : category === "Developer"
-                  ? "#62003f"
+                  ? "#800053"
                   : category === "Wifi"
-                  ? "#003a80"
-                  : category === "Social"? "#005c31":"#006d60",borderWidth:0.5,backgroundColor:category === "Banking"
+                  ? "#00459a"
+                  : category === "Social"? "#007c42":"#008575",borderWidth:0.5,backgroundColor:category === "Banking"
                   ? "#1f0f00ff"
                   : category === "Mail or ID"
                   ? "#230000ff"
@@ -43,14 +43,14 @@ const CategoryCompo = ({category,quantity}) => {
                   : category === "Social"?"#00351c":"#003d38",
               borderWidth: 0.5,
               borderColor: category === "Banking"
-                  ? "#643100"
+                  ? "#884200"
                   : category === "Mail or ID"
-                  ? "#780000"
+                  ? "#970000"
                   : category === "Developer"
-                  ? "#62003f"
+                  ? "#830055"
                   : category === "Wifi"
-                  ? "#003a80"
-                  : category === "Social"? "#005c31":"#006d60"
+                  ? "#00469b"
+                  : category === "Social"? "#007a41":"#008475"
             }]}>
               {category === "Banking"? <Ionicons name="card-outline" size={28} color="orange" />
                 : category === "Mail or ID"? <UserRound size={27} color="red" strokeWidth={2.1} />
@@ -92,16 +92,16 @@ const CategoryCompo = ({category,quantity}) => {
                   : category === "Wifi"
                   ? "#002248"
                   : category === "Social"?"#00351c":"#003d38",
-          borderWidth: 0.5,
+          borderWidth: 0.6,
           borderColor: category === "Banking"
-                  ? "#643100"
+                  ? "#833f00"
                   : category === "Mail or ID"
-                  ? "#780000"
+                  ? "#8f0000"
                   : category === "Developer"
-                  ? "#62003f"
+                  ? "#78004e"
                   : category === "Wifi"
-                  ? "#003a80"
-                  : category === "Social"? "#005c31":"#006d60"
+                  ? "#004394"
+                  : category === "Social"? "#00733d":"#008071"
         }]}>
             <Text style={{color:  category === "Banking"
                   ? "orange"
@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
     paddingVertical:10,
     paddingHorizontal:18,
     borderRadius:50,
+     elevation:10
   },
   iconPill:{
     paddingHorizontal:22,
@@ -216,6 +217,7 @@ const styles = StyleSheet.create({
     borderRadius:50,
     justifyContent:"center",
     alignItems:"center",
+    elevation:10
   },
   modalContent: {
     backgroundColor: "#202020ff",

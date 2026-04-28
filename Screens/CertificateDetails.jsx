@@ -37,6 +37,7 @@ import { ChevronDown } from "lucide-react-native";
 import Toaster from "../Components/UniversalToaster/Toaster";
 import { BlurView } from "@react-native-community/blur";
 import { ScrollView } from "react-native-gesture-handler";
+import { buttonStyles } from "../styles/buttonStyles";
 
 const CertificateDetails = ({ navigation, route }) => {
   const { index, categories } = route.params;
@@ -294,7 +295,7 @@ const CertificateDetails = ({ navigation, route }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -360,7 +361,7 @@ const CertificateDetails = ({ navigation, route }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#343434ff", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => setDeletePassModalVisible(false)}
                 >
                   <Text
@@ -372,7 +373,7 @@ const CertificateDetails = ({ navigation, route }) => {
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red", borderWidth: 0.5, borderColor: "#ff9999" }]}
+                  style={[styles.modalbtn, buttonStyles.redButton]}
                   onPress={checkFingerprintForDeletion}
                 >
                   <Text
@@ -506,7 +507,7 @@ const CertificateDetails = ({ navigation, route }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#343434ff", borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => {
                     setBackToInitial(backToInitial + 1);
                     setPickedImage(null);
@@ -522,7 +523,7 @@ const CertificateDetails = ({ navigation, route }) => {
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={checkFingerprintForUpdation}
                 >
                   <Text

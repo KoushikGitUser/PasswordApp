@@ -28,6 +28,7 @@ import { fetchCertificates } from "../utilsForCertificate";
 import { saveAutoLockSetting } from "../autolockService";
 import { ChevronDown, Eye, EyeOff, Search } from "lucide-react-native";
 import { BlurView } from "@react-native-community/blur";
+import { buttonStyles } from "../styles/buttonStyles";
 
 const Homescreen = ({
   navigation,
@@ -290,7 +291,7 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -333,7 +334,7 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={() => {
                     setEnableAutoLock(true);
                     saveAutoLockSetting(true);
@@ -367,7 +368,7 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn,buttonStyles.cancelButton, { backgroundColor: "#383838" }]}
                   onPress={() => {
                     setMissingFieldsModalVisible(false);
                   }}
@@ -401,7 +402,7 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => setExitAppModalVisible(false)}
                 >
                   <Text
@@ -413,7 +414,7 @@ const Homescreen = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#ff0000ff", borderWidth: 0.5, borderColor: "#ff9999" }]}
+                  style={[styles.modalbtn, buttonStyles.redButton]}
                   onPress={() => {
                     BackHandler.exitApp();
                     setExitAppModalVisible(false);
@@ -447,7 +448,7 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn,{borderWidth:0.5,borderColor:"#525252"}]}
+                  style={[styles.modalbtn,buttonStyles.cancelButton]}
                   onPress={() => setDeleteAllModalVisible(false)}
                 >
                   <Text
@@ -459,7 +460,7 @@ const Homescreen = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "red",borderWidth:0.5,borderColor:"#ff9999" }]}
+                  style={[styles.modalbtn, buttonStyles.redButton]}
                   onPress={checkFingerprint}
                 >
                   <Text
@@ -490,7 +491,7 @@ const Homescreen = ({
                   setSecureEntry(true);
                 }
               }}
-              style={{ marginBottom: 20,backgroundColor:"#2a2a2a",borderRadius:40,width:90,paddingVertical:7,margin:"auto",borderWidth:1,borderColor:"#3a3a3a" }}
+              style={{ marginBottom: 20,backgroundColor:"#2a2a2a",borderRadius:40,width:90,paddingVertical:7,margin:"auto",borderWidth:1,borderColor:"#3a3a3a",elevation:10 }}
             >
               {secureEntry ? (
                 <EyeOff
@@ -573,7 +574,7 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { borderWidth: 0.5, borderColor: "#525252" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => {
                     setModalVisible(false);
                     setSecureEntry(true);
@@ -591,7 +592,7 @@ const Homescreen = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#cfcfcf", borderWidth: 1, borderColor: "#fff" }]}
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
                   onPress={handleAdd}
                 >
                   <Text style={{ fontSize: 15, fontWeight: 800, color: "black" }}>
@@ -646,7 +647,7 @@ const Homescreen = ({
               </TouchableOpacity>
             ))}
             <TouchableOpacity
-              style={[styles.modalbtn, { marginTop: 20 }]}
+              style={[styles.modalbtn,buttonStyles.cancelButton, { marginTop: 20 }]}
               onPress={() => setCategoryPickerVisible(false)}
             >
               <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
@@ -890,7 +891,7 @@ const Homescreen = ({
       </View>
       {returnSearchBarOrDeleteButton() && (
         <TouchableOpacity
-          style={styles.fabFirst}
+          style={[styles.fabFirst,buttonStyles.redButton]}
           onPress={() => setDeleteAllModalVisible(true)}
           activeOpacity={0.7}
         >
@@ -900,7 +901,7 @@ const Homescreen = ({
       )}
 
       <TouchableOpacity
-        style={styles.fab}
+        style={[styles.fab,buttonStyles.whiteButton]}
         onPress={() => {
           setModalVisible(true);
         }}
@@ -942,6 +943,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingVertical: 12,
     paddingHorizontal: 20,
+    elevation:10
   },
   categoryOption: {
     paddingVertical: 15,
@@ -951,6 +953,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#2a2a2a",
         borderWidth: 1,
     borderColor: "#3d3d3d",
+    elevation:10
   },
   categoryOptionSelected: {
     backgroundColor: "#353535ff",
@@ -1018,6 +1021,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#cfcfcf",
     borderWidth:1,
     borderColor:"#fff",
+    elevation:10,
+    shadowColor:"white",
     width: "auto",
     height: "auto",
     paddingHorizontal: 25,
@@ -1034,7 +1039,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 60,
     left: 20,
-    backgroundColor: "red",
+    ...buttonStyles.redButton,
     width: "auto",
     height: "auto",
     paddingHorizontal: 25,
@@ -1086,6 +1091,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     color: "white",
+    elevation:10
   },
   modalbtn: {
     width: "100%",

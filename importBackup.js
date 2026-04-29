@@ -1,11 +1,10 @@
 import * as DocumentPicker from "expo-document-picker";
-import * as SecureStore from "expo-secure-store";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from "expo-file-system";
 import {
   setSkipLock,
   normalizePasswordRecord,
   replacePasswords,
+  mergePasswords,
 } from "./utils";
 import {
   decryptEnvelope,
@@ -15,8 +14,6 @@ import {
 import { triggerToast } from "./Services/toast";
 
 const STORAGE_KEY = "passwords";
-const CERT_INFO_KEY = "CERTIFICATE_INFO";
-const CERT_IMAGE_KEY = "CERTIFICATE_IMAGE";
 
 export const pickAndReadBackupFile = async () => {
   try {
@@ -67,20 +64,19 @@ export const decryptBackupEnvelope = (envelope, passphrase) => {
   return payload;
 };
 
-export const commitBackupPayload = async (payload) => {
+export const commitBackupPayload = async (payload, mode = "replace") => {
   try {
     const normalizedPasswords = (payload.passwords || []).map((p) =>
       normalizePasswordRecord(p || {})
     );
-    await replacePasswords(normalizedPasswords);
-    await SecureStore.setItemAsync(
-      CERT_INFO_KEY,
-      JSON.stringify(payload.certificateInfos || [])
-    );
-    await AsyncStorage.setItem(
-      CERT_IMAGE_KEY,
-      JSON.stringify(payload.certificateImagePaths || [])
-    );
+
+    if (mode === "merge") {
+      await mergePasswords(normalizedPasswords);
+    } else {
+      await replacePasswords(normalizedPasswords);
+    }
+
+    // Certificate import removed - only passwords are restored
     return true;
   } catch (error) {
     console.error("Error committing backup:", error);

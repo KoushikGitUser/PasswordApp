@@ -30,7 +30,6 @@ import {
   openAutofillPicker,
 } from "../Services/autofill";
 import { setSkipLock, clearPasswords, getPasswords } from "../utils";
-import { deleteAllCertificates, fetchCertificates } from "../utilsForCertificate";
 import { generateBackup } from "../backUpGenerator";
 import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
@@ -72,6 +71,8 @@ const Settings = ({
 
   const [exportPassphraseModalVisible, setExportPassphraseModalVisible] = useState(false);
   const [importPassphraseModalVisible, setImportPassphraseModalVisible] = useState(false);
+  const [importModeModalVisible, setImportModeModalVisible] = useState(false);
+  const [importMode, setImportMode] = useState("replace"); // "replace" or "merge"
   const [exportPassphrase, setExportPassphrase] = useState("");
   const [exportPassphraseConfirm, setExportPassphraseConfirm] = useState("");
   const [exportShowPass, setExportShowPass] = useState(false);
@@ -341,7 +342,6 @@ const Settings = ({
     if (enteredPin === storedPin) {
       // Delete all data
       await clearPasswords();
-      await deleteAllCertificates();
       await SecureStore.deleteItemAsync("userSecurityPIN");
       setIsSecurityPinSet(false);
 
@@ -432,22 +432,43 @@ const Settings = ({
       return;
     }
     if (file.status === "legacy") {
-      const ok = await commitBackupPayload(file.payload);
-      if (ok) {
-        triggerToast(
-          "Imported",
-          "Legacy backup imported. Re-export to encrypt.",
-          "success",
-          3500
-        );
-        onDataAdded && onDataAdded();
-      } else {
-        triggerToast("Import failed", "Could not save imported data.", "error", 3500);
-      }
+      // Show import mode selection modal first
+      setPendingEnvelope({ isLegacy: true, payload: file.payload });
+      setImportModeModalVisible(true);
       return;
     }
     if (file.status === "encrypted") {
-      setPendingEnvelope(file.envelope);
+      // Show import mode selection modal first
+      setPendingEnvelope({ isLegacy: false, envelope: file.envelope });
+      setImportModeModalVisible(true);
+    }
+  };
+
+  const handleImportModeConfirm = () => {
+    setImportModeModalVisible(false);
+
+    if (pendingEnvelope.isLegacy) {
+      // For legacy backup, import directly with selected mode
+      const ok = commitBackupPayload(pendingEnvelope.payload, importMode);
+      ok.then((success) => {
+        if (success) {
+          triggerToast(
+            "Imported",
+            importMode === "merge"
+              ? "Backup merged with existing passwords."
+              : "Backup imported successfully.",
+            "success",
+            3500
+          );
+          onDataAdded && onDataAdded();
+          setPendingEnvelope(null);
+        } else {
+          triggerToast("Import failed", "Could not save imported data.", "error", 3500);
+        }
+      });
+    } else {
+      // For encrypted backup, show passphrase modal
+      setPendingEnvelope(pendingEnvelope.envelope);
       setImportPassphrase("");
       setImportShowPass(false);
       setImportError("");
@@ -614,7 +635,7 @@ const Settings = ({
 
     try {
       const payload = await runDecrypt();
-      const ok = await commitBackupPayload(payload);
+      const ok = await commitBackupPayload(payload, importMode);
       if (ok) {
         setImportPassphraseModalVisible(false);
         setPendingEnvelope(null);
@@ -622,7 +643,9 @@ const Settings = ({
         setImportError("");
         triggerToast(
           "Imported",
-          "Encrypted backup decrypted and restored.",
+          importMode === "merge"
+            ? "Backup merged with existing passwords."
+            : "Encrypted backup decrypted and restored.",
           "success",
           3500
         );
@@ -728,26 +751,25 @@ const Settings = ({
               <Text
                 style={[styles.paragraph, { color: "white", fontWeight: 800 }]}
               >
-                👋 Welcome to your Personal Password and Files Vault!
+                👋 Welcome to your Personal Password Vault!
               </Text>
 
               <Text style={styles.sectionTitle}>🔐 Security First</Text>
               <Text style={styles.paragraph}>
-                Your passwords and files are stored securely using Expo's Secure
-                Store, which uses device-level encryption means your passwords
-                are saved in encrypted form which no one can read. Nothing is
-                stored online or synced — only you can access your saved
-                passwords. If you uninstall this app then you will loose all
-                your saved passwords
+                Your passwords are stored securely using Android's native vault
+                storage system with hardware-backed encryption. This means your passwords
+                are encrypted at the device level and protected by your device's secure
+                enclave. Nothing is stored online or synced — only you can access your
+                saved passwords on this device. If you uninstall this app then you will
+                lose all your saved passwords.
               </Text>
 
               <Text style={styles.sectionTitle}>
-                ➕ How to Add Passwords/Certificates
+                ➕ How to Add Passwords
               </Text>
               <Text style={styles.paragraph}>
-                For Passwords, choose a particular category as per your
-                password. Then add password by clicking the Add new button. For
-                IDs/Certificates do the same thing for passwords.
+                Choose a category that matches your password type, then add your
+                password by clicking the Add new button.
               </Text>
 
               <Text style={styles.sectionTitle}>📂 Categories & Colors</Text>
@@ -769,18 +791,6 @@ const Settings = ({
               </Text>
               <Text style={styles.bullet}>
                 🔵 Wi-Fi – Home or office Wi-Fi credentials
-              </Text>
-
-              <Text style={styles.sectionTitle}>For IDs/Certificates</Text>
-
-              <Text style={styles.bullet}>
-                Portrait – Voter Card,Passport etc.
-              </Text>
-              <Text style={styles.bullet}>
-                Landscape – Pan Card,Adhaar Card etc.
-              </Text>
-              <Text style={styles.bullet}>
-                File – Admit Card, Marksheets etc.
               </Text>
 
               <Text style={styles.tip}>
@@ -845,10 +855,7 @@ const Settings = ({
                 PBKDF2-SHA256 to encrypt the file. Only someone with that
                 exact passphrase can restore it. The passphrase is not
                 stored anywhere — if you forget it, the backup file cannot
-                be decrypted. Images linked to certificates are saved
-                inside the app's storage; if you uninstall, those images
-                are lost, so keep an extra copy in your gallery if they
-                matter. To restore on a new device, import the backup via
+                be decrypted. To restore on a new device, import the backup via
                 Settings → Import Backup and enter the passphrase.
               </Text>
 
@@ -931,6 +938,115 @@ const Settings = ({
                     style={{ fontSize: 15, fontWeight: 800, color: "green" }}
                   >
                     Import
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </BlurView>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent
+        visible={importModeModalVisible}
+        onRequestClose={() => setImportModeModalVisible(false)}
+      >
+        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
+          <View style={styles.modalContent}>
+            <Text
+              style={{
+                color: "orange",
+                fontSize: 18,
+                fontWeight: 800,
+                paddingBottom: 20,
+              }}
+            >
+              Import Mode
+            </Text>
+            <Text style={{ color: "white", fontSize: 16, paddingBottom: 15 }}>
+              Choose how you want to import this backup:
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => setImportMode("replace")}
+              style={[
+                styles.importModeOption,
+                importMode === "replace" && styles.importModeOptionSelected,
+              ]}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                <View
+                  style={[
+                    styles.radioButton,
+                    importMode === "replace" && styles.radioButtonSelected,
+                  ]}
+                >
+                  {importMode === "replace" && (
+                    <View style={styles.radioButtonInner} />
+                  )}
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
+                    Replace All
+                  </Text>
+                  <Text style={{ color: "#aaa", fontSize: 14, marginTop: 4 }}>
+                    Delete current passwords and import backup
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => setImportMode("merge")}
+              style={[
+                styles.importModeOption,
+                importMode === "merge" && styles.importModeOptionSelected,
+              ]}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                <View
+                  style={[
+                    styles.radioButton,
+                    importMode === "merge" && styles.radioButtonSelected,
+                  ]}
+                >
+                  {importMode === "merge" && (
+                    <View style={styles.radioButtonInner} />
+                  )}
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
+                    Merge
+                  </Text>
+                  <Text style={{ color: "#aaa", fontSize: 14, marginTop: 4 }}>
+                    Keep current passwords + add from backup
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            <View style={styles.buttonRow}>
+              <View style={{ width: "45%" }}>
+                <TouchableOpacity
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
+                  onPress={() => {
+                    setImportModeModalVisible(false);
+                    setPendingEnvelope(null);
+                  }}
+                >
+                  <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: "45%" }}>
+                <TouchableOpacity
+                  style={[styles.modalbtn, buttonStyles.whiteButton]}
+                  onPress={handleImportModeConfirm}
+                >
+                  <Text style={{ fontSize: 15, fontWeight: 800, color: "green" }}>
+                    Continue
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1082,7 +1198,7 @@ const Settings = ({
               Delete All Data
             </Text>
             <Text style={{ color: "white", fontSize: 16, marginBottom: 10 }}>
-              This action will permanently delete all your saved passwords, certificates, and security PIN.
+              This action will permanently delete all your saved passwords and security PIN.
             </Text>
             <Text style={{ color: "red", fontSize: 16, fontWeight: 800 }}>
               This action is irreversible and cannot be undone!
@@ -1547,18 +1663,17 @@ const Settings = ({
               Generate Backup
             </Text>
             <Text style={{ color: "white", fontSize: 16, paddingBottom: 20 }}>
-              It’s crucial to back up your passwords and certificates. All your
+              It's crucial to back up your passwords. All your
               data is securely stored locally on this device and is not synced
               to any cloud service for your privacy and security. If you
               uninstall this app, clear its data, or wipe your device, all your
-              saved passwords and certificates will be permanently lost. Please
-              Backup your passwords/datas before you unistall this app or wipe
+              saved passwords will be permanently lost. Please
+              backup your passwords before you uninstall this app or wipe
               your device.
             </Text>
 
             <Text style={{ color: "red", fontSize: 16 }}>
-              Note: A backup.json file will be created, don't share that with
-              anyone as that file contains all your passwords.
+              Note: A .json file will be created which will contain all your passwords with encryption which nobody can see.You have to provide a password to protect that .json file. And while importing that backup file, you have to give the same password you used to protect it.
             </Text>
 
             <View style={styles.buttonRow}>
@@ -1680,9 +1795,8 @@ const Settings = ({
           onPress={async () => {
             // Check if there's any data to backup
             const passwords = await getPasswords();
-            const certificates = await fetchCertificates();
 
-            if (passwords.length === 0 && certificates.length === 0) {
+            if (passwords.length === 0) {
               triggerToast("Nothing exists to backup", "info");
               return;
             }
@@ -2387,6 +2501,38 @@ const styles = StyleSheet.create({
     ...buttonStyles.whiteButton,
     paddingVertical: 16,
     borderRadius: 50,
+  },
+  importModeOption: {
+    backgroundColor: "#2a2a2a",
+    borderRadius: 62,
+    borderWidth: 1,
+    borderColor: "#3d3d3d",
+    padding: 17,
+    paddingVertical:10,
+    marginBottom: 12,
+    elevation:10,
+  },
+  importModeOptionSelected: {
+    borderColor: "#ff8c00",
+    backgroundColor: "#2d2410",
+  },
+  radioButton: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#666",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  radioButtonSelected: {
+    borderColor: "#ff8c00",
+  },
+  radioButtonInner: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: "#ff8c00",
   },
   downloadBtnText: {
     color: "black",

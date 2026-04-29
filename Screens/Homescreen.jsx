@@ -24,7 +24,6 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { triggerToast } from "../Services/toast";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import * as LocalAuthentication from "expo-local-authentication";
-import { fetchCertificates } from "../utilsForCertificate";
 import { saveAutoLockSetting } from "../autolockService";
 import { ChevronDown, Eye, EyeOff, Search } from "lucide-react-native";
 import { BlurView } from "@react-native-community/blur";
@@ -52,7 +51,6 @@ const Homescreen = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredPasswords, setFilteredPasswords] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [certificates, setCertificates] = useState([]);
   const [deleteAllModalVisible, setDeleteAllModalVisible] = useState(false);
   const [exitAppModalVisible, setExitAppModalVisible] = useState(false);
   const [missingFieldsModalVisible, setMissingFieldsModalVisible] =
@@ -128,15 +126,6 @@ const Homescreen = ({
     }
   };
 
-  const handleFetchCertificates = async () => {
-    const certs = await fetchCertificates();
-    setCertificates(certs);
-  };
-
-  useEffect(() => {
-    handleFetchCertificates();
-  }, []);
-
   const categoryCounts = passwords.reduce((acc, item) => {
     acc[item.category] = (acc[item.category] || 0) + 1;
     return acc;
@@ -148,8 +137,7 @@ const Homescreen = ({
       await fetchPasswords(); // Reflect changes immediately
       setDeleteAllModalVisible(false);
       const stored = await getPasswords();
-      const certs = await fetchCertificates();
-      if (certs?.length + stored?.length == 0) {
+      if (stored?.length == 0) {
         setEnableAutoLock(false);
         saveAutoLockSetting(false);
       }
@@ -158,8 +146,7 @@ const Homescreen = ({
       await fetchPasswords(); // Reflect changes immediately
       setDeleteAllModalVisible(false);
       const stored = await getPasswords();
-      const certs = await fetchCertificates();
-      if (certs?.length + stored?.length == 0) {
+      if (stored?.length == 0) {
         setEnableAutoLock(false);
         saveAutoLockSetting(false);
       }
@@ -177,14 +164,13 @@ const Homescreen = ({
 
   useEffect(() => {
     const handleDataFetch = async () => {
-      const certs = await fetchCertificates();
       const stored = await getPasswords();
-      if (certs?.length + stored?.length == 0) {
+      if (stored?.length == 0) {
         setEnableAutoLock(false);
       }
     };
     handleDataFetch();
-  }, [certificates, passwords]);
+  }, [passwords]);
 
   const returnSearchBarOrDeleteButton = () => {
     if (categories == "All") {
@@ -241,11 +227,10 @@ const Homescreen = ({
     setCategory("");
     setPin("");
     setModalVisible(false);
-    if (certificates?.length + passwords?.length == 0 && !enableAutoLock) {
+    if (passwords?.length == 0 && !enableAutoLock) {
       setFirstPassAddAutoLockInfoModal(true);
     }
     fetchPasswords();
-    handleFetchCertificates();
   };
 
   const handleToggleEye = () => {
@@ -674,12 +659,12 @@ const Homescreen = ({
 
               <Text style={styles.sectionTitle}>🔐 Security First</Text>
               <Text style={styles.paragraph}>
-                Your passwords are stored securely using Expo's Secure Store,
-                which uses device-level encryption means your passwords are
-                saved in encrypted form which no one can read. Nothing is stored
-                online or synced — only you can access your saved passwords. If
-                you uninstall this app then you will loose all your saved
-                passwords
+                Your passwords are stored securely using Android's native vault
+                storage system with hardware-backed encryption. This means your passwords
+                are encrypted at the device level and protected by your device's secure
+                enclave. Nothing is stored online or synced — only you can access your
+                saved passwords on this device. If you uninstall this app then you will
+                lose all your saved passwords.
               </Text>
 
               <Text style={styles.sectionTitle}>➕ How to Add Passwords</Text>
@@ -722,7 +707,7 @@ const Homescreen = ({
             <View style={[styles.buttonRow, { justifyContent: "center" }]}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn, buttonStyles.cancelButton]}
                   onPress={() => setInfoModalVisible(false)}
                 >
                   <Text

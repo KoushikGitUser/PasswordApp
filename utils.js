@@ -40,6 +40,20 @@ export const replacePasswords = async (arr) => {
   await writePasswordsJson(JSON.stringify(arr));
 };
 
+export const mergePasswords = async (backupPasswords) => {
+  try {
+    const existing = await readPasswordsJson();
+    const currentPasswords = existing ? JSON.parse(existing) : [];
+
+    // Simple blind merge - combine all passwords
+    const merged = [...currentPasswords, ...backupPasswords];
+
+    await writePasswordsJson(JSON.stringify(merged));
+  } catch (e) {
+    console.error('mergePasswords error:', e);
+  }
+};
+
 export const normalizePasswordRecord = (entry) => ({
   ...entry,
   id: entry.id || Crypto.randomUUID(),

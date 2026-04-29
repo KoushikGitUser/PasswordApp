@@ -18,7 +18,6 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { fetchCertificates } from "../utilsForCertificate";
 import { generateBackup } from "../backUpGenerator";
 import * as DocumentPicker from "expo-document-picker";
 import * as Sharing from "expo-sharing";
@@ -45,7 +44,6 @@ const CategoryScreen = ({
   const [exitAppModalVisible, setExitAppModalVisible] = useState(false);
   const [backUpModalVisible, setbackUpModalVisible] = useState(false);
   const [importModalVisible, setImportModalVisible] = useState(false);
-  const [certificatesQuantity, setCertificatesQuantity] = useState(0);
   const [backupLoader, setBackupLoader] = useState(false);
   const [disableAutoLockModalVisible, setDisableAutoLockModalVisible] =
     useState(false);
@@ -112,15 +110,6 @@ const CategoryScreen = ({
       setBackupLoader(false);
       setSkipLock(false);
     }
-  };
-
-  useEffect(() => {
-    handleFetchCertificates();
-  }, []);
-
-  const handleFetchCertificates = async () => {
-    const certs = await fetchCertificates();
-    setCertificatesQuantity(certs?.length);
   };
 
   const fetchPasswords = async () => {
@@ -339,26 +328,25 @@ const CategoryScreen = ({
               <Text
                 style={[styles.paragraph, { color: "white", fontWeight: 800 }]}
               >
-                👋 Welcome to your Personal Password and Files Vault!
+                👋 Welcome to your Personal Password Vault!
               </Text>
 
               <Text style={styles.sectionTitle}>🔐 Security First</Text>
               <Text style={styles.paragraph}>
-                Your passwords and files are stored securely using Expo's Secure
-                Store, which uses device-level encryption means your passwords
-                are saved in encrypted form which no one can read. Nothing is
-                stored online or synced — only you can access your saved
-                passwords. If you uninstall this app then you will loose all
-                your saved passwords
+                Your passwords are stored securely using Android's native vault
+                storage system with hardware-backed encryption. This means your passwords
+                are encrypted at the device level and protected by your device's secure
+                enclave. Nothing is stored online or synced — only you can access your
+                saved passwords on this device. If you uninstall this app then you will
+                lose all your saved passwords.
               </Text>
 
               <Text style={styles.sectionTitle}>
-                ➕ How to Add Passwords/Certificates
+                ➕ How to Add Passwords
               </Text>
               <Text style={styles.paragraph}>
-                For Passwords, choose a particular category as per your
-                password. Then add password by clicking the Add new button. For
-                IDs/Certificates do the same thing for passwords.
+                Choose a category that matches your password type, then add your
+                password by clicking the Add new button.
               </Text>
 
               <Text style={styles.sectionTitle}>📂 Categories & Colors</Text>
@@ -382,18 +370,6 @@ const CategoryScreen = ({
                 🔵 Wi-Fi – Home or office Wi-Fi credentials
               </Text>
 
-              <Text style={styles.sectionTitle}>For IDs/Certificates</Text>
-
-              <Text style={styles.bullet}>
-                Portrait – Voter Card,Passport etc.
-              </Text>
-              <Text style={styles.bullet}>
-                Landscape – Pan Card,Adhaar Card etc.
-              </Text>
-              <Text style={styles.bullet}>
-                File – Admit Card, Marksheets etc.
-              </Text>
-
               <Text style={styles.tip}>
                 💡 Tip: Tap any password card to view, edit, or delete it.
               </Text>
@@ -402,20 +378,13 @@ const CategoryScreen = ({
                 💾 Backup and Import Your Data
               </Text>
               <Text style={styles.paragraph}>
-                To protect your important passwords and certificates, this app
+                To protect your important passwords, this app
                 provides a simple backup system. You can generate a backup file
                 that safely stores all your saved passwords by clicking the
-                cloud export icon at the top, certificates, and associated data.
-                This backup file can be shared securely. Please note: Images
-                linked to certificates are saved inside the app’s storage. If
-                you uninstall the app, these images will be deleted from your
-                device. To fully protect your data, make sure to keep a backup
-                file and save important certificate images separately to your
-                gallery if needed. When you reinstall the app or set it up on a
+                cloud export icon at the top. This backup file can be shared securely.
+                When you reinstall the app or set it up on a
                 new device, you can easily import your backup file by clicking
                 the cloud import icon at the top to restore all your saved data.
-                Now after restoring edit the certificates and change or update
-                the images by the images that you kept as backup on your device.
               </Text>
 
               <Text style={styles.footer}>

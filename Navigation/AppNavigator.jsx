@@ -12,7 +12,6 @@ import CertificatesImages from "../Screens/CertificatesImages";
 import CertificateDetails from "../Screens/CertificateDetails";
 import * as SecureStore from 'expo-secure-store';
 import { skipLock, STORAGE_KEY } from "../utils";
-import { CERT_INFO_KEY } from "../utilsForCertificate";
 import Settings from "../Screens/Settings";
 import { loadAutoLockSetting } from "../autolockService";
 
@@ -33,11 +32,9 @@ const AppNavigator = () => {
   const checkUserData = async () => {
     try {
       const passwords = await SecureStore.getItemAsync(STORAGE_KEY);
-      const certificates = await SecureStore.getItemAsync(CERT_INFO_KEY);
       const passwordArray = passwords ? JSON.parse(passwords) : [];
-      const certificateArray = certificates ? JSON.parse(certificates) : [];
 
-      if (passwordArray.length === 0 && certificateArray.length === 0) {
+      if (passwordArray.length === 0) {
         setEnableAutoLock(false);
       } else {
         setEnableAutoLock(true);

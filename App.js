@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "./Navigation/AppNavigator";
 import Toaster from "./Components/UniversalToaster/Toaster";
 import { runBootMigration } from "./Services/migration";
+import { AppThemeProvider } from "./theme/ThemeContext";
 
 export default function App() {
   const [ready, setReady] = useState(false);
@@ -31,9 +32,11 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Toaster />
-      <AppNavigator />
-    </NavigationContainer>
+    <AppThemeProvider>
+      <NavigationContainer>
+        <Toaster />
+        <AppNavigator />
+      </NavigationContainer>
+    </AppThemeProvider>
   );
 }

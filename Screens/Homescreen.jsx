@@ -27,7 +27,8 @@ import * as LocalAuthentication from "expo-local-authentication";
 import { saveAutoLockSetting } from "../autolockService";
 import { ChevronDown, Eye, EyeOff, Search } from "lucide-react-native";
 import { BlurView } from "@react-native-community/blur";
-import { buttonStyles } from "../styles/buttonStyles";
+import { useTheme } from "../theme/ThemeContext";
+import { getButtonStyles } from "../styles/buttonStyles";
 
 const Homescreen = ({
   navigation,
@@ -37,6 +38,9 @@ const Homescreen = ({
   autoLockDisabled,
   enableAutoLock,
 }) => {
+  const { colors, isDark } = useTheme();
+  const dynamicButtons = getButtonStyles(colors);
+
   const categories = route?.params?.category;
 
   const [passwords, setPasswords] = useState([]);
@@ -257,30 +261,30 @@ const Homescreen = ({
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "black" }}>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={authNotAvailableModal}
         onRequestClose={() => setAuthNotAvailableModal(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ color: "white", fontSize: 18, fontWeight: 800 }}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
+            <Text style={{ color: colors.text, fontSize: 18, fontWeight: 800 }}>
               Authentication Not Available
             </Text>
-            <Text style={{ color: "white", fontSize: 16, marginTop: 10 }}>
+            <Text style={{ color: colors.text, fontSize: 16, marginTop: 10 }}>
               Your device does not have any authentication method set up. Please set up a PIN, password, or biometric authentication in your device settings.
             </Text>
 
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.whiteButton]}
+                  style={[styles.modalbtn, dynamicButtons.whiteButton]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "black" }}
+                    style={{ fontSize: 15, fontWeight: 800, color: colors.whiteButtonText }}
                   >
                     Got it
                   </Text>
@@ -291,16 +295,16 @@ const Homescreen = ({
         </BlurView>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={firstPassAddAutoLockInfoModal}
         onRequestClose={() => setFirstPassAddAutoLockInfoModal(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text
               style={{
-                color: "white",
+                color: colors.text,
                 fontSize: 18,
                 fontWeight: 800,
                 paddingBottom: 20,
@@ -308,7 +312,7 @@ const Homescreen = ({
             >
               Auto Lock!
             </Text>
-            <Text style={{ color: "white", fontSize: 16 }}>
+            <Text style={{ color: colors.text, fontSize: 16 }}>
               As you've added your first password in this app, now Autolock will
               be enabled immediately after closing this Popup which will
               automatically lock this app after 25 seconds (After every
@@ -319,14 +323,14 @@ const Homescreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.whiteButton]}
+                  style={[styles.modalbtn, dynamicButtons.whiteButton]}
                   onPress={() => {
                     setEnableAutoLock(true);
                     saveAutoLockSetting(true);
                     setFirstPassAddAutoLockInfoModal(false);
                   }}
                 >
-                  <Text style={{ fontSize: 15, fontWeight: 800, color: "black" }}>
+                  <Text style={{ fontSize: 15, fontWeight: 800, color: colors.whiteButtonText }}>
                     Okay
                   </Text>
                 </TouchableOpacity>
@@ -336,30 +340,30 @@ const Homescreen = ({
         </BlurView>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={missingFieldsModalVisible}
         onRequestClose={() => setMissingFieldsModalVisible(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ color: "red", fontSize: 18, fontWeight: 800 }}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
+            <Text style={{ color: colors.error, fontSize: 18, fontWeight: 800 }}>
               Missing fields
             </Text>
-            <Text style={{ color: "white", fontSize: 16 }}>
+            <Text style={{ color: colors.text, fontSize: 16 }}>
               All fields are required!
             </Text>
 
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn,buttonStyles.cancelButton, { backgroundColor: "#383838" }]}
+                  style={[styles.modalbtn,dynamicButtons.cancelButton]}
                   onPress={() => {
                     setMissingFieldsModalVisible(false);
                   }}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "white" }}
+                    style={{ fontSize: 15, fontWeight: 800, color: colors.cancelButtonText }}
                   >
                     Close
                   </Text>
@@ -370,42 +374,42 @@ const Homescreen = ({
         </BlurView>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={exitAppModalVisible}
         onRequestClose={() => setExitAppModalVisible(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ color: "white", fontSize: 18, fontWeight: 800,marginLeft:8 }}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
+            <Text style={{ color:isDark? "white":"black", fontSize: 18, fontWeight: 800,marginLeft:8 }}>
               Exit App
             </Text>
-            <Text style={{ color: "white", fontSize: 16,marginLeft:8 }}>
+            <Text style={{ color:isDark? "white":"black", fontSize: 16,marginLeft:8 }}>
               Are you sure you want to exit?
             </Text>
 
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.cancelButton]}
+                  style={[styles.modalbtn, dynamicButtons.cancelButton]}
                   onPress={() => setExitAppModalVisible(false)}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "white" }}
+                    style={{ fontSize: 15, fontWeight: 800, color:isDark? "white":"black"}}
                   >
                     Cancel
                   </Text>
                 </TouchableOpacity>
               </View>
               <View style={{ width: "45%" }}>
-                <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.redButton]}
+                <TouchableOpacity   
+                  style={[styles.modalbtn, dynamicButtons.redButton]}
                   onPress={() => {
                     BackHandler.exitApp();
                     setExitAppModalVisible(false);
                   }}
                 >
-                  <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
+                  <Text style={{ fontSize: 15, fontWeight: 800, color: colors.redButtonText }}>
                     Exit
                   </Text>
                 </TouchableOpacity>
@@ -415,29 +419,29 @@ const Homescreen = ({
         </BlurView>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={deleteAllModalVisible}
         onRequestClose={() => setDeleteAllModalVisible(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ color: "white", fontSize: 16,marginLeft:2 }}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
+            <Text style={{ color: colors.text, fontSize: 16, marginLeft: 2 }}>
               Are you sure you want to delete all{" "}
               {categories == "All" ? "your" : categories} passwords?
             </Text>
-            <Text style={{ color: "red", fontSize: 16, fontWeight: 800,marginLeft:2}}>
+            <Text style={{ color: colors.error, fontSize: 16, fontWeight: 800, marginLeft: 2 }}>
               This action is irreversible!
             </Text>
 
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn,buttonStyles.cancelButton]}
+                  style={[styles.modalbtn,dynamicButtons.cancelButton]}
                   onPress={() => setDeleteAllModalVisible(false)}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "white" }}
+                    style={{ fontSize: 15, fontWeight: 800, color: colors.cancelButtonText }}
                   >
                     Cancel
                   </Text>
@@ -445,11 +449,11 @@ const Homescreen = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.redButton]}
+                  style={[styles.modalbtn, dynamicButtons.redButton]}
                   onPress={checkFingerprint}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "white" }}
+                    style={{ fontSize: 15, fontWeight: 800, color: colors.redButtonText }}
                   >
                     Delete
                   </Text>
@@ -461,13 +465,13 @@ const Homescreen = ({
       </Modal>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <TouchableOpacity
               onPress={() => {
                 if (secureEntry) {
@@ -476,7 +480,17 @@ const Homescreen = ({
                   setSecureEntry(true);
                 }
               }}
-              style={{ marginBottom: 20,backgroundColor:"#2a2a2a",borderRadius:40,width:90,paddingVertical:7,margin:"auto",borderWidth:1,borderColor:"#3a3a3a",elevation:10 }}
+              style={{
+                marginBottom: 20,
+                backgroundColor: colors.inputBackground,
+                borderRadius: 40,
+                width: 90,
+                paddingVertical: 7,
+                margin: "auto",
+                borderWidth: 1,
+                borderColor: colors.inputBorder,
+                elevation: 10
+              }}
             >
               {secureEntry ? (
                 <EyeOff
@@ -496,14 +510,18 @@ const Homescreen = ({
             </TouchableOpacity>
 
             <TextInput
-              placeholderTextColor="#636363"
+              placeholderTextColor={colors.inputPlaceholder}
               placeholder="Name/Label"
               value={passName}
               onChangeText={setPassName}
-              style={styles.input}
+              style={[styles.input, {
+                backgroundColor: colors.inputBackground,
+                borderColor: colors.inputBorder,
+                color: colors.inputText,
+              }]}
             />
             <TextInput
-              placeholderTextColor="#636363"
+              placeholderTextColor={colors.inputPlaceholder}
               placeholder={
                 categories == "Banking"
                   ? "Username/Card No."
@@ -519,47 +537,63 @@ const Homescreen = ({
               }
               value={username}
               onChangeText={setUsername}
-              style={styles.input}
+              style={[styles.input, {
+                backgroundColor: colors.inputBackground,
+                borderColor: colors.inputBorder,
+                color: colors.inputText,
+              }]}
             />
             <TextInput
-              placeholderTextColor="#636363"
+              placeholderTextColor={colors.inputPlaceholder}
               placeholder="Password"
               value={password}
               onChangeText={setPassword}
               secureTextEntry={secureEntry}
-              style={styles.input}
+              style={[styles.input, {
+                backgroundColor: colors.inputBackground,
+                borderColor: colors.inputBorder,
+                color: colors.inputText,
+              }]}
             />
             {category == "Banking" ? (
               <TextInput
-                placeholderTextColor="#636363"
+                placeholderTextColor={colors.inputPlaceholder}
                 placeholder="PIN"
                 value={pin}
                 onChangeText={setPin}
                 secureTextEntry={secureEntry}
-                style={styles.input}
+                style={[styles.input, {
+                backgroundColor: colors.inputBackground,
+                borderColor: colors.inputBorder,
+                color: colors.inputText,
+              }]}
               />
             ) : null}
             {categories == "All" && (
               <TouchableOpacity
-                style={styles.categorySelector}
+                style={[styles.categorySelector, {
+                  backgroundColor: colors.inputBackground,
+                  borderWidth: 1,
+                  borderColor: colors.inputBorder
+                }]}
                 onPress={() => setCategoryPickerVisible(true)}
               >
                 <Text
                   style={{
-                    color: category ? "white" : "lightgrey",
+                    color: category ? colors.text : colors.textSecondary,
                     fontSize: 16,
                   }}
                 >
                   {category || "Select Category"}
                 </Text>
-                <ChevronDown size={30} color="lightgrey" strokeWidth={1.75} />
+                <ChevronDown size={30} color={colors.textSecondary} strokeWidth={1.75} />
               </TouchableOpacity>
             )}
 
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.cancelButton]}
+                  style={[styles.modalbtn, dynamicButtons.cancelButton]}
                   onPress={() => {
                     setModalVisible(false);
                     setSecureEntry(true);
@@ -569,7 +603,7 @@ const Homescreen = ({
                   }}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "white" }}
+                    style={{ fontSize: 15, fontWeight: 800, color: colors.cancelButtonText }}
                   >
                     Cancel
                   </Text>
@@ -577,10 +611,10 @@ const Homescreen = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.whiteButton]}
+                  style={[styles.modalbtn, dynamicButtons.whiteButton]}
                   onPress={handleAdd}
                 >
-                  <Text style={{ fontSize: 15, fontWeight: 800, color: "black" }}>
+                  <Text style={{ fontSize: 15, fontWeight: 800, color: colors.whiteButtonText }}>
                     Save
                   </Text>
                 </TouchableOpacity>
@@ -590,16 +624,16 @@ const Homescreen = ({
         </BlurView>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={categoryPickerVisible}
         onRequestClose={() => setCategoryPickerVisible(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text
               style={{
-                color: "white",
+                color: colors.text,
                 fontSize: 18,
                 fontWeight: 800,
                 marginBottom: 20,
@@ -613,7 +647,14 @@ const Homescreen = ({
                 key={option.value}
                 style={[
                   styles.categoryOption,
-                  category === option.value && styles.categoryOptionSelected,
+                  { backgroundColor: colors.surface, borderColor: colors.border },
+                  category === option.value && [
+                    styles.categoryOptionSelected,
+                    {
+                      backgroundColor: isDark ? "#353535" : "#e0e0e0",
+                      borderColor: isDark ? "#505050" : "#b0b0b0"
+                    }
+                  ],
                 ]}
                 onPress={() => {
                   setCategory(option.value);
@@ -622,7 +663,7 @@ const Homescreen = ({
               >
                 <Text
                   style={{
-                    color: category === option.value ? "white" : "lightgrey",
+                    color: category === option.value ? colors.text : colors.textSecondary,
                     fontSize: 16,
                     fontWeight: category === option.value ? 700 : 400,
                   }}
@@ -632,10 +673,10 @@ const Homescreen = ({
               </TouchableOpacity>
             ))}
             <TouchableOpacity
-              style={[styles.modalbtn,buttonStyles.cancelButton, { marginTop: 20 }]}
+              style={[styles.modalbtn,dynamicButtons.cancelButton, { marginTop: 20 }]}
               onPress={() => setCategoryPickerVisible(false)}
             >
-              <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
+              <Text style={{ fontSize: 15, fontWeight: 800, color: colors.cancelButtonText }}>
                 Cancel
               </Text>
             </TouchableOpacity>
@@ -643,12 +684,12 @@ const Homescreen = ({
         </BlurView>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={infoModalVisible}
         onRequestClose={() => setInfoModalVisible(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent]}>
             <ScrollView style={{ maxHeight: 400 }}>
               <Text
@@ -657,8 +698,8 @@ const Homescreen = ({
                 👋 Welcome to your Personal Password Vault!
               </Text>
 
-              <Text style={styles.sectionTitle}>🔐 Security First</Text>
-              <Text style={styles.paragraph}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>🔐 Security First</Text>
+              <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
                 Your passwords are stored securely using Android's native vault
                 storage system with hardware-backed encryption. This means your passwords
                 are encrypted at the device level and protected by your device's secure
@@ -667,39 +708,39 @@ const Homescreen = ({
                 lose all your saved passwords.
               </Text>
 
-              <Text style={styles.sectionTitle}>➕ How to Add Passwords</Text>
-              <Text style={styles.paragraph}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>➕ How to Add Passwords</Text>
+              <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
                 On the Home screen, tap the white floating Add Pass button. A
                 modal will appear where you can enter Passname, Username,
                 Password, and Category. Tap Save to store it securely.
               </Text>
 
-              <Text style={styles.sectionTitle}>📂 Categories & Colors</Text>
-              <Text style={styles.paragraph}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>📂 Categories & Colors</Text>
+              <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
                 Use categories to organize your saved passwords. Each has a
                 color and a dedicated icon for the same to recognise:
               </Text>
-              <Text style={styles.bullet}>
+              <Text style={[styles.bullet, { color: colors.textSecondary }]}>
                 🟠 Banking – Credit cards, banking logins
               </Text>
-              <Text style={styles.bullet}>
+              <Text style={[styles.bullet, { color: colors.textSecondary }]}>
                 🔴 Mail or ID – Gmail, Aadhaar, personal accounts
               </Text>
-              <Text style={styles.bullet}>
+              <Text style={[styles.bullet, { color: colors.textSecondary }]}>
                 🟢 Social – Facebook, Instagram, Snapchat
               </Text>
-              <Text style={styles.bullet}>
+              <Text style={[styles.bullet, { color: colors.textSecondary }]}>
                 🟣 Developer – GitHub, Firebase, etc.
               </Text>
-              <Text style={styles.bullet}>
+              <Text style={[styles.bullet, { color: colors.textSecondary }]}>
                 🔵 Wi-Fi – Home or office Wi-Fi credentials
               </Text>
 
-              <Text style={styles.tip}>
+              <Text style={[styles.tip, { color: colors.textSecondary }]}>
                 💡 Tip: Tap any password card to view, edit, or delete it.
               </Text>
 
-              <Text style={styles.footer}>
+              <Text style={[styles.footer, { color: colors.text }]}>
                 We hope this app makes your digital life safer and easier!
               </Text>
             </ScrollView>
@@ -707,7 +748,7 @@ const Homescreen = ({
             <View style={[styles.buttonRow, { justifyContent: "center" }]}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.cancelButton]}
+                  style={[styles.modalbtn, dynamicButtons.cancelButton]}
                   onPress={() => setInfoModalVisible(false)}
                 >
                   <Text
@@ -721,15 +762,15 @@ const Homescreen = ({
           </View>
         </BlurView>
       </Modal>
-      <StatusBar  />
-      <View style={[styles.statusbar,{height:StatusBar.currentHeight}]}>
+      <StatusBar backgroundColor={colors.background} barStyle={isDark?"light-content":"dark-content"} />
+      <View style={[styles.statusbar,{height:StatusBar.currentHeight,backgroundColor:colors.background}]}>
       </View>
       <View
         style={{
           width: "100%",
           height: "auto",
           paddingHorizontal: 20,
-          backgroundColor: "black",
+          backgroundColor: colors.background,
           flexDirection: "row",
           justifyContent: "flex-start",
           alignItems: "center",
@@ -739,11 +780,12 @@ const Homescreen = ({
           <AntDesign
             name="arrowleft"
             size={24}
-            color="white"
+            color={colors.text}
             style={{
-              backgroundColor: "#2a2a2a",
+              backgroundColor: colors.surface,
               padding: 8,
               borderRadius: 50,
+              elevation:10
             }}
           />
         </TouchableOpacity>
@@ -753,7 +795,7 @@ const Homescreen = ({
             paddingTop: 25,
             paddingBottom: 30,
             fontSize: 30,
-            color: "white",
+            color: colors.text,
             fontWeight: 800,
           }}
         >
@@ -767,7 +809,7 @@ const Homescreen = ({
           justifyContent: "center",
           alignItems: "flex-start",
           flex:1,
-          backgroundColor: "black",
+          backgroundColor: colors.background,
         }}
       >
         {!returnSearchBarOrDeleteButton() ? (
@@ -779,44 +821,47 @@ const Homescreen = ({
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "flex-start",
-              backgroundColor: "black",
+              backgroundColor: colors.background,
             }}
           >
-            <Text style={{ fontSize: 20, fontWeight: 400, color: "lightgrey" }}>
+            <Text style={{ fontSize: 20, fontWeight: 400, color: colors.textSecondary }}>
               No passwords added
             </Text>
           </View>
         ) : (
           <View
             style={{
-              height: windowHeight * 0.85,
+              flex: 1,
               width: "100%",
-              backgroundColor: "black",
-              paddingHorizontal:20
+              backgroundColor: colors.background,
+              paddingHorizontal: 0
             }}
           >
             {returnSearchBarOrDeleteButton() && (
-              <View style={styles.searchmain}>
-                <Search color="grey" style={{marginRight:10}} />
+              <View style={[styles.searchmain, {
+                backgroundColor: colors.inputBackground,
+                borderColor: colors.inputBorder,
+              }]}>
+                <Search color={colors.textTertiary} style={{marginRight:10}} />
                 <TextInput
-                  placeholderTextColor="grey"
+                  placeholderTextColor={colors.inputPlaceholder}
                   placeholder="Search your password"
                   value={searchQuery}
                   onChangeText={setSearchQuery}
-                  style={styles.searchpass}
+                  style={[styles.searchpass, { color: colors.inputText }]}
                 />
                 {searchQuery !== "" && (
                   <AntDesign
                     name="closecircle"
                     onPress={() => setSearchQuery("")}
                     size={24}
-                    color="lightgrey"
+                    color={colors.textSecondary}
                   />
                 )}
               </View>
             )} 
 
-            <ScrollView showsVerticalScrollIndicator={false} style={{ flex:1, width: "100%",paddingTop:10,borderTopRightRadius:35,borderTopLeftRadius:35}}>
+            <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1, width: "100%", paddingTop: 10, borderTopRightRadius: 35, borderTopLeftRadius: 35, backgroundColor: colors.background }}>
               {filteredPasswords?.map((item, index) => {
                 return categories !== "All" ? (
                   item?.category == categories ? (
@@ -876,7 +921,7 @@ const Homescreen = ({
       </View>
       {returnSearchBarOrDeleteButton() && (
         <TouchableOpacity
-          style={[styles.fabFirst,buttonStyles.redButton]}
+          style={[styles.fabFirst,dynamicButtons.redButton]}
           onPress={() => setDeleteAllModalVisible(true)}
           activeOpacity={0.7}
         >
@@ -886,25 +931,21 @@ const Homescreen = ({
       )}
 
       <TouchableOpacity
-        style={[styles.fab,buttonStyles.whiteButton]}
+        style={[styles.fab,dynamicButtons.whiteButton,{}]}
         onPress={() => {
           setModalVisible(true);
         }}
         activeOpacity={0.7}
       >
-        <Text style={styles.fabIcon}>Add New </Text>
+        <Text style={[styles.fabIcon,{color:isDark?"black":"white"}]}>Add New </Text>
         <Entypo name="plus" size={24} color="orange" />
         {/* OR using Ionicons: */}
         {/* <Ionicons name="add" size={28} color="white" /> */}
       </TouchableOpacity>
-
-      <View style={styles.navbar}>
-
-      </View>
     </View>
   );
 };
-
+const screenwidth = Dimensions.get("window").width
 const styles = StyleSheet.create({
   main: {
     width: "95%",
@@ -921,14 +962,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#2a2a2a",
     borderRadius: 50,
-    borderWidth: 1,
-    borderColor: "#3d3d3d",
     marginBottom: 15,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    elevation:10
+    elevation: 10
   },
   categoryOption: {
     paddingVertical: 15,
@@ -941,9 +979,7 @@ const styles = StyleSheet.create({
     elevation:10
   },
   categoryOptionSelected: {
-    backgroundColor: "#353535ff",
     borderWidth: 1,
-    borderColor: "#505050ff",
   },
   paragraph: {
     fontSize: 16,
@@ -979,7 +1015,7 @@ const styles = StyleSheet.create({
     color: "lightgrey",
   },
   searchmain: {
-    width: "100%",
+    width: screenwidth - 40,
     margin: "auto",
     marginBottom: 20,
     height: 50,
@@ -990,7 +1026,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     borderWidth:1,
-    borderColor:"#444444"
+    borderColor:"#444444",
+    elevation:10
   },
   footer: {
     fontSize: 16,
@@ -1024,7 +1061,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 60,
     left: 20,
-    ...buttonStyles.redButton,
     width: "auto",
     height: "auto",
     paddingHorizontal: 25,
@@ -1096,16 +1132,9 @@ const styles = StyleSheet.create({
   },
   statusbar:{
     width:"100%",
-    backgroundColor:"black"
+    backgroundColor:"red"
   },
-  navbar: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 35,
-    backgroundColor: "black",
-  }
+
 });
 
 export default Homescreen;

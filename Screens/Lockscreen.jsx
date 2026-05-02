@@ -23,7 +23,8 @@ import {
   MAX_FAILS,
 } from "../Services/pinLockout";
 import Toaster from "../Components/UniversalToaster/Toaster";
-import { buttonStyles } from "../styles/buttonStyles";
+import { useTheme } from "../theme/ThemeContext";
+import { getButtonStyles } from "../styles/buttonStyles";
 
 const formatCountdown = (ms) => {
   const totalSec = Math.max(0, Math.ceil(ms / 1000));
@@ -33,6 +34,9 @@ const formatCountdown = (ms) => {
 };
 
 const Lockscreen = ({ navigation, onAuthenticated }) => {
+  const { colors, isDark } = useTheme();
+  const dynamicButtons = getButtonStyles(colors);
+
   const [authNotAvailableModal, setAuthNotAvailableModal] = useState(false);
   const [securityPinModalVisible, setSecurityPinModalVisible] = useState(false);
   const [pinDigits, setPinDigits] = useState(["", "", "", "", "", ""]);
@@ -193,7 +197,7 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "black",
+        backgroundColor:isDark? colors.background:"#d4d4d4",
         padding: 20,
       }}
     >
@@ -203,23 +207,30 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
         visible={authNotAvailableModal}
         onRequestClose={() => setAuthNotAvailableModal(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ color: "white", fontSize: 18, fontWeight: 800 }}>
+        <BlurView
+          intensity={40}
+          tint={isDark ? "dark" : "light"}
+          style={styles.blurContainer}
+        >
+          <View style={[styles.modalContent, {
+            backgroundColor: colors.modalBackground,
+            borderColor: colors.border,
+          }]}>
+            <Text style={{ color: colors.text, fontSize: 18, fontWeight: "800" }}>
               Authentication Not Available
             </Text>
-            <Text style={{ color: "white", fontSize: 16, marginTop: 10 }}>
+            <Text style={{ color: colors.textSecondary, fontSize: 16, marginTop: 10 }}>
               Your device does not have any authentication method set up. Please set up a PIN, password, or biometric authentication in your device settings.
             </Text>
 
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.whiteButton]}
+                  style={[styles.modalbtn, dynamicButtons.whiteButton, { borderRadius: 50 }]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "black" }}
+                    style={{ fontSize: 15, fontWeight: "800", color: colors.whiteButtonText }}
                   >
                     Got it
                   </Text>
@@ -236,14 +247,22 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
         visible={cooldownModalVisible}
         onRequestClose={() => {}}
       >
-        <BlurView blurType="dark" blurAmount={15} style={styles.blurContainer}>
-          <View style={[styles.modalContent, { alignItems: "center" }]}>
-            <Ionicons name="lock-closed" size={44} color="#ff5a5a" />
+        <BlurView
+          intensity={40}
+          tint={isDark ? "dark" : "light"}
+          style={styles.blurContainer}
+        >
+          <View style={[styles.modalContent, {
+            alignItems: "center",
+            backgroundColor: colors.modalBackground,
+            borderColor: colors.border,
+          }]}>
+            <Ionicons name="lock-closed" size={44} color="#ff0000" />
             <Text
               style={{
-                color: "#ff5a5a",
+                color: "#ff0000",
                 fontSize: 20,
-                fontWeight: 800,
+                fontWeight: "800",
                 marginTop: 14,
               }}
             >
@@ -251,7 +270,7 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
             </Text>
             <Text
               style={{
-                color: "white",
+                color: colors.text,
                 fontSize: 15,
                 textAlign: "center",
                 marginTop: 10,
@@ -264,19 +283,20 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
             <View
               style={{
                 marginTop: 24,
-                backgroundColor: "#1a0000",
-                borderWidth: 1,
-                borderColor: "#5a0000",
+                backgroundColor: isDark ? "#1a0000" : "#fff0f0",
+                borderWidth: 5,
+                borderColor: isDark ? "#5a0000" : "#ffcccc",
                 paddingHorizontal: 28,
                 paddingVertical: 16,
-                borderRadius: 16,
+                borderRadius: 30,
+                elevation:10
               }}
             >
               <Text
                 style={{
-                  color: "white",
+                  color: colors.text,
                   fontSize: 36,
-                  fontWeight: 800,
+                  fontWeight: "800",
                   letterSpacing: 2,
                   textAlign: "center",
                   fontVariant: ["tabular-nums"],
@@ -286,7 +306,7 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
               </Text>
               <Text
                 style={{
-                  color: "#ff9b9b",
+                  color: "#ff4343",
                   fontSize: 12,
                   textAlign: "center",
                   marginTop: 6,
@@ -298,7 +318,7 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
             </View>
             <Text
               style={{
-                color: "lightgrey",
+                color: colors.textSecondary,
                 fontSize: 13,
                 textAlign: "center",
                 marginTop: 18,
@@ -320,9 +340,16 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
         }}
       >
         <Toaster/>
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ color: "white", fontSize: 16, fontWeight: 800, textAlign: "center", marginBottom: 20 }}>
+        <BlurView
+          intensity={40}
+          tint={isDark ? "dark" : "light"}
+          style={styles.blurContainer}
+        >
+          <View style={[styles.modalContent, {
+            backgroundColor: colors.modalBackground,
+            borderColor: colors.border,
+          }]}>
+            <Text style={{ color: colors.text, fontSize: 16, fontWeight: "800", textAlign: "center", marginBottom: 20 }}>
               Provide your 6 digit security PIN for extended protection.
             </Text>
 
@@ -331,7 +358,11 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
                 <TextInput
                   key={index}
                   ref={(ref) => (pinInputRefs.current[index] = ref)}
-                  style={styles.pinInput}
+                  style={[styles.pinInput, {
+                    backgroundColor: colors.inputBackground,
+                    borderColor: colors.inputBorder,
+                    color: colors.inputText,
+                  }]}
                   value={digit}
                   onChangeText={(text) => handlePinDigitChange(text, index)}
                   onKeyPress={(e) => handlePinKeyPress(e, index)}
@@ -360,10 +391,10 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.whiteButton]}
+                  style={[styles.modalbtn, dynamicButtons.whiteButton, { borderRadius: 50 }]}
                   onPress={handleVerifyPin}
                 >
-                  <Text style={{ fontSize: 15, fontWeight: 800, color: "black" }}>
+                  <Text style={{ fontSize: 15, fontWeight: "800", color: colors.whiteButtonText }}>
                     Verify
                   </Text>
                 </TouchableOpacity>
@@ -375,15 +406,15 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
 
       <Image
         source={require("../assets/splash4.png")}
-        style={{ width: 310, height: 310, marginBottom: 10 }}
+        style={{ width: 310, height: 310, marginBottom: 10,elevation:10}}
         resizeMode="contain"
       />
       <Text
         style={{
           textAlign: "center",
           fontSize: 13,
-          fontWeight: 800,
-          color: "white",
+          fontWeight: "800",
+          color: colors.text,
         }}
       >
         App is locked,
@@ -392,8 +423,8 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
         style={{
           textAlign: "center",
           fontSize: 13,
-          fontWeight: 800,
-          color: "white",
+          fontWeight: "800",
+          color: colors.text,
         }}
       >
         Authenticate to open the app
@@ -404,23 +435,19 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
           onPress={checkFingerprint}
           style={{
             margin: "auto",
-            backgroundColor: "#272727ff",
+            backgroundColor: colors.surface,
             paddingHorizontal: 25,
             paddingVertical: 18,
             flexDirection: "row",
             alignItems: "center",
             gap: 10,
             borderRadius: 55,
-            borderWidth: 1.5,
-            borderColor: "#323232ff",
-            shadowOpacity: 1,
-            shadowOffset: {
-              width: 10,
-              height: 20,
-            },
+            borderWidth: isDark?1.5:0,
+            borderColor: colors.border,
+            elevation: 10,
           }}
         >
-          <Text style={{ color: "white", fontSize: 16, fontWeight: 800 }}>
+          <Text style={{ color: colors.text, fontSize: 16, fontWeight: "800" }}>
             AUTHENTICATE
           </Text>
           <Ionicons name="finger-print" size={27} color="#00c76b" />
@@ -441,13 +468,11 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalContent: {
-    backgroundColor: "#202020ff",
     borderRadius: 40,
     paddingHorizontal: 20,
     paddingVertical: 20,
     elevation: 5,
     borderWidth: 0.5,
-    borderColor: "#3d3d3d",
   },
   modalbtn: {
     width: "100%",
@@ -455,8 +480,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 18,
-    borderRadius: 54,
-    backgroundColor: "#383838",
   },
   buttonRow: {
     flexDirection: "row",
@@ -474,10 +497,7 @@ const styles = StyleSheet.create({
     width: 45,
     height: 55,
     borderRadius: 12,
-    backgroundColor: "#383838",
     borderWidth: 1,
-    borderColor: "#505050",
-    color: "white",
     fontSize: 24,
     textAlign: "center",
     fontWeight: "800",

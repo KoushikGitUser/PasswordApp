@@ -30,7 +30,8 @@ import { Cog, LockKeyhole, LockKeyholeOpen, RotateCw } from "lucide-react-native
 import Feather from "@expo/vector-icons/Feather";
 import { BlurView } from "@react-native-community/blur";
 import { isAutofillSupported, isAutofillEnabled } from "../Services/autofill";
-import { buttonStyles } from "../styles/buttonStyles";
+import { useTheme } from "../theme/ThemeContext";
+import { getButtonStyles } from "../styles/buttonStyles";
 
 const CategoryScreen = ({
   navigation,
@@ -39,6 +40,9 @@ const CategoryScreen = ({
   enableAutoLock,
   setautoLockDisabled,
 }) => {
+  const { colors, isDark } = useTheme();
+  const dynamicButtons = getButtonStyles(colors);
+
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [passwords, setPasswords] = useState([]);
   const [exitAppModalVisible, setExitAppModalVisible] = useState(false);
@@ -181,7 +185,7 @@ const CategoryScreen = ({
   }, [exitAppModalVisible]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "black", alignItems: "center" }}>
+    <View style={{ flex: 1, backgroundColor: colors.background, alignItems: "center" }}>
       {backupLoader && (
         <View style={styles.loaderOverlay}>
           <ActivityIndicator size="large" color="#ffffff" />
@@ -190,62 +194,72 @@ const CategoryScreen = ({
       )}
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={autofillOnboardVisible}
         onRequestClose={() => setAutofillOnboardVisible(false)}
       >
-        <View style={styles.onboardBackdrop}>
+        <BlurView
+          intensity={40}
+          tint={isDark ? "dark" : "light"}
+          style={styles.blurContainer}
+        >
           <TouchableOpacity
-            style={styles.onboardDismissArea}
+            style={styles.blurDismissArea}
             activeOpacity={1}
             onPress={() => setAutofillOnboardVisible(false)}
           />
-          <View style={styles.onboardSheet}>
+          <View style={[styles.onboardSheet, {
+            backgroundColor: colors.modalBackground,
+            borderColor: colors.border,
+          }]}>
 
-            <View style={styles.onboardIconWrap}>
+            <View style={[styles.onboardIconWrap, {
+              backgroundColor: isDark ? "#001e10" : "#e6fff4",
+              borderColor: isDark ? "#005c31" : "#00c787",
+            }]}>
               <MaterialCommunityIcons
                 name="form-textbox-password"
                 size={36}
                 color="#00c76b"
               />
             </View>
-            <Text style={styles.onboardTitle}>Fill Passwords anywhere</Text>
-            <Text style={styles.onboardBody}>
+            <Text style={[styles.onboardTitle, { color: colors.text }]}>Fill Passwords anywhere</Text>
+            <Text style={[styles.onboardBody, { color: colors.textSecondary }]}>
               Set Passwords App as your default Autofill service and your saved
               logins will appear on any app or browser login screen.
             </Text>
             <View style={styles.onboardBtnRow}>
               <TouchableOpacity
-                style={[styles.onboardBtn, styles.onboardCancelBtn]}
+                style={[styles.onboardBtn, styles.onboardCancelBtn, dynamicButtons.cancelButton, { borderRadius: 50 }]}
                 activeOpacity={0.85}
                 onPress={() => setAutofillOnboardVisible(false)}
               >
-                <Text style={styles.onboardCancelText}>Cancel</Text>
+                <Text style={[styles.onboardCancelText, { color: colors.cancelButtonText }]}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.onboardBtn, styles.onboardGoBtn]}
+                style={[styles.onboardBtn, styles.onboardGoBtn, dynamicButtons.whiteButton, { borderRadius: 50,paddingVertical:18 }]}
                 activeOpacity={0.85}
                 onPress={() => {
                   setAutofillOnboardVisible(false);
                   navigation.navigate("settings", { blinkAutofill: true });
                 }}
               >
-                <Text style={styles.onboardGoText}>Go</Text>
+                <Text style={[styles.onboardGoText, { color: colors.whiteButtonText }]}>Go</Text>
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </BlurView>
       </Modal>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={authNotAvailableModal}
         onRequestClose={() => setAuthNotAvailableModal(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color: "white", fontSize: 18, fontWeight: 800 }}>
               Authentication Not Available
             </Text>
@@ -256,7 +270,7 @@ const CategoryScreen = ({
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.whiteButton]}
+                  style={[styles.modalbtn, dynamicButtons.whiteButton]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
@@ -272,28 +286,28 @@ const CategoryScreen = ({
       </Modal>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={exitAppModalVisible}
         onRequestClose={() => setExitAppModalVisible(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ color: "white", fontSize: 18, fontWeight: 800,marginLeft:8}}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
+            <Text style={{ color:isDark? "white":"black", fontSize: 18, fontWeight: 800,marginLeft:8}}>
               Exit App
             </Text>
-            <Text style={{ color: "white", fontSize: 16,marginLeft:8 }}>
+            <Text style={{ color:isDark? "white":"black", fontSize: 16,marginLeft:8 }}>
               Are you sure you want to exit?
             </Text>
 
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.cancelButton]}
+                  style={[styles.modalbtn, dynamicButtons.cancelButton]}
                   onPress={() => setExitAppModalVisible(false)}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "white" }}
+                    style={{ fontSize: 15, fontWeight: 800, color:isDark? "white":"black" }}
                   >
                     Cancel
                   </Text>
@@ -301,13 +315,13 @@ const CategoryScreen = ({
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.redButton]}
+                  style={[styles.modalbtn, dynamicButtons.redButton]}
                   onPress={() => {
                     BackHandler.exitApp();
                     setExitAppModalVisible(false);
                   }}
                 >
-                  <Text style={{ fontSize: 15, fontWeight: 800, color: "white" }}>
+                  <Text style={{ fontSize: 15, fontWeight: 800, color: colors.redButtonText }}>
                     Exit
                   </Text>
                 </TouchableOpacity>
@@ -317,12 +331,12 @@ const CategoryScreen = ({
         </BlurView>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={infoModalVisible}
         onRequestClose={() => setInfoModalVisible(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent]}>
             <ScrollView style={{ maxHeight: 400 }}>
               <Text
@@ -417,7 +431,7 @@ const CategoryScreen = ({
         style={{
           width: "100%",
           height: 100,
-          backgroundColor: "black",
+          backgroundColor: colors.background,
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
@@ -430,14 +444,14 @@ const CategoryScreen = ({
             paddingTop: 35,
             paddingBottom: 30,
             fontSize: 30,
-            color: "white",
+            color: colors.text,
             fontWeight: 800,
           }}
         >
           Home
         </Text>
 
-        <View style={styles.backupAndInfo}>
+        <View style={[styles.backupAndInfo,{backgroundColor:isDark?"#1c1c1cff":"#fff",borderWidth:isDark?1.5:0}]}>
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("settings", { blinkAutoLock: true })
@@ -458,13 +472,13 @@ const CategoryScreen = ({
               navigation.navigate("settings", { blinkAutoLock: false })
             }
           >
-            <Cog size={28} color="lightgrey" strokeWidth={2} />
+            <Cog size={28} color={isDark?"lightgrey":"grey"} strokeWidth={2} />
           </TouchableOpacity>
         </View>
       </View>
 
       <ScrollView
-        style={styles.scrollContent}
+        style={[styles.scrollContent,{backgroundColor:colors.background}]}
         contentContainerStyle={styles.scrollContentContainer}
         showsVerticalScrollIndicator={false}
       >
@@ -537,9 +551,13 @@ const CategoryScreen = ({
         <View style={{height:50}} />
       </ScrollView>
 
-      <View style={styles.fabContainer}>
+      <View style={[styles.fabContainer, { backgroundColor: colors.background }]}>
         <TouchableOpacity
-          style={styles.fabFirst}
+          style={[styles.fabFirst, {
+            backgroundColor: isDark ? "#231100" : "#fff5e6",
+            borderWidth: 0.5,
+            borderColor: isDark ? "#643100" : "#ffcc80"
+          }]}
           onPress={fetchPasswords}
           activeOpacity={0.7}
         >
@@ -547,7 +565,11 @@ const CategoryScreen = ({
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.fab}
+          style={[styles.fab, {
+            backgroundColor: isDark ? "#001e10" : "#e6f7ed",
+            borderWidth: 0.5,
+            borderColor: isDark ? "#005c31" : "#80dea0"
+          }]}
           onPress={handleLockNow}
           activeOpacity={0.7}
         >
@@ -606,6 +628,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 1,
     borderColor: "rgb(63, 63, 63)",
+    elevation:10
   },
   paragraph: {
     fontSize: 16,
@@ -745,7 +768,6 @@ const styles = StyleSheet.create({
     right: 0,
     width: "100%",
     height: 130,
-    backgroundColor: "black",
     paddingHorizontal: 23,
     paddingBottom: 30,
     flexDirection: "row",
@@ -753,9 +775,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   fabFirst: {
-    backgroundColor: "#231100ff",
-    borderWidth:0.5,
-    borderColor:"#643100",
     width: 100,
     height: 60,
     borderRadius: 50,
@@ -766,11 +785,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     flexDirection: "row",
     gap: 10,
+    elevation: 10,
   },
   fab: {
-    backgroundColor: "#001e10",
-    borderWidth:0.5,
-    borderColor:"#005c31",
     width: 100,
     height: 60,
     borderRadius: 50,
@@ -780,56 +797,53 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     flexDirection: "row",
+    elevation: 10,
   },
   onboardBackdrop: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.65)",
     justifyContent: "flex-end",
   },
   onboardDismissArea: {
     flex: 1,
   },
   onboardSheet: {
-    backgroundColor: "#171717",
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
+    borderRadius: 42,
     paddingHorizontal: 22,
     paddingTop: 30,
     paddingBottom: 30,
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderColor: "#2c2c2c",
+    borderWidth: 1,
     alignItems: "center",
+    maxWidth: 400,
+    width: "100%",
+    elevation: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
   },
   onboardHandle: {
     alignSelf: "center",
     width: 40,
     height: 4,
     borderRadius: 2,
-    backgroundColor: "#555",
     marginBottom: 20,
   },
   onboardIconWrap: {
     width: 68,
     height: 68,
     borderRadius: 50,
-    backgroundColor: "#001e10",
     borderWidth: 1,
-    borderColor: "#005c31",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
   },
   onboardTitle: {
-    color: "white",
     fontSize: 20,
     fontWeight: "800",
     marginBottom: 8,
     textAlign: "center",
   },
   onboardBody: {
-    color: "lightgrey",
     fontSize: 14,
     textAlign: "center",
     lineHeight: 21,
@@ -844,25 +858,18 @@ const styles = StyleSheet.create({
   onboardBtn: {
     flex: 1,
     paddingVertical: 16,
-    borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
   },
   onboardCancelBtn: {
-    backgroundColor: "#2c2c2c",
-    borderWidth: 1,
-    borderColor: "#363636",
   },
   onboardCancelText: {
-    color: "white",
     fontSize: 15,
     fontWeight: "800",
   },
   onboardGoBtn: {
-    ...buttonStyles.whiteButton,
   },
   onboardGoText: {
-    color: "#007a47",
     fontSize: 15,
     fontWeight: "800",
   },

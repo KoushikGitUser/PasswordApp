@@ -14,8 +14,10 @@ import {
   TriangleAlert,
 } from "lucide-react-native";
 import { toastEmitter } from "../../Services/toast";
+import { useTheme } from "../../theme/ThemeContext";
 
 const Toaster = () => {
+  const { colors, isDark } = useTheme();
 
   const [toast, setToast] = useState({
     visible: false,
@@ -104,7 +106,14 @@ const Toaster = () => {
   return (
     <Animated.View
       {...panResponder.panHandlers}
-      style={[styles.toast, { transform: [{ translateY: slideAnim }] }]}
+      style={[
+        styles.toast,
+        {
+          transform: [{ translateY: slideAnim }],
+          backgroundColor: colors.surface,
+          borderColor: colors.border,
+        },
+      ]}
     >
       {toast.type == "success" ? (
         <BadgeCheck
@@ -127,9 +136,13 @@ const Toaster = () => {
       )}
 
       <Animated.View style={{width:"100%"}}>
-        <Text style={[styles.textTitle,{fontFamily:'Mukta-Bold'}]}>{toast.title}</Text>
+        <Text style={[styles.textTitle, { fontFamily: 'Mukta-Bold', color: colors.text }]}>
+          {toast.title}
+        </Text>
         {toast.description !== "" && (
-          <Text style={[styles.textDesc,{fontFamily:'Mukta-Regular'}]}>{toast.description}</Text>
+          <Text style={[styles.textDesc, { fontFamily: 'Mukta-Regular', color: colors.textSecondary }]}>
+            {toast.description}
+          </Text>
         )}
       </Animated.View>
     </Animated.View>
@@ -145,28 +158,26 @@ const styles = StyleSheet.create({
     left: 20,
     paddingVertical: 14,
     paddingHorizontal: 20,
-    backgroundColor: "#181818ff",
-    borderRadius: 20,
+    borderRadius: 28,
     borderWidth: 1,
-    borderColor: "#2e2e2eff",
     elevation: 10,
-    shadowColor: "#000000ff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
     zIndex: 99999999999,
-    flexDirection: "row", 
+    flexDirection: "row",
     alignItems: "flex-start",
     gap: 10,
   },
   textTitle: {
-    fontWeight: 800,
+    fontWeight: "800",
     fontSize: 16,
-    color:"white"
   },
   textDesc: {
-    color: "#a3a3a3ff",
     fontSize: 14,
-    fontWeight:"800",
-    maxWidth:"85%",
-
+    fontWeight: "800",
+    maxWidth: "85%",
   },
 });
 

@@ -9,14 +9,19 @@ import {
   FlatList,
   ActivityIndicator,
   Image,
+  Dimensions,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { listInstalledApps } from "../Services/autofill";
+import { useTheme } from "../theme/ThemeContext";
+import { BlurView } from "@react-native-community/blur";
 
 const AppPickerSheet = ({ visible, onClose, onPick, existingPackages = [] }) => {
+  const { colors, isDark } = useTheme();
   const [apps, setApps] = useState([]);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
+  const screenWidth = Dimensions.get("window").width
 
   useEffect(() => {
     if (!visible) return;
@@ -50,7 +55,13 @@ const AppPickerSheet = ({ visible, onClose, onPick, existingPackages = [] }) => 
       .includes((item.packageName || "").toLowerCase());
     return (
       <TouchableOpacity
-        style={[styles.row, alreadyAdded && { opacity: 0.45 }]}
+        style={[styles.row, {
+          backgroundColor: colors.surface,
+          borderColor: colors.border,
+          elevation:10,
+          width:screenWidth - 80,
+          margin:"auto",
+        }, alreadyAdded && { opacity: 0.45 }]}
         activeOpacity={0.7}
         disabled={alreadyAdded}
         onPress={() => {
@@ -64,24 +75,24 @@ const AppPickerSheet = ({ visible, onClose, onPick, existingPackages = [] }) => 
             style={styles.icon}
           />
         ) : (
-          <View style={[styles.icon, styles.iconFallback]}>
-            <Text style={styles.iconFallbackText}>
+          <View style={[styles.icon, styles.iconFallback, { backgroundColor: colors.categoryPillBg }]}>
+            <Text style={[styles.iconFallbackText, { color: colors.text }]}>
               {(item.label || "?").charAt(0).toUpperCase()}
             </Text>
           </View>
         )}
         <View style={{ flex: 1 }}>
-          <Text style={styles.rowTitle} numberOfLines={1}>
+          <Text style={[styles.rowTitle, { color: colors.text }]} numberOfLines={1}>
             {item.label || item.packageName}
           </Text>
-          <Text style={styles.rowPkg} numberOfLines={1}>
+          <Text style={[styles.rowPkg, { color: colors.textTertiary }]} numberOfLines={1}>
             {item.packageName}
           </Text>
         </View>
         {alreadyAdded ? (
-          <Ionicons name="checkmark-circle" size={30} color="#00ff88" />
+          <Ionicons name="checkmark-circle" size={30} color={colors.accentGreen} />
         ) : (
-          <Ionicons name="add" size={28} color="lightgrey" />
+          <Ionicons name="add" size={28} color={colors.textSecondary} />
         )}
       </TouchableOpacity>
     );
@@ -91,32 +102,43 @@ const AppPickerSheet = ({ visible, onClose, onPick, existingPackages = [] }) => 
     <Modal
       visible={visible}
       transparent
-      animationType="slide"
+      animationType="fade"
       onRequestClose={onClose}
     >
-      <View style={styles.backdrop}>
+      <BlurView
+        intensity={40}
+        tint={isDark ? "dark" : "light"}
+        style={styles.backdrop}
+      >
         <TouchableOpacity
           style={styles.dismissArea}
           activeOpacity={1}
           onPress={onClose}
         />
-        <View style={styles.sheet}>
-          <View style={styles.handle} />
-          <View style={styles.header}>
-            <Text style={styles.title}>Link an app</Text>
+        <View style={[styles.sheet, {
+          backgroundColor: colors.modalBackground,
+          borderColor: colors.border
+        }]}>
+          <View style={[styles.header,{width:screenWidth - 80,margin:"auto"}]}>
+            <Text style={[styles.title, { color: colors.text }]}>Link an app</Text>
             <TouchableOpacity
               onPress={onClose}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
-              <Ionicons name="close" size={22} color="lightgrey" />
+              <Ionicons name="close" size={22} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
-          <View style={styles.searchWrap}>
-            <Ionicons name="search" size={18} color="#7a7a7a" />
+          <View style={[styles.searchWrap, {
+            backgroundColor: colors.inputBackground,
+            borderColor: colors.inputBorder,
+            width:screenWidth - 80,
+            margin:"auto"
+          }]}>
+            <Ionicons name="search" size={18} color={colors.textTertiary} />
             <TextInput
-              style={styles.searchInput}
+              style={[styles.searchInput, { color: colors.inputText }]}
               placeholder="Search installed apps"
-              placeholderTextColor="#7a7a7a"
+              placeholderTextColor={colors.inputPlaceholder}
               value={query}
               onChangeText={setQuery}
               autoCapitalize="none"
@@ -125,25 +147,25 @@ const AppPickerSheet = ({ visible, onClose, onPick, existingPackages = [] }) => 
           </View>
           {loading ? (
             <View style={styles.loader}>
-              <ActivityIndicator color="#00c787" />
-              <Text style={styles.loaderText}>Loading installed apps…</Text>
+              <ActivityIndicator color={colors.accentGreen} />
+              <Text style={[styles.loaderText, { color: colors.textSecondary }]}>Loading installed apps…</Text>
             </View>
           ) : (
             <FlatList
               data={filtered}
               keyExtractor={(item) => item.packageName}
               renderItem={renderItem}
-              contentContainerStyle={{ paddingBottom: 20 }}
+              contentContainerStyle={{ paddingBottom: 20, paddingTop:20}}
               keyboardShouldPersistTaps="handled"
               ListEmptyComponent={
                 <View style={styles.empty}>
-                  <Text style={styles.emptyText}>No matching apps.</Text>
+                  <Text style={[styles.emptyText, { color: colors.textTertiary }]}>No matching apps.</Text>
                 </View>
               }
             />
           )}
         </View>
-      </View>
+      </BlurView>
     </Modal>
   );
 };
@@ -151,32 +173,30 @@ const AppPickerSheet = ({ visible, onClose, onPick, existingPackages = [] }) => 
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.65)",
-    justifyContent: "flex-end",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
   },
   dismissArea: {
-    flex: 1,
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   sheet: {
-    backgroundColor: "#171717",
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingHorizontal: 16,
-    paddingTop: 10,
+    borderRadius: 28,
+    paddingTop: 20,
     paddingBottom: 20,
-    maxHeight: "80%",
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderColor: "#2c2c2c",
-  },
-  handle: {
-    alignSelf: "center",
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: "#555",
-    marginBottom: 14,
+    maxHeight: "85%",
+    width: "100%",
+    maxWidth: 500,
+    borderWidth: 1,
+    elevation: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
   },
   header: {
     flexDirection: "row",
@@ -186,7 +206,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   title: {
-    color: "white",
     fontSize: 19,
     fontWeight: "800",
   },
@@ -194,17 +213,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    backgroundColor: "#2c2c2c",
     borderWidth: 1,
-    borderColor: "#363636",
     borderRadius: 50,
     paddingHorizontal: 16,
     paddingVertical: 12,
     marginBottom: 14,
+    
   },
   searchInput: {
     flex: 1,
-    color: "white",
     fontSize: 14,
     padding: 0,
   },
@@ -212,9 +229,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: "#272727",
     borderWidth: 1,
-    borderColor: "#242424",
     borderRadius: 52,
     paddingVertical: 12,
     paddingHorizontal: 14,
@@ -224,24 +239,20 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 50,
-    backgroundColor: "#4f4f4f",
   },
   iconFallback: {
     justifyContent: "center",
     alignItems: "center",
   },
   iconFallbackText: {
-    color: "white",
     fontWeight: "800",
     fontSize: 16,
   },
   rowTitle: {
-    color: "white",
     fontSize: 15,
     fontWeight: "700",
   },
   rowPkg: {
-    color: "#7a7a7a",
     fontSize: 11,
     marginTop: 2,
   },
@@ -251,7 +262,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   loaderText: {
-    color: "lightgrey",
     fontSize: 13,
   },
   empty: {
@@ -259,7 +269,6 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   emptyText: {
-    color: "#7a7a7a",
     fontSize: 13,
   },
 });

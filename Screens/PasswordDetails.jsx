@@ -45,9 +45,14 @@ import { BlurView } from "@react-native-community/blur";
 import AppPickerSheet from "../Components/AppPickerSheet";
 import { ScrollView } from "react-native-gesture-handler";
 import Toaster from "../Components/UniversalToaster/Toaster";
-import { buttonStyles } from "../styles/buttonStyles";
+import { useTheme } from "../theme/ThemeContext";
+import { getButtonStyles } from "../styles/buttonStyles";
+import { getCategoryColors } from "../theme/colors";
 
 const PasswordDetails = ({ route, navigation }) => {
+  const { colors, isDark } = useTheme();
+  const dynamicButtons = getButtonStyles(colors);
+
   const { index, passCategory } = route.params;
 
   const [entry, setEntry] = useState(null);
@@ -450,6 +455,7 @@ const PasswordDetails = ({ route, navigation }) => {
   };
 
   const firstLetter = passName.charAt(0).toUpperCase();
+  const catColors = getCategoryColors(category, isDark);
 
   if (!entry) return null;
 
@@ -457,7 +463,7 @@ const PasswordDetails = ({ route, navigation }) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: "black",
+        backgroundColor: colors.background,
         alignItems: "center",
         paddingHorizontal: 20,
       }}
@@ -469,17 +475,17 @@ const PasswordDetails = ({ route, navigation }) => {
         existingPackages={linkedPackages}
       />
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={authNotAvailableModal}
         onRequestClose={() => setAuthNotAvailableModal(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ color: "white", fontSize: 18, fontWeight: 800 }}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
+            <Text style={{ color: colors.text, fontSize: 18, fontWeight: 800 }}>
               Authentication Not Available
             </Text>
-            <Text style={{ color: "white", fontSize: 16, marginTop: 10 }}>
+            <Text style={{ color: colors.text, fontSize: 16, marginTop: 10 }}>
               Your device does not have any authentication method set up. Please
               set up a PIN, password, or biometric authentication in your device
               settings.
@@ -488,11 +494,11 @@ const PasswordDetails = ({ route, navigation }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.whiteButton]}
+                  style={[styles.modalbtn, dynamicButtons.whiteButton]}
                   onPress={() => setAuthNotAvailableModal(false)}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "black" }}
+                    style={{ fontSize: 15, fontWeight: 800, color: colors.whiteButtonText }}
                   >
                     Got it
                   </Text>
@@ -503,30 +509,30 @@ const PasswordDetails = ({ route, navigation }) => {
         </BlurView>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={notUpdatedModalVisible}
         onRequestClose={() => setNotUpdatedModalVisible(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ color: "white", fontSize: 18, fontWeight: 800 }}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border,paddingHorizontal:20}]}>
+            <Text style={{ color: colors.text, fontSize: 18, fontWeight: 800 }}>
               Couldn't Update
             </Text>
-            <Text style={{ color: "white", fontSize: 16 }}>
+            <Text style={{ color: colors.text, fontSize: 16 }}>
               You didn't change anything to save!
             </Text>
 
             <View style={styles.buttonRow}>
               <View style={{ width: "100%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.cancelButton]}
+                  style={[styles.modalbtn, dynamicButtons.cancelButton]}
                   onPress={() => {
                     setNotUpdatedModalVisible(false);
                   }}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "white" }}
+                    style={{ fontSize: 15, fontWeight: 800, color: colors.cancelButtonText }}
                   >
                     Close
                   </Text>
@@ -537,28 +543,28 @@ const PasswordDetails = ({ route, navigation }) => {
         </BlurView>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={deletePassModalVisible}
         onRequestClose={() => setDeletePassModalVisible(false)}
       >
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ color: "white", fontSize: 16 }}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border,paddingHorizontal:20 }]}>
+            <Text style={{ color: colors.text, fontSize: 16 }}>
               Are you sure you want to delete this password?
             </Text>
-            <Text style={{ color: "red", fontSize: 16, fontWeight: 800 }}>
+            <Text style={{ color: colors.error, fontSize: 16, fontWeight: 800 }}>
               This action is irreversible!
             </Text>
 
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.cancelButton]}
+                  style={[styles.modalbtn, dynamicButtons.cancelButton]}
                   onPress={() => setDeletePassModalVisible(false)}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "white" }}
+                    style={{ fontSize: 15, fontWeight: 800, color: colors.cancelButtonText }}
                   >
                     Cancel
                   </Text>
@@ -566,11 +572,11 @@ const PasswordDetails = ({ route, navigation }) => {
               </View>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn, buttonStyles.redButton]}
+                  style={[styles.modalbtn, dynamicButtons.redButton]}
                   onPress={checkFingerprintForDeletion}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "white" }}
+                    style={{ fontSize: 15, fontWeight: 800, color: colors.redButtonText }}
                   >
                     Delete
                   </Text>
@@ -581,14 +587,14 @@ const PasswordDetails = ({ route, navigation }) => {
         </BlurView>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
         <Toaster />
-        <BlurView blurType="dark" blurAmount={10} style={styles.blurContainer}>
-          <View style={styles.modalContent}>
+        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <TouchableOpacity
               onPress={() => {
                 if (secureEntry) {
@@ -599,14 +605,14 @@ const PasswordDetails = ({ route, navigation }) => {
               }}
               style={{
                 marginBottom: 20,
-                backgroundColor: "#2a2a2a",
+                backgroundColor: colors.inputBackground,
                 borderRadius: 40,
                 width: 90,
                 paddingVertical: 7,
                 margin: "auto",
                 borderWidth: 1,
-                borderColor: "#3a3a3a",
-                elevation:10
+                borderColor: colors.inputBorder,
+                elevation: 10
               }}
             >
               {secureEntry ? (
@@ -627,59 +633,78 @@ const PasswordDetails = ({ route, navigation }) => {
             </TouchableOpacity>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              style={{ maxHeight: 350 }}
+              style={{ maxHeight: 350,paddingTop:15 }}
             >
               <TextInput
-                placeholderTextColor="lightgrey"
+                placeholderTextColor={colors.inputPlaceholder}
                 placeholder="Name/Label"
                 value={passName}
                 onChangeText={setPassName}
-                style={styles.input}
+                style={[styles.input, {
+                  backgroundColor: colors.inputBackground,
+                  borderColor: colors.inputBorder,
+                  color: colors.inputText
+                }]}
               />
               <TextInput
-                placeholderTextColor="lightgrey"
+                placeholderTextColor={colors.inputPlaceholder}
                 placeholder="Username"
                 value={username}
                 onChangeText={setUsername}
-                style={styles.input}
+                style={[styles.input, {
+                  backgroundColor: colors.inputBackground,
+                  borderColor: colors.inputBorder,
+                  color: colors.inputText
+                }]}
               />
               <TextInput
-                placeholderTextColor="lightgrey"
+                placeholderTextColor={colors.inputPlaceholder}
                 placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={secureEntry}
-                style={styles.input}
+                style={[styles.input, {
+                  backgroundColor: colors.inputBackground,
+                  borderColor: colors.inputBorder,
+                  color: colors.inputText
+                }]}
               />
               {category == "Banking" && (
                 <TextInput
-                  placeholderTextColor="lightgrey"
+                  placeholderTextColor={colors.inputPlaceholder}
                   placeholder="PIN"
                   value={pin}
                   onChangeText={setPin}
                   secureTextEntry={secureEntry}
-                  style={styles.input}
+                  style={[styles.input, {
+                    backgroundColor: colors.inputBackground,
+                    borderColor: colors.inputBorder,
+                    color: colors.inputText
+                  }]}
                 />
               )}
 
-              <Text style={styles.linkSectionLabel}>LINKED APPS</Text>
+              <Text style={[styles.linkSectionLabel, { color: colors.textSecondary,marginLeft:20 }]}>LINKED APPS</Text>
               {linkedPackages.length === 0 ? (
-                <Text style={styles.linkEmptyHint}>
+                <Text style={[styles.linkEmptyHint, { color: colors.textTertiary,paddingHorizontal:20 }]}>
                   No apps linked yet. Add a package id to enable autofill for
                   that app (e.g. com.instagram.android).
                 </Text>
               ) : (
                 <View style={styles.chipWrap}>
                   {linkedPackages.map((p) => (
-                    <View key={p} style={styles.chip}>
-                      <Text style={styles.chipText} numberOfLines={1}>
+                    <View key={p} style={[styles.chip, {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.border
+                    }]}>
+                      <Text style={[styles.chipText, { color: colors.text }]} numberOfLines={1}>
                         {p}
                       </Text>
                       <TouchableOpacity
                         onPress={() => removePackage(p)}
                         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                       >
-                        <Ionicons name="close" size={14} color="lightgrey" />
+                        <Ionicons name="close" size={14} color={colors.textSecondary} />
                       </TouchableOpacity>
                     </View>
                   ))}
@@ -687,35 +712,41 @@ const PasswordDetails = ({ route, navigation }) => {
               )}
               <TouchableOpacity
                 onPress={() => setAppPickerVisible(true)}
-                style={styles.linkAddFullBtn}
+                style={[styles.linkAddFullBtn, {
+                  backgroundColor: isDark ? "#001e10" : "#e6f7ed",
+                  borderColor: isDark ? "#005c31" : "#80dea0"
+                }]}
                 activeOpacity={0.7}
               >
-                <Ionicons name="add-circle" size={20} color="#00c76b" />
-                <Text style={styles.linkAddFullBtnText}>
+                <Ionicons name="add-circle" size={20} color={colors.accentGreen} />
+                <Text style={[styles.linkAddFullBtnText, { color: colors.accentGreen }]}>
                   Add from installed apps
                 </Text>
               </TouchableOpacity>
 
-              <Text style={[styles.linkSectionLabel, { marginTop: 18 }]}>
+              <Text style={[styles.linkSectionLabel, { marginTop: 18, color: colors.textSecondary,marginLeft:20 }]}>
                 LINKED WEBSITES
               </Text>
               {linkedDomains.length === 0 ? (
-                <Text style={styles.linkEmptyHint}>
+                <Text style={[styles.linkEmptyHint, { color: colors.textTertiary,paddingHorizontal:20 }]}>
                   No websites linked yet. Add a domain to enable autofill on
                   that site (e.g. instagram.com).
                 </Text>
               ) : (
                 <View style={styles.chipWrap}>
                   {linkedDomains.map((d) => (
-                    <View key={d} style={styles.chip}>
-                      <Text style={styles.chipText} numberOfLines={1}>
+                    <View key={d} style={[styles.chip, {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.border
+                    }]}>
+                      <Text style={[styles.chipText, { color: colors.text }]} numberOfLines={1}>
                         {d}
                       </Text>
                       <TouchableOpacity
                         onPress={() => removeDomain(d)}
                         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                       >
-                        <Ionicons name="close" size={14} color="lightgrey" />
+                        <Ionicons name="close" size={14} color={colors.textSecondary} />
                       </TouchableOpacity>
                     </View>
                   ))}
@@ -723,22 +754,29 @@ const PasswordDetails = ({ route, navigation }) => {
               )}
               <View style={styles.linkAddRow}>
                 <TextInput
-                  placeholderTextColor="#7a7a7a"
+                  placeholderTextColor={colors.inputPlaceholder}
                   placeholder="example.com"
                   value={newDomain}
                   onChangeText={setNewDomain}
                   autoCapitalize="none"
                   autoCorrect={false}
                   keyboardType="url"
-                  style={styles.linkAddInput}
+                  style={[styles.linkAddInput, {
+                    backgroundColor: colors.inputBackground,
+                    borderColor: colors.inputBorder,
+                    color: colors.inputText
+                  }]}
                   onSubmitEditing={addDomain}
                 />
                 <TouchableOpacity
                   onPress={addDomain}
-                  style={styles.linkAddBtn}
+                  style={[styles.linkAddBtn, {
+                    backgroundColor: colors.whiteButtonBg,
+                    borderColor: colors.whiteButtonBorder
+                  }]}
                   activeOpacity={0.7}
                 >
-                  <Ionicons name="add" size={20} color="black" />
+                  <Ionicons name="add" size={20} color={colors.whiteButtonText} />
                 </TouchableOpacity>
               </View>
               <View style={{ height: 50 }} />
@@ -762,7 +800,7 @@ const PasswordDetails = ({ route, navigation }) => {
             <View style={styles.buttonRow}>
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
-                  style={[styles.modalbtn,buttonStyles.cancelButton, {  }]}
+                  style={[styles.modalbtn,dynamicButtons.cancelButton, {  }]}
                   onPress={() => {
                     setModalVisible(false);
                     setBackToInitial(backToInitial + 1);
@@ -770,7 +808,7 @@ const PasswordDetails = ({ route, navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "white" }}
+                    style={{ fontSize: 15, fontWeight: 800, color: colors.cancelButtonText }}
                   >
                     Cancel
                   </Text>
@@ -779,10 +817,10 @@ const PasswordDetails = ({ route, navigation }) => {
               <View style={{ width: "45%" }}>
                 <TouchableOpacity
                   onPress={checkFingerprintForUpdation}
-                  style={[styles.modalbtn, buttonStyles.whiteButton]}
+                  style={[styles.modalbtn, dynamicButtons.whiteButton]}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: 800, color: "black" }}
+                    style={{ fontSize: 15, fontWeight: 800, color: colors.whiteButtonText }}
                   >
                     Update
                   </Text>
@@ -794,14 +832,14 @@ const PasswordDetails = ({ route, navigation }) => {
       </Modal>
       <StatusBar />
       <View
-        style={[styles.statusbar, { height: StatusBar.currentHeight }]}
+        style={[styles.statusbar, { height: StatusBar.currentHeight,backgroundColor:colors.background }]}
       ></View>
       <View
         style={{
           width: "100%",
           paddingTop: 35,
           paddingBottom: 20,
-          backgroundColor: "black",
+          backgroundColor: colors.background,
           flexDirection: "row",
           alignItems: "center",
         }}
@@ -818,11 +856,12 @@ const PasswordDetails = ({ route, navigation }) => {
           <AntDesign
             name="arrowleft"
             size={24}
-            color="white"
+            color={colors.text}
             style={{
-              backgroundColor: "#2a2a2a",
+              backgroundColor: colors.surface,
               padding: 8,
               borderRadius: 50,
+              elevation:10,
             }}
           />
         </TouchableOpacity>
@@ -831,7 +870,7 @@ const PasswordDetails = ({ route, navigation }) => {
           style={{
             marginLeft: 20,
             fontSize: 25,
-            color: "white",
+            color: colors.text,
             fontWeight: "800",
           }}
         >
@@ -840,7 +879,11 @@ const PasswordDetails = ({ route, navigation }) => {
       </View>
 
       {/* main below content */}
-      <View style={styles.passmain}>
+      <View style={[styles.passmain, {
+        backgroundColor: colors.surface,
+        borderColor: colors.border,
+        borderWidth:isDark?1.5:0
+      }]}>
         <View
           style={[
             styles.passviewflex,
@@ -848,7 +891,7 @@ const PasswordDetails = ({ route, navigation }) => {
               width: "95%",
               paddingBottom: 15,
               borderBottomWidth: 0.5,
-              borderBottomColor: "#5d5d5dff",
+              borderBottomColor: colors.border,
             },
           ]}
         >
@@ -856,31 +899,9 @@ const PasswordDetails = ({ route, navigation }) => {
             style={[
               styles.pic,
               {
-                borderColor:
-                  category === "Banking"
-                    ? "#643100"
-                    : category === "Mail or ID"
-                      ? "#780000"
-                      : category === "Developer"
-                        ? "#62003f"
-                        : category === "Wifi"
-                          ? "#003a80"
-                          : category === "Social"
-                            ? "#005c31"
-                            : "#006d60",
+                borderColor: catColors.iconBorder,
                 borderWidth: 0.5,
-                backgroundColor:
-                  category === "Banking"
-                    ? "#1c0e00"
-                    : category === "Mail or ID"
-                      ? "#200000"
-                      : category === "Developer"
-                        ? "#1e0013"
-                        : category === "Wifi"
-                          ? "#000e1f"
-                          : category === "Social"
-                            ? "#001e10"
-                            : "#001f1c",
+                backgroundColor: catColors.iconBg,
               },
             ]}
           >
@@ -888,46 +909,39 @@ const PasswordDetails = ({ route, navigation }) => {
               style={{
                 fontSize: 25,
                 fontWeight: 800,
-                color:
-                  category === "Banking"
-                    ? "orange"
-                    : category === "Mail or ID"
-                      ? "red"
-                      : category === "Developer"
-                        ? "#e00092"
-                        : category === "Wifi"
-                          ? "#0098ff"
-                          : category === "Social"
-                            ? "#00c76b"
-                            : "#00cfbb",
+                color: catColors.accent,
               }}
             >
               {firstLetter}
             </Text>
           </View>
           <View style={styles.name_and_user}>
-            <Text style={styles.texts}>Name/Label</Text>
+            <Text style={[styles.texts, { color: colors.text }]}>Name/Label</Text>
             <TouchableOpacity
               onPress={() => setIsPassNameExpanded(!isPassNameExpanded)}
             >
-              <Text style={[styles.texts, { color: "lightgrey" }]}>
+              <Text style={[styles.texts, { color: colors.textSecondary }]}>
                 {isPassNameExpanded ? passName : truncatePassName(passName)}
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={[styles.categoryPill, { marginLeft: "auto" }]}>
+          <View style={[styles.categoryPill, {
+            marginLeft: "auto",
+            backgroundColor: colors.categoryPillBg,
+            borderColor: colors.categoryPillBorder
+          }]}>
             {category === "Banking" ? (
-              <Ionicons name="card-outline" size={22} color="orange" />
+              <Ionicons name="card-outline" size={22} color={catColors.accent} />
             ) : category === "Mail or ID" ? (
-              <UserRound size={22} color="red" strokeWidth={2.1} />
+              <UserRound size={22} color={catColors.accent} strokeWidth={2.1} />
             ) : category === "Developer" ? (
-              <FontAwesome6 name="code" size={20} color="#e00092" />
+              <FontAwesome6 name="code" size={20} color={catColors.accent} />
             ) : category === "Wifi" ? (
-              <Wifi size={20} color="#0098ff" strokeWidth={3} />
+              <Wifi size={20} color={catColors.accent} strokeWidth={3} />
             ) : category === "Social" ? (
-              <Globe size={22} color="#00c76b" strokeWidth={2.2} />
+              <Globe size={22} color={catColors.accent} strokeWidth={2.2} />
             ) : (
-              <KeyRound size={22} color="#00cfbb" strokeWidth={2.1} />
+              <KeyRound size={22} color={catColors.accent} strokeWidth={2.1} />
             )}
           </View>
           {/* <Ionicons
@@ -953,54 +967,20 @@ const PasswordDetails = ({ route, navigation }) => {
             style={[
               styles.pic,
               {
-                borderColor:
-                  category === "Banking"
-                    ? "#643100"
-                    : category === "Mail or ID"
-                      ? "#780000"
-                      : category === "Developer"
-                        ? "#62003f"
-                        : category === "Wifi"
-                          ? "#003a80"
-                          : category === "Social"
-                            ? "#005c31"
-                            : "#006d60",
+                borderColor: catColors.iconBorder,
                 borderWidth: 0.5,
-                backgroundColor:
-                  category === "Banking"
-                    ? "#1c0e00"
-                    : category === "Mail or ID"
-                      ? "#200000"
-                      : category === "Developer"
-                        ? "#1e0013"
-                        : category === "Wifi"
-                          ? "#000e1f"
-                          : category === "Social"
-                            ? "#001e10"
-                            : "#001f1c",
+                backgroundColor: catColors.iconBg,
               },
             ]}
           >
             <UserRound
               size={25}
-              color={
-                category === "Banking"
-                  ? "orange"
-                  : category === "Mail or ID"
-                    ? "red"
-                    : category === "Developer"
-                      ? "#e00092"
-                      : category === "Wifi"
-                        ? "#0098ff"
-                        : category === "Social"
-                          ? "#00c76b"
-                          : "#00cfbb"
-              }
+              color={catColors.accent}
               strokeWidth={2.5}
             />
           </View>
           <View style={styles.name_and_user}>
-            <Text style={styles.texts}>
+            <Text style={[styles.texts, { color: colors.text }]}>
               {category == "Banking"
                 ? "Username/Card No."
                 : category == "Mail or ID"
@@ -1016,17 +996,21 @@ const PasswordDetails = ({ route, navigation }) => {
             <TouchableOpacity
               onPress={() => setIsUsernameExpanded(!isUsernameExpanded)}
             >
-              <Text style={[styles.texts, { color: "lightgrey" }]}>
+              <Text style={[styles.texts, { color: colors.textSecondary }]}>
                 {isUsernameExpanded ? username : truncateUsername(username)}
               </Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity
             onPress={() => copyToClipboard(username, "username")}
-            style={[styles.categoryPill, { marginLeft: "auto" }]}
+            style={[styles.categoryPill, {
+              marginLeft: "auto",
+              backgroundColor: colors.categoryPillBg,
+              borderColor: colors.categoryPillBorder
+            }]}
             activeOpacity={0.7}
           >
-            <Ionicons name="copy" size={20} color="lightgrey" />
+            <Ionicons name="copy" size={20} color={colors.textSecondary} />
           </TouchableOpacity>
         </View>
         <View
@@ -1043,49 +1027,15 @@ const PasswordDetails = ({ route, navigation }) => {
             style={[
               styles.pic,
               {
-                borderColor:
-                  category === "Banking"
-                    ? "#643100"
-                    : category === "Mail or ID"
-                      ? "#780000"
-                      : category === "Developer"
-                        ? "#62003f"
-                        : category === "Wifi"
-                          ? "#003a80"
-                          : category === "Social"
-                            ? "#005c31"
-                            : "#006d60",
+                borderColor: catColors.iconBorder,
                 borderWidth: 0.5,
-                backgroundColor:
-                  category === "Banking"
-                    ? "#1c0e00"
-                    : category === "Mail or ID"
-                      ? "#200000"
-                      : category === "Developer"
-                        ? "#1e0013"
-                        : category === "Wifi"
-                          ? "#000e1f"
-                          : category === "Social"
-                            ? "#001e10"
-                            : "#001f1c",
+                backgroundColor: catColors.iconBg,
               },
             ]}
           >
             <KeyRound
               size={24}
-              color={
-                category === "Banking"
-                  ? "orange"
-                  : category === "Mail or ID"
-                    ? "red"
-                    : category === "Developer"
-                      ? "#e00092"
-                      : category === "Wifi"
-                        ? "#0098ff"
-                        : category === "Social"
-                          ? "#00c76b"
-                          : "#00cfbb"
-              }
+              color={catColors.accent}
               strokeWidth={2}
             />
           </View>
@@ -1093,13 +1043,16 @@ const PasswordDetails = ({ route, navigation }) => {
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
             >
-              <Text style={styles.texts}>Password</Text>
+              <Text style={[styles.texts, { color: colors.text }]}>Password</Text>
               <TouchableOpacity
                 onPress={checkFingerprintForSharingPass}
-                style={styles.categoryPill}
+                style={[styles.categoryPill, {
+                  backgroundColor: colors.categoryPillBg,
+                  borderColor: colors.categoryPillBorder
+                }]}
                 activeOpacity={0.7}
               >
-                <Ionicons name="share" size={20} color="lightgrey" />
+                <Ionicons name="share" size={20} color={colors.textSecondary} />
               </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -1115,23 +1068,28 @@ const PasswordDetails = ({ route, navigation }) => {
                 {
                   paddingVertical: showPass ? 5 : 1,
                   paddingHorizontal: showPass ? 20 : 8,
+                  backgroundColor: isDark ? "#391414" : "#ffe6e6",
+                  borderColor: isDark ? "#930000" : "#ff9999",
                 },
               ]}
             >
               {showPass ? (
-                <Text style={[styles.texts, { color: "red" }]}>{password}</Text>
+                <Text style={[styles.texts, { color: colors.error }]}>{password}</Text>
               ) : (
-                <Text style={[styles.texts, { color: "red" }]}>••••••••••</Text>
+                <Text style={[styles.texts, { color: colors.error }]}>••••••••••</Text>
               )}
             </TouchableOpacity>
           </View>
           <View style={styles.iconsShareAndCopy}>
             <TouchableOpacity
               onPress={() => copyToClipboard(password, "password")}
-              style={styles.categoryPill}
+              style={[styles.categoryPill, {
+                backgroundColor: colors.categoryPillBg,
+                borderColor: colors.categoryPillBorder
+              }]}
               activeOpacity={0.7}
             >
-              <Ionicons name="copy" size={20} color="lightgrey" />
+              <Ionicons name="copy" size={20} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
         </View>
@@ -1151,54 +1109,20 @@ const PasswordDetails = ({ route, navigation }) => {
               style={[
                 styles.pic,
                 {
-                  borderColor:
-                    category === "Banking"
-                      ? "#643100"
-                      : category === "Mail or ID"
-                        ? "#780000"
-                        : category === "Developer"
-                          ? "#62003f"
-                          : category === "Wifi"
-                            ? "#003a80"
-                            : category === "Social"
-                              ? "#005c31"
-                              : "#006d60",
+                  borderColor: catColors.iconBorder,
                   borderWidth: 0.5,
-                  backgroundColor:
-                    category === "Banking"
-                      ? "#1c0e00"
-                      : category === "Mail or ID"
-                        ? "#200000"
-                        : category === "Developer"
-                          ? "#1e0013"
-                          : category === "Wifi"
-                            ? "#000e1f"
-                            : category === "Social"
-                              ? "#001e10"
-                              : "#001f1c",
+                  backgroundColor: catColors.iconBg,
                 },
               ]}
             >
               <FontAwesome5
                 name="keyboard"
                 size={20}
-                color={
-                  category === "Banking"
-                    ? "orange"
-                    : category === "Mail or ID"
-                      ? "red"
-                      : category === "Developer"
-                        ? "#e00092"
-                        : category === "Wifi"
-                          ? "#0098ff"
-                          : category === "Social"
-                            ? "#00c76b"
-                            : "#00cfbb"
-                }
+                color={catColors.accent}
               />
             </View>
             <View style={[styles.name_and_user, { width: "65%" }]}>
-              <Text style={styles.texts}>PIN</Text>
+              <Text style={[styles.texts, { color: colors.text }]}>PIN</Text>
               <TouchableOpacity
                 onPress={() => {
                   if (showPIN) {
@@ -1212,22 +1136,28 @@ const PasswordDetails = ({ route, navigation }) => {
                   {
                     paddingVertical: showPIN ? 5 : 1,
                     paddingHorizontal: showPIN ? 20 : 8,
+                    backgroundColor: isDark ? "#391414" : "#ffe6e6",
+                    borderColor: isDark ? "#930000" : "#ff9999",
                   },
                 ]}
               >
                 {showPIN ? (
-                  <Text style={[styles.texts, { color: "red" }]}>{pin}</Text>
+                  <Text style={[styles.texts, { color: colors.error }]}>{pin}</Text>
                 ) : (
-                  <Text style={[styles.texts, { color: "red" }]}>••••••</Text>
+                  <Text style={[styles.texts, { color: colors.error }]}>••••••</Text>
                 )}
               </TouchableOpacity>
             </View>
             <TouchableOpacity
               onPress={() => copyToClipboard(pin, "pin")}
-              style={[styles.categoryPill, { marginLeft: "auto" }]}
+              style={[styles.categoryPill, {
+                marginLeft: "auto",
+                backgroundColor: colors.categoryPillBg,
+                borderColor: colors.categoryPillBorder
+              }]}
               activeOpacity={0.7}
             >
-              <Ionicons name="copy" size={20} color="lightgrey" />
+              <Ionicons name="copy" size={20} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
         )}
@@ -1242,89 +1172,28 @@ const PasswordDetails = ({ route, navigation }) => {
             style={[
               styles.pic,
               {
-                borderColor:
-                  category === "Banking"
-                    ? "#643100"
-                    : category === "Mail or ID"
-                      ? "#780000"
-                      : category === "Developer"
-                        ? "#62003f"
-                        : category === "Wifi"
-                          ? "#003a80"
-                          : category === "Social"
-                            ? "#005c31"
-                            : "#006d60",
+                borderColor: catColors.iconBorder,
                 borderWidth: 0.5,
-                backgroundColor:
-                  category === "Banking"
-                    ? "#1c0e00"
-                    : category === "Mail or ID"
-                      ? "#200000"
-                      : category === "Developer"
-                        ? "#1e0013"
-                        : category === "Wifi"
-                          ? "#000e1f"
-                          : category === "Social"
-                            ? "#001e10"
-                            : "#001f1c",
+                backgroundColor: catColors.iconBg,
               },
             ]}
           >
             <ClipboardList
               size={24}
-              color={
-                category === "Banking"
-                  ? "orange"
-                  : category === "Mail or ID"
-                    ? "red"
-                    : category === "Developer"
-                      ? "#e00092"
-                      : category === "Wifi"
-                        ? "#0098ff"
-                        : category === "Social"
-                          ? "#00c76b"
-                          : "#00cfbb"
-              }
+              color={catColors.accent}
               strokeWidth={2}
             />
           </View>
           <View style={styles.name_and_user}>
-            <Text style={styles.texts}>Category</Text>
+            <Text style={[styles.texts, { color: colors.text }]}>Category</Text>
             <Text
               style={[
                 styles.categoryText,
                 {
-                  color:
-                    category === "Banking"
-                      ? "orange"
-                      : category === "Mail or ID"
-                        ? "red"
-                        : category === "Developer"
-                          ? "#a8006e"
-                          : category === "Wifi"
-                            ? "#0072ff"
-                            : "#00c76b",
+                  color: catColors.accent,
                   borderWidth: 0.5,
-                  borderColor:
-                    category === "Banking"
-                      ? "#ba5a00"
-                      : category === "Mail or ID"
-                        ? "#930000"
-                        : category === "Developer"
-                          ? "#7e0052"
-                          : category === "Wifi"
-                            ? "#0051b2"
-                            : "#00713c",
-                  backgroundColor:
-                    category === "Banking"
-                      ? "#2d1600"
-                      : category === "Mail or ID"
-                        ? "#391414"
-                        : category === "Developer"
-                          ? "#29001a"
-                          : category === "Wifi"
-                            ? "#00152e"
-                            : "#002d18",
+                  borderColor: catColors.pillBorder,
+                  backgroundColor: catColors.pillBg,
                 },
               ]}
             >
@@ -1334,22 +1203,29 @@ const PasswordDetails = ({ route, navigation }) => {
         </View>
       </View>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={qrBottomSheetVisible}
         onRequestClose={handleCloseQrSheet}
       >
         <TouchableOpacity
-          style={styles.qrModalContainer}
+          style={[styles.qrModalContainer, { backgroundColor: isDark?"black":"#eaeaea" }]}
           activeOpacity={1}
           onPress={handleCloseQrSheet}
         >
-          <TouchableOpacity style={styles.qrBottomSheet} activeOpacity={1}>
+          <TouchableOpacity style={[styles.qrBottomSheet, {
+            backgroundColor: isDark? colors.surface:"#d4d4d4",
+            borderColor: colors.border
+          }]} activeOpacity={1}>
             <TouchableOpacity
-              style={styles.closeButton}
+              style={[styles.closeButton, {
+                backgroundColor: isDark? colors.surface:"#d4d4d4",
+                borderColor: colors.border,
+                elevation:10
+              }]}
               onPress={handleCloseQrSheet}
             >
-              <ChevronDown size={25} strokeWidth={2.5} color="white" />
+              <ChevronDown size={25} strokeWidth={2.5} color={colors.text} />
             </TouchableOpacity>
             <View style={styles.qrContent}>
               <Text style={styles.qrWarningText}>
@@ -1358,7 +1234,7 @@ const PasswordDetails = ({ route, navigation }) => {
               <Text style={styles.qrWarningText}>
                 Share only to your trusted ones
               </Text>
-              <Text style={styles.qrTimerText}>Auto-close in {countdown}s</Text>
+              <Text style={[styles.qrTimerText,{color:isDark?"#dfdfdfff":"grey"}]}>Auto-close in {countdown}s</Text>
               <View style={styles.qrCodeContainer}>
                 <QrCodeSvg
                   value={password}
@@ -1377,21 +1253,21 @@ const PasswordDetails = ({ route, navigation }) => {
       <View style={styles.buttonsmain}>
         <TouchableOpacity
           onPress={() => setDeletePassModalVisible(true)}
-          style={[styles.button,buttonStyles.redButton]}
+          style={[styles.button,dynamicButtons.redButton]}
         >
-          <Text style={styles.texts}>Delete</Text>
+          <Text style={[styles.texts, { color: colors.redButtonText }]}>Delete</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setModalVisible(true)}
-          style={[styles.button,buttonStyles.whiteButton]}
+          style={[styles.button,dynamicButtons.whiteButton]}
         >
-          <Text style={[styles.texts, { color: "black" }]}>Edit</Text>
+          <Text style={[styles.texts, { color: colors.whiteButtonText }]}>Edit</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-
+const screenwidth = Dimensions.get("window").width
 const styles = StyleSheet.create({
   main: {
     width: "100%",
@@ -1410,13 +1286,11 @@ const styles = StyleSheet.create({
     borderRadius: 80,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#2c2c2c",
     borderWidth: 1,
-    borderColor: "#363636",
-        elevation:10,
+    elevation: 10,
   },
   linkSectionLabel: {
-    color: "lightgrey",
+    color: "#ebebf5",
     fontSize: 11,
     fontWeight: "800",
     letterSpacing: 1,
@@ -1434,21 +1308,20 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 8,
     marginBottom: 10,
+    marginLeft:20
   },
   chip: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    backgroundColor: "#2c2c2c",
     borderWidth: 1,
-    borderColor: "#363636",
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 50,
     maxWidth: "100%",
   },
   chipText: {
-    color: "white",
+    color: "#ffffff",
     fontSize: 13,
     fontWeight: "600",
     maxWidth: 200,
@@ -1457,22 +1330,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    width:screenwidth - 80,
+    margin:"auto"
   },
   linkAddInput: {
     flex: 1,
-    backgroundColor: "#202020",
     borderWidth: 1,
-    borderColor: "#333",
     borderRadius: 54,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    color: "white",
     fontSize: 14,
   },
   linkAddBtn: {
-    backgroundColor: "#cfcfcf",
     borderWidth: 1,
-    borderColor: "#fff",
     width: 40,
     height: 40,
     borderRadius: 50,
@@ -1484,15 +1354,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
-    backgroundColor: "#001e10",
     borderWidth: 1,
-    borderColor: "#005c31",
     borderRadius: 54,
     paddingVertical: 12,
     paddingHorizontal: 14,
+    width:screenwidth - 80,
+    margin:"auto"
   },
   linkAddFullBtnText: {
-    color: "#00c76b",
     fontSize: 14,
     fontWeight: "700",
   },
@@ -1535,30 +1404,27 @@ const styles = StyleSheet.create({
   },
 
   picker: {
-    color: "white", // for dark mode
+    color: "#ffffff", // for dark mode
     backgroundColor: "#282828",
     height: 65,
   },
   modalContent: {
     backgroundColor: "#202020ff",
     borderRadius: 40,
-    paddingHorizontal: 20,
     paddingVertical: 20,
     elevation: 5,
     borderWidth: 0.5,
     borderColor: "#3d3d3d",
   },
   passTextView: {
-    backgroundColor: "#391414",
     paddingHorizontal: 5,
     paddingVertical: 5,
     borderRadius: 50,
     borderWidth: 0.5,
-    borderColor: "#930000",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-        elevation:10,
+    elevation: 10,
   },
   name_and_user: {
     flexDirection: "column",
@@ -1584,21 +1450,19 @@ const styles = StyleSheet.create({
     elevation:10
   },
   texts: {
-    color: "white",
     fontSize: 17,
     fontWeight: 800,
   },
   input: {
-    backgroundColor: "#2a2a2a",
     borderRadius: 50,
     borderWidth: 1,
-    borderColor: "#3d3d3d",
+    margin:"auto",
     marginBottom: 15,
     fontSize: 16,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    color: "white",
-    elevation:10
+    elevation: 10,
+    width:screenwidth - 80
   },
   modalbtn: {
     width: "100%",
@@ -1607,12 +1471,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 18,
     borderRadius: 54,
-    backgroundColor: "#383838",
   },
   buttonRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%",
+    width: screenwidth - 80,
+    margin:"auto",
     marginTop: 30,
   },
   passmain: {
@@ -1621,13 +1485,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingRight: 15,
     paddingVertical: 25,
-    backgroundColor: "#1c1c1c",
     borderWidth: 1.5,
-    borderColor: "#282828ff",
     borderRadius: 40,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-start",
+    elevation:10,
   },
   buttonsmain: {
     width: "98%",
@@ -1651,31 +1514,27 @@ const styles = StyleSheet.create({
   qrModalContainer: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "#000000ff",
   },
   qrBottomSheet: {
-    backgroundColor: "#1a1a1aff",
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     height: "60%",
     position: "relative",
     borderWidth: 1,
-    borderColor: "#292929ff",
+    elevation:10
   },
   closeButton: {
     position: "absolute",
     bottom: "102%",
-    alignSelf: "center", // Centers horizontally
+    alignSelf: "center",
     zIndex: 10,
     padding: 10,
     paddingHorizontal: 60,
-    backgroundColor: "#1a1a1aff",
     borderRadius: 55,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#292929ff",
   },
   qrContent: {
     flex: 1,
@@ -1699,7 +1558,7 @@ const styles = StyleSheet.create({
     padding: 18, 
     backgroundColor: "#e0e0e0",
     borderRadius: 35, 
-    elevation: 10,
+    elevation: 20,
     marginTop: 10,
     borderWidth: 3,
     outlineWidth:10,

@@ -6,112 +6,48 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useNavigation } from '@react-navigation/native';
 import { Globe, KeyRound, User, UserRound, Wifi } from 'lucide-react-native';
+import { useTheme } from '../theme/ThemeContext';
+import { getCategoryColors } from '../theme/colors';
 
 const CategoryCompo = ({category,quantity}) => {
 
-     const navigation = useNavigation(); 
+     const navigation = useNavigation();
+     const { colors, isDark } = useTheme();
+     const catColors = getCategoryColors(category, isDark); 
 
   return (
     <View style={{width:"47%",}}>
-     <TouchableOpacity onPress={() => navigation.navigate("homescreen", { category: category })} style={[styles.categoryCompoMain,{borderColor: category === "Banking"
-                  ? "#8a4300"
-                  : category === "Mail or ID"
-                  ? "#950000"
-                  : category === "Developer"
-                  ? "#800053"
-                  : category === "Wifi"
-                  ? "#00459a"
-                  : category === "Social"? "#007c42":"#008575",borderWidth:0.5,backgroundColor:category === "Banking"
-                  ? "#1f0f00ff"
-                  : category === "Mail or ID"
-                  ? "#230000ff"
-                  : category === "Developer"
-                  ? "#230016ff"
-                  : category === "Wifi"
-                  ? "#001229ff"
-                  : category === "Social"?"#001e10":"#001f1c"}]}>
+     <TouchableOpacity onPress={() => navigation.navigate("homescreen", { category: category })} style={[styles.categoryCompoMain,{
+       borderColor: catColors.border,
+       borderWidth: 0.5,
+       backgroundColor: catColors.bg
+     }]}>
         <View style={[styles.catIconandNum,{width:"100%"}]}>
             <View style={[styles.iconPill,{
-              backgroundColor: category === "Banking"
-                  ? "#3a1c00"
-                  : category === "Mail or ID"
-                  ? "#430000"
-                  : category === "Developer"
-                  ? "#3d0027"
-                  : category === "Wifi"
-                  ? "#002248"
-                  : category === "Social"?"#00351c":"#003d38",
+              backgroundColor: catColors.iconBg,
               borderWidth: 0.5,
-              borderColor: category === "Banking"
-                  ? "#884200"
-                  : category === "Mail or ID"
-                  ? "#970000"
-                  : category === "Developer"
-                  ? "#830055"
-                  : category === "Wifi"
-                  ? "#00469b"
-                  : category === "Social"? "#007a41":"#008475"
+              borderColor: catColors.iconBorder
             }]}>
-              {category === "Banking"? <Ionicons name="card-outline" size={28} color="orange" />
-                : category === "Mail or ID"? <UserRound size={27} color="red" strokeWidth={2.1} />
-                : category === "Developer"? <FontAwesome6 name="code" size={25} color="#e00092" />
-                : category === "Wifi"? <Wifi size={27} color="#0098ff" strokeWidth={3} />
-                : category === "Social"? <Globe size={27} color="#00c76b" strokeWidth={2.2} />
-                : <KeyRound size={27} color="#00cfbb" strokeWidth={2.1} />}
+              {category === "Banking"? <Ionicons name="card-outline" size={28} color={catColors.accent} />
+                : category === "Mail or ID"? <UserRound size={27} color={catColors.accent} strokeWidth={2.1} />
+                : category === "Developer"? <FontAwesome6 name="code" size={25} color={catColors.accent} />
+                : category === "Wifi"? <Wifi size={27} color={catColors.accent} strokeWidth={3} />
+                : category === "Social"? <Globe size={27} color={catColors.accent} strokeWidth={2.2} />
+                : <KeyRound size={27} color={catColors.accent} strokeWidth={2.1} />}
             </View>
             <View  style={[styles.catIconandNum,{gap:5}]}>
-                <Text style={{color: category === "Banking"
-                  ? "orange"
-                  : category === "Mail or ID"
-                  ? "red"
-                  : category === "Developer"
-                  ? "#e00092"
-                  : category === "Wifi"
-                  ? "#0098ff"
-                  : category === "Social"?"#00c76b":"#00cfbb",fontSize:16,fontWeight:800}}>{quantity}</Text>
-                <MaterialIcons name="arrow-forward-ios" size={20} color={category === "Banking"
-                  ? "orange"
-                  : category === "Mail or ID"
-                  ? "red"
-                  : category === "Developer"
-                  ? "#e00092"
-                  : category === "Wifi"
-                  ? "#0098ff"
-                  : category === "Social"?"#00c76b":"#00cfbb"} />
+                <Text style={{color: catColors.accent, fontSize:16, fontWeight:800}}>{quantity}</Text>
+                <MaterialIcons name="arrow-forward-ios" size={20} color={catColors.accent} />
 
             </View>
 
         </View>
         <View style={[styles.titlePill, {
-          backgroundColor: category === "Banking"
-                  ? "#3a1c00"
-                  : category === "Mail or ID"
-                  ? "#430000"
-                  : category === "Developer"
-                  ? "#3d0027"
-                  : category === "Wifi"
-                  ? "#002248"
-                  : category === "Social"?"#00351c":"#003d38",
+          backgroundColor: catColors.pillBg,
           borderWidth: 0.6,
-          borderColor: category === "Banking"
-                  ? "#833f00"
-                  : category === "Mail or ID"
-                  ? "#8f0000"
-                  : category === "Developer"
-                  ? "#78004e"
-                  : category === "Wifi"
-                  ? "#004394"
-                  : category === "Social"? "#00733d":"#008071"
+          borderColor: catColors.pillBorder
         }]}>
-            <Text style={{color:  category === "Banking"
-                  ? "orange"
-                  : category === "Mail or ID"
-                  ? "red"
-                  : category === "Developer"
-                  ? "#e00092"
-                  : category === "Wifi"
-                  ? "#0098ff"
-                  : category === "Social"?"#00c76b":"#00cfbb",fontSize:17,fontWeight:800}}>
+            <Text style={{color: catColors.accent, fontSize:17, fontWeight:800}}>
                 {category}
             </Text>
         </View>
@@ -199,7 +135,8 @@ const styles = StyleSheet.create({
     backgroundColor:"#272727",
     borderRadius:30,
     flexDirection:"column",
-    gap:20
+    gap:20,
+    elevation:10
   },
   titlePill:{
     width:"100%",

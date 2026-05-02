@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, Vibration } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Vibration, Dimensions } from "react-native";
 import React from "react";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useNavigation } from "@react-navigation/native";
@@ -7,6 +7,8 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { Globe, KeyRound, UserRound, Wifi } from "lucide-react-native";
+import { useTheme } from "../theme/ThemeContext";
+import { getCategoryColors } from "../theme/colors";
 
 const PasswordCard = ({
   userName,
@@ -16,6 +18,8 @@ const PasswordCard = ({
   headCategory,
 }) => {
   const navigation = useNavigation();
+  const { colors, isDark } = useTheme();
+  const catColors = getCategoryColors(category, isDark);
 
   const truncateUsername = (name, item) => {
     if (item == "passName") {
@@ -53,37 +57,15 @@ const PasswordCard = ({
             passCategory: headCategory,
           })
         }
-        style={styles.main}
+        style={[styles.main, { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder,borderWidth:isDark?1.5:0}]}
       >
         <View style={styles.leftSection}>
           <View
             style={[
               styles.pic,
               {
-                backgroundColor:
-                  category === "Banking"
-                    ? "#1c0e00"
-                    : category === "Mail or ID"
-                    ? "#200000"
-                    : category === "Developer"
-                    ? "#1e0013"
-                    : category === "Wifi"
-                    ? "#000e1f"
-                    : category === "Social"
-                    ? "#001e10"
-                    : "#001f1c",
-                borderColor:
-                  category === "Banking"
-                    ? "#4b2400ff"
-                    : category === "Mail or ID"
-                    ? "#780000"
-                    : category === "Developer"
-                    ? "#62003f"
-                    : category === "Wifi"
-                    ? "#003a80"
-                    : category === "Social"
-                    ? "#005c31"
-                    : "#006d60",
+                backgroundColor: catColors.iconBg,
+                borderColor: catColors.iconBorder,
                 borderWidth: 1,
               },
             ]}
@@ -93,18 +75,7 @@ const PasswordCard = ({
                 fontSize: 30,
                 fontWeight: 800,
                 paddingBottom: 5,
-                color:
-                  category === "Banking"
-                    ? "orange"
-                    : category === "Mail or ID"
-                    ? "red"
-                    : category === "Developer"
-                    ? "#e00092"
-                    : category === "Wifi"
-                    ? "#0098ff"
-                    : category === "Social"
-                    ? "#00c76b"
-                    : "#00cfbb",
+                color: catColors.accent,
               }}
             >
               {firstLetter}
@@ -112,14 +83,14 @@ const PasswordCard = ({
           </View>
           <View style={styles.name_and_user}>
             <Text
-              style={styles.passNameText}
+              style={[styles.passNameText, { color: colors.text }]}
               numberOfLines={1}
               ellipsizeMode="tail"
             >
               {passName}
             </Text>
             <Text
-              style={styles.userNameText}
+              style={[styles.userNameText, { color: colors.textSecondary }]}
               numberOfLines={1}
               ellipsizeMode="tail"
             >
@@ -129,7 +100,7 @@ const PasswordCard = ({
         </View>
 
         <View style={styles.rightSection}>
-          <View style={styles.categoryPill}>
+          <View style={[styles.categoryPill, { backgroundColor: colors.categoryPillBg, borderColor: colors.categoryPillBorder }]}>
             {category === "Banking" ? (
               <Ionicons name="card-outline" size={22} color="orange" />
             ) : category === "Mail or ID" ? (
@@ -144,17 +115,18 @@ const PasswordCard = ({
               <KeyRound size={22} color="#00cfbb" strokeWidth={2.1} />
             )}
           </View>
-                <MaterialIcons name="arrow-forward-ios" size={20} color="white" />
+                <MaterialIcons name="arrow-forward-ios" size={20} color={colors.text} />
       
         </View>
       </TouchableOpacity>
     </View>
   );
 };
-
+const screenwidth = Dimensions.get("window").width
+const paddingHorizontal = 40
 const styles = StyleSheet.create({
   main: {
-    width: "100%",
+    width: screenwidth - 40,
     margin: "auto",
     backgroundColor: "#1c1c1c",
     paddingVertical: 12,
@@ -163,8 +135,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderWidth: 1.5,
     borderColor: "rgb(45, 45, 45)",
+    elevation:10
   },
   leftSection: {
     flexDirection: "row",

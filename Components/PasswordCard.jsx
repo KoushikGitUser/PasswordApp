@@ -9,6 +9,7 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { Globe, KeyRound, UserRound, Wifi } from "lucide-react-native";
 import { useTheme } from "../theme/ThemeContext";
 import { getCategoryColors } from "../theme/colors";
+import { ELEVATION_LEVELS, SHADOW_COLORS } from "../styles/elevationStyles";
 
 const PasswordCard = ({
   userName,
@@ -57,7 +58,7 @@ const PasswordCard = ({
             passCategory: headCategory,
           })
         }
-        style={[styles.main, { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder,borderWidth:isDark?1.5:0}]}
+        style={[styles.main, { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder,borderWidth:isDark?1.5:1,shadowColor:isDark?"black":"#969696"}]}
       >
         <View style={styles.leftSection}>
           <View
@@ -123,7 +124,7 @@ const PasswordCard = ({
   );
 };
 const screenwidth = Dimensions.get("window").width
-const paddingHorizontal = 40
+const paddingHorizontal = 40;
 const styles = StyleSheet.create({
   main: {
     width: screenwidth - 40,
@@ -136,7 +137,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     borderColor: "rgb(45, 45, 45)",
-    elevation:10
+    elevation:ELEVATION_LEVELS.large,
+    shadowColor: "#969696"
+
   },
   leftSection: {
     flexDirection: "row",
@@ -186,7 +189,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexShrink: 0,
-    elevation:10
+    elevation:ELEVATION_LEVELS.medium,
+    shadowColor:"#969696"
   },
   categoryPill: {
     paddingHorizontal: 18,
@@ -195,9 +199,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#2c2c2c",
-    borderWidth:1,
+    borderWidth:0.5,
     borderColor:"#363636",
-    elevation:10,
+    elevation:ELEVATION_LEVELS.medium,
+    shadowColor:"#969696"
   },
 });
 

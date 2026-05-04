@@ -15,6 +15,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { listInstalledApps } from "../Services/autofill";
 import { useTheme } from "../theme/ThemeContext";
 import { BlurView } from "@react-native-community/blur";
+import { getElevation, ELEVATION_LEVELS } from "../styles/elevationStyles";
 
 const AppPickerSheet = ({ visible, onClose, onPick, existingPackages = [] }) => {
   const { colors, isDark } = useTheme();
@@ -58,7 +59,7 @@ const AppPickerSheet = ({ visible, onClose, onPick, existingPackages = [] }) => 
         style={[styles.row, {
           backgroundColor: colors.surface,
           borderColor: colors.border,
-          elevation:10,
+          ...getElevation('medium', isDark),
           width:screenWidth - 80,
           margin:"auto",
         }, alreadyAdded && { opacity: 0.45 }]}
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 500,
     borderWidth: 1,
-    elevation: 20,
+    elevation: ELEVATION_LEVELS.large,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.3,

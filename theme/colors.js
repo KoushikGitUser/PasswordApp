@@ -65,7 +65,7 @@ export const lightColors = {
   categoryWifiBorder: '#80bdff',
 
   // Card pill colors
-  categoryPillBg: '#f0f0f0',
+  categoryPillBg: '#ffffff',
   categoryPillBorder: '#d0d0d0',
 
   // Accent colors

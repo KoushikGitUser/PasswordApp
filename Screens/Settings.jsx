@@ -45,6 +45,7 @@ import * as SecureStore from "expo-secure-store";
 import { triggerToast } from "../Services/toast";
 import { useTheme } from "../theme/ThemeContext";
 import { getButtonStyles } from "../styles/buttonStyles";
+import { getElevation, ELEVATION_LEVELS } from "../styles/elevationStyles";
 
 const Settings = ({
   onDataAdded,
@@ -2089,7 +2090,7 @@ const Settings = ({
                   borderTopRightRadius: 30,
                   borderBottomLeftRadius: 0,
                   borderBottomRightRadius: 0,
-                  elevation: 10,
+                  ...getElevation('medium', isDark),
                 },
               ]}
             >
@@ -2341,7 +2342,7 @@ const Settings = ({
                   inputRange: [0, 1],
                   outputRange: [autofillOn ? "#80dea0" : colors.border, "#3d3d3d"]
                 }),
-                elevation: 10,
+                ...getElevation('medium', isDark),
               },
             ]}
           >
@@ -2775,7 +2776,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     borderWidth: 0.5,
-    elevation: 10,
+    elevation: ELEVATION_LEVELS.medium,
   },
   tip: {
     fontSize: 16,
@@ -2832,7 +2833,7 @@ const styles = StyleSheet.create({
     width: "auto",
     height: "auto",
     paddingHorizontal: 20,
-    elevation: 10,
+    elevation: ELEVATION_LEVELS.medium,
     shadowColor: "red",
     paddingVertical: 12,
     borderRadius: 13,
@@ -3066,7 +3067,7 @@ const styles = StyleSheet.create({
     padding: 17,
     paddingVertical: 10,
     marginBottom: 12,
-    elevation: 10,
+    elevation: ELEVATION_LEVELS.medium,
   },
   radioButton: {
     width: 24,

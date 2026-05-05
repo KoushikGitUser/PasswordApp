@@ -424,7 +424,12 @@ const Homescreen = ({
         visible={deleteAllModalVisible}
         onRequestClose={() => setDeleteAllModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView
+          intensity={40}
+          tint={isDark ? "dark" : "light"}
+          overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"}
+          style={styles.blurContainer}
+        >
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color: colors.text, fontSize: 16, marginLeft: 2 }}>
               Are you sure you want to delete all{" "}
@@ -471,7 +476,7 @@ const Homescreen = ({
         onRequestClose={() => setModalVisible(false)}
       >
         <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
-          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
+          <View style={[styles.modalContent, { backgroundColor:isDark? colors.modalBackground:"#f3f3f3", borderColor: colors.border }]}>
             <TouchableOpacity
               onPress={() => {
                 if (secureEntry) {
@@ -489,7 +494,9 @@ const Homescreen = ({
                 margin: "auto",
                 borderWidth: 1,
                 borderColor: colors.inputBorder,
-                elevation: 10
+                elevation: 10,
+                  shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
               }}
             >
               {secureEntry ? (
@@ -518,6 +525,8 @@ const Homescreen = ({
                 backgroundColor: colors.inputBackground,
                 borderColor: colors.inputBorder,
                 color: colors.inputText,
+                  shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
               }]}
             />
             <TextInput
@@ -541,6 +550,8 @@ const Homescreen = ({
                 backgroundColor: colors.inputBackground,
                 borderColor: colors.inputBorder,
                 color: colors.inputText,
+                  shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
               }]}
             />
             <TextInput
@@ -553,6 +564,8 @@ const Homescreen = ({
                 backgroundColor: colors.inputBackground,
                 borderColor: colors.inputBorder,
                 color: colors.inputText,
+                  shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
               }]}
             />
             {category == "Banking" ? (
@@ -566,6 +579,8 @@ const Homescreen = ({
                 backgroundColor: colors.inputBackground,
                 borderColor: colors.inputBorder,
                 color: colors.inputText,
+                  shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
               }]}
               />
             ) : null}
@@ -574,7 +589,9 @@ const Homescreen = ({
                 style={[styles.categorySelector, {
                   backgroundColor: colors.inputBackground,
                   borderWidth: 1,
-                  borderColor: colors.inputBorder
+                  borderColor: colors.inputBorder,
+                    shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
                 }]}
                 onPress={() => setCategoryPickerVisible(true)}
               >
@@ -647,12 +664,15 @@ const Homescreen = ({
                 key={option.value}
                 style={[
                   styles.categoryOption,
-                  { backgroundColor: colors.surface, borderColor: colors.border },
+                  { backgroundColor: colors.surface, borderColor: colors.border, shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,  },
                   category === option.value && [
                     styles.categoryOptionSelected,
                     {
                       backgroundColor: isDark ? "#353535" : "#e0e0e0",
-                      borderColor: isDark ? "#505050" : "#b0b0b0"
+                      borderColor: isDark ? "#505050" : "#b0b0b0",
+                      shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
                     }
                   ],
                 ]}
@@ -785,7 +805,8 @@ const Homescreen = ({
               backgroundColor: colors.surface,
               padding: 8,
               borderRadius: 50,
-              elevation:10
+              elevation:10,
+              shadowColor:isDark?"black":"#969696"
             }}
           />
         </TouchableOpacity>
@@ -841,6 +862,7 @@ const Homescreen = ({
               <View style={[styles.searchmain, {
                 backgroundColor: colors.inputBackground,
                 borderColor: colors.inputBorder,
+                shadowColor:isDark?"black":"#969696"
               }]}>
                 <Search color={colors.textTertiary} style={{marginRight:10}} />
                 <TextInput
@@ -1025,8 +1047,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 15,
-    borderWidth:1,
-    borderColor:"#444444",
+    borderWidth:0.5,
+    borderColor:"#797979",
     elevation:10
   },
   footer: {

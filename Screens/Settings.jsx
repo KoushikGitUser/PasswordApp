@@ -778,11 +778,7 @@ const Settings = ({
         visible={infoModalVisible}
         onRequestClose={() => setInfoModalVisible(false)}
       >
-        <BlurView
-          intensity={40}
-          tint={isDark ? "dark" : "light"}
-          style={styles.blurContainer}
-        >
+  <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}> 
           <TouchableOpacity
             style={styles.blurDismissArea}
             activeOpacity={1}
@@ -937,7 +933,7 @@ const Settings = ({
         onRequestClose={() => setImportModalVisible(false)}
       >
         <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
-          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
+          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border, }]}>
             <Text
               style={{
                 color: "green",
@@ -1022,6 +1018,8 @@ const Settings = ({
                   backgroundColor: colors.surface,
                   borderColor: importMode === "replace" ? "#ff8c00" : colors.border,
                   borderRadius: 50,
+                  shadowColor:isDark?"black":"#969696",
+
                 },
                 importMode === "replace" && {
                   backgroundColor: isDark ? "#2d2410" : "#fff5e6",
@@ -1060,6 +1058,8 @@ const Settings = ({
                   backgroundColor: colors.surface,
                   borderColor: importMode === "merge" ? "#ff8c00" : colors.border,
                   borderRadius: 50,
+                  shadowColor:isDark?"black":"#969696",
+
                 },
                 importMode === "merge" && {
                   backgroundColor: isDark ? "#2d2410" : "#fff5e6",
@@ -1470,7 +1470,7 @@ const Settings = ({
         onRequestClose={() => setExportPassphraseModalVisible(false)}
       >
         <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
-          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
+          <View style={[styles.modalContent, { backgroundColor: isDark? colors.modalBackground:"#f3f3f3", borderColor: colors.border }]}>
             <Text
               style={{
                 color: "#00c787",
@@ -1501,9 +1501,10 @@ const Settings = ({
               backgroundColor: colors.inputBackground,
               borderColor: colors.inputBorder,
               opacity: backupLoader ? 0.5 : 1,
+              shadowColor:isDark?"black":"#969696"
             }]}>
               <TextInput
-                style={[styles.passInput, { color: colors.inputText }]}
+                style={[styles.passInput, { color: colors.inputText, }]}
                 placeholder="Password (Min 12 characters)"
                 placeholderTextColor={colors.inputPlaceholder}
                 value={exportPassphrase}
@@ -1532,6 +1533,7 @@ const Settings = ({
               backgroundColor: colors.inputBackground,
               borderColor: colors.inputBorder,
               opacity: backupLoader ? 0.5 : 1,
+              shadowColor:isDark?"black":"#969696"
             }]}>
               <TextInput
                 style={[styles.passInput, { color: colors.inputText }]}
@@ -1553,6 +1555,7 @@ const Settings = ({
               backgroundColor: colors.inputBackground,
               borderColor: colors.inputBorder,
               opacity: backupLoader ? 0.5 : 1,
+              shadowColor:isDark?"black":"#969696"
             }]}>
               <TextInput
                 style={[styles.passInput, { color: colors.inputText }]}
@@ -1652,7 +1655,7 @@ const Settings = ({
         onRequestClose={cancelImportFlow}
       >
         <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
-          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
+          <View style={[styles.modalContent, { backgroundColor: isDark? colors.modalBackground:"#f3f3f3", borderColor: colors.border }]}>
             <Text
               style={{
                 color: "#00c787",
@@ -1671,6 +1674,8 @@ const Settings = ({
             <View style={[styles.passInputRow, {
               backgroundColor: colors.inputBackground,
               borderColor: colors.inputBorder,
+              shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
             }]}>
               <TextInput
                 style={[styles.passInput, { color: colors.inputText }]}
@@ -1843,7 +1848,8 @@ const Settings = ({
               backgroundColor: colors.surface,
               padding: 8,
               borderRadius: 50,
-              elevation:10
+              elevation:10,
+              shadowColor:isDark?"black":"#969696"
             }}
           />
 
@@ -1883,6 +1889,7 @@ const Settings = ({
               borderBottomWidth: 0,
               backgroundColor: colors.surface,
               borderColor: colors.border,
+              shadowColor:isDark?"black":"#969696"
             },
           ]}
         >
@@ -1930,6 +1937,7 @@ const Settings = ({
               borderBottomRightRadius: 30,
               backgroundColor: colors.surface,
               borderColor: colors.border,
+              shadowColor:isDark?"black":"#969696"
             },
           ]}
         >
@@ -1967,6 +1975,7 @@ const Settings = ({
               borderRadius: 30,
               backgroundColor: colors.surface,
               borderColor: colors.border,
+              shadowColor:isDark?"black":"#969696"
 
             },
           ]}
@@ -1985,7 +1994,8 @@ const Settings = ({
             ) : themeMode === "dark" ? (
               <Moon strokeWidth={2} size={26} color={colors.textSecondary} />
             ) : (
-              <Smartphone strokeWidth={2} size={26} color={colors.textSecondary} />
+              <MaterialCommunityIcons name="circle-half-full" size={24} color={ colors.textSecondary} />
+
             )}
 
             <View style={{ flex: 1 }}>
@@ -2035,12 +2045,13 @@ const Settings = ({
                 styles.settingsMain,
                 {
                   backgroundColor: enableAutoLock ? "#001e10" : "#200000",
-                  borderWidth: 1,
+                  borderWidth: 0.5,
                   borderColor: enableAutoLock ? "#005c31" : "#780000",
                   borderTopLeftRadius: 30,
                   borderTopRightRadius: 30,
                   borderBottomLeftRadius: 0,
                   borderBottomRightRadius: 0,
+                  shadowColor:isDark?"black":"#969696"
                 },
               ]}
             >
@@ -2090,7 +2101,8 @@ const Settings = ({
                   borderTopRightRadius: 30,
                   borderBottomLeftRadius: 0,
                   borderBottomRightRadius: 0,
-                  ...getElevation('medium', isDark),
+                  elevation:10,
+                  shadowColor:isDark?"black":"#969696",
                 },
               ]}
             >
@@ -2181,6 +2193,7 @@ const Settings = ({
                 borderBottomRightRadius: 30,
                 backgroundColor: colors.surface,
                 borderColor: colors.border,
+                shadowColor:isDark?"black":"#969696"
               },
             ]}
           >
@@ -2217,6 +2230,7 @@ const Settings = ({
                   borderBottomWidth: 0,
                   backgroundColor: colors.surface,
                   borderColor: colors.border,
+                  shadowColor:isDark?"black":"#969696"
                 },
               ]}
             >
@@ -2258,6 +2272,7 @@ const Settings = ({
                   backgroundColor: isDark ? "#200000" : "#ffe6e6",
                   borderWidth: 1,
                   borderColor: isDark ? "#780000" : "#ff9999",
+                  shadowColor:isDark?"black":"#969696"
                 },
               ]}
             >
@@ -2301,6 +2316,7 @@ const Settings = ({
                   backgroundColor: autofillOn ? "#001e10" : colors.surface,
                   borderWidth: 1,
                   borderColor: autofillOn ? "#005c31" : colors.border,
+                  shadowColor:isDark?"black":"#969696"
                 },
               ]}
             >
@@ -2453,7 +2469,8 @@ const Settings = ({
                   borderRadius: 30,
                   backgroundColor: colors.redButtonBg,
                   borderColor: colors.redButtonBorder,
-                  borderWidth:1.5
+                  borderWidth:1.5,
+                  shadowColor:isDark?"black":"#969696"
                 },
               ]}
             >
@@ -2495,6 +2512,7 @@ const Settings = ({
               borderRadius: 50,
               backgroundColor: colors.surface,
               borderColor: colors.border,
+              shadowColor:isDark?"black":"#969696"
             },
           ]}
         >
@@ -2561,6 +2579,8 @@ const Settings = ({
                   backgroundColor: colors.surface,
                   borderColor: themeMode === "light" ? "#ff8c00" : colors.border,
 
+                  shadowColor:isDark?"black":"#969696"
+
                 },
                 themeMode === "light" && {
                   backgroundColor: "#fff5e6",
@@ -2574,10 +2594,14 @@ const Settings = ({
                     {
                       backgroundColor: colors.inputBackground,
                       borderColor: colors.inputBorder,
+                      elevation:10,
+                      shadowColor:isDark?"black":"#4e4e4e"
                     },
                     themeMode === "light" && {
                       backgroundColor: "#ffe4b3",
                       borderColor: "#ff8c00",
+                      elevation:10,
+                      shadowColor:isDark?"black":"#4e4e4e"
                     },
                   ]}
                 >
@@ -2617,6 +2641,7 @@ const Settings = ({
                 {
                   backgroundColor: colors.surface,
                   borderColor: themeMode === "dark" ? "#4da6ff" : colors.border,
+                  shadowColor:isDark?"black":"#969696"
                 },
                 themeMode === "dark" && {
                   backgroundColor: "#0d1f2d",
@@ -2630,10 +2655,14 @@ const Settings = ({
                     {
                       backgroundColor: colors.inputBackground,
                       borderColor: colors.inputBorder,
+                      elevation:10,
+                      shadowColor:isDark?"black":"#4e4e4e"
                     },
                     themeMode === "dark" && {
                       backgroundColor: "#1a2f3d",
                       borderColor: "#4da6ff",
+                      elevation:10,
+                      shadowColor:isDark?"black":"#4e4e4e"
                     },
                   ]}
                 >
@@ -2673,6 +2702,7 @@ const Settings = ({
                 {
                   backgroundColor: colors.surface,
                   borderColor: themeMode === "auto" ? (isDark ? "#4da6ff" : "#ff8c00") : colors.border,
+                  shadowColor:isDark?"black":"#969696"
                 },
                 themeMode === "auto" && {
                   backgroundColor: isDark ? "#0d1f2d" : "#fff5e6",
@@ -2686,10 +2716,14 @@ const Settings = ({
                     {
                       backgroundColor: colors.inputBackground,
                       borderColor: colors.inputBorder,
+                        elevation:10,
+                      shadowColor:isDark?"black":"#4e4e4e"
                     },
                     themeMode === "auto" && {
                       backgroundColor: isDark ? "#1a2f3d" : "#ffe4b3",
                       borderColor: isDark ? "#4da6ff" : "#ff8c00",
+                        elevation:10,
+                      shadowColor:isDark?"black":"#4e4e4e"
                     },
                   ]}
                 >

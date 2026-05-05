@@ -23,7 +23,7 @@ export const lightColors = {
   borderStrong: '#cccccc',
 
   // Input colors
-  inputBackground: '#f5f5f5',
+  inputBackground: '#ffffff',
   inputBorder: '#d0d0d0',
   inputText: '#000000',
   inputPlaceholder: '#999999',

@@ -68,6 +68,7 @@ const PasswordCard = ({
                 backgroundColor: catColors.iconBg,
                 borderColor: catColors.iconBorder,
                 borderWidth: 1,
+                shadowColor:isDark?"black":"#969696"
               },
             ]}
           >
@@ -101,7 +102,7 @@ const PasswordCard = ({
         </View>
 
         <View style={styles.rightSection}>
-          <View style={[styles.categoryPill, { backgroundColor: colors.categoryPillBg, borderColor: colors.categoryPillBorder }]}>
+          <View style={[styles.categoryPill, { backgroundColor: colors.categoryPillBg, borderColor: colors.categoryPillBorder,shadowColor:isDark?"black":"#969696" }]}>
             {category === "Banking" ? (
               <Ionicons name="card-outline" size={22} color="orange" />
             ) : category === "Mail or ID" ? (
@@ -190,7 +191,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexShrink: 0,
     elevation:ELEVATION_LEVELS.medium,
-    shadowColor:"#969696"
+
   },
   categoryPill: {
     paddingHorizontal: 18,
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
     borderWidth:0.5,
     borderColor:"#363636",
     elevation:ELEVATION_LEVELS.medium,
-    shadowColor:"#969696"
+
   },
 });
 

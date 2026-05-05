@@ -442,9 +442,10 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
             alignItems: "center",
             gap: 10,
             borderRadius: 55,
-            borderWidth: isDark?1.5:0,
+            borderWidth: isDark?1.5:1,
             borderColor: colors.border,
             elevation: 10,
+            shadowColor:isDark?"black":"#969696"
           }}
         >
           <Text style={{ color: colors.text, fontSize: 16, fontWeight: "800" }}>

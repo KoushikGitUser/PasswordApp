@@ -112,6 +112,8 @@ const Toaster = () => {
           transform: [{ translateY: slideAnim }],
           backgroundColor: colors.surface,
           borderColor: colors.border,
+            elevation:10,
+                      shadowColor:isDark?"black":"#969696"
         },
       ]}
     >

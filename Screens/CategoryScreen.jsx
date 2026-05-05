@@ -451,7 +451,7 @@ const CategoryScreen = ({
           Home
         </Text>
 
-        <View style={[styles.backupAndInfo,{backgroundColor:isDark?"#1c1c1cff":"#fff",borderWidth:isDark?1.5:0}]}>
+        <View style={[styles.backupAndInfo,{backgroundColor:isDark?"#1c1c1cff":"#fff",borderWidth:isDark?1.5:0,shadowColor:isDark?"black":"#969696"}]}>
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("settings", { blinkAutoLock: true })
@@ -556,7 +556,8 @@ const CategoryScreen = ({
           style={[styles.fabFirst, {
             backgroundColor: isDark ? "#231100" : "#fff5e6",
             borderWidth: 0.5,
-            borderColor: isDark ? "#643100" : "#ffcc80"
+            borderColor: isDark ? "#643100" : "#ffcc80",
+            shadowColor:isDark?"black":"#969696"
           }]}
           onPress={fetchPasswords}
           activeOpacity={0.7}
@@ -568,7 +569,8 @@ const CategoryScreen = ({
           style={[styles.fab, {
             backgroundColor: isDark ? "#001e10" : "#e6f7ed",
             borderWidth: 0.5,
-            borderColor: isDark ? "#005c31" : "#80dea0"
+            borderColor: isDark ? "#005c31" : "#80dea0",
+            shadowColor:isDark?"black":"#969696"
           }]}
           onPress={handleLockNow}
           activeOpacity={0.7}

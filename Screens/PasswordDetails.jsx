@@ -594,7 +594,7 @@ const PasswordDetails = ({ route, navigation }) => {
       >
         <Toaster />
         <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
-          <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
+          <View style={[styles.modalContent, { backgroundColor: isDark? colors.modalBackground:"#f3f3f3", borderColor: colors.border }]}>
             <TouchableOpacity
               onPress={() => {
                 if (secureEntry) {
@@ -612,7 +612,9 @@ const PasswordDetails = ({ route, navigation }) => {
                 margin: "auto",
                 borderWidth: 1,
                 borderColor: colors.inputBorder,
-                elevation: 10
+                elevation: 10,
+                  shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
               }}
             >
               {secureEntry ? (
@@ -643,7 +645,9 @@ const PasswordDetails = ({ route, navigation }) => {
                 style={[styles.input, {
                   backgroundColor: colors.inputBackground,
                   borderColor: colors.inputBorder,
-                  color: colors.inputText
+                  color: colors.inputText,
+                   shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
                 }]}
               />
               <TextInput
@@ -654,7 +658,9 @@ const PasswordDetails = ({ route, navigation }) => {
                 style={[styles.input, {
                   backgroundColor: colors.inputBackground,
                   borderColor: colors.inputBorder,
-                  color: colors.inputText
+                  color: colors.inputText,
+                    shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
                 }]}
               />
               <TextInput
@@ -666,7 +672,9 @@ const PasswordDetails = ({ route, navigation }) => {
                 style={[styles.input, {
                   backgroundColor: colors.inputBackground,
                   borderColor: colors.inputBorder,
-                  color: colors.inputText
+                  color: colors.inputText,
+                    shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
                 }]}
               />
               {category == "Banking" && (
@@ -679,7 +687,9 @@ const PasswordDetails = ({ route, navigation }) => {
                   style={[styles.input, {
                     backgroundColor: colors.inputBackground,
                     borderColor: colors.inputBorder,
-                    color: colors.inputText
+                    color: colors.inputText,
+                      shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
                   }]}
                 />
               )}
@@ -862,6 +872,7 @@ const PasswordDetails = ({ route, navigation }) => {
               padding: 8,
               borderRadius: 50,
               elevation:10,
+              shadowColor:isDark?"black":"#969696"
             }}
           />
         </TouchableOpacity>
@@ -882,7 +893,8 @@ const PasswordDetails = ({ route, navigation }) => {
       <View style={[styles.passmain, {
         backgroundColor: colors.surface,
         borderColor: colors.border,
-        borderWidth:isDark?1.5:0
+        borderWidth:isDark?1.5:0,
+        shadowColor:isDark?"black":"#969696"
       }]}>
         <View
           style={[
@@ -902,6 +914,7 @@ const PasswordDetails = ({ route, navigation }) => {
                 borderColor: catColors.iconBorder,
                 borderWidth: 0.5,
                 backgroundColor: catColors.iconBg,
+                shadowColor:isDark?"black":"#969696"
               },
             ]}
           >
@@ -928,7 +941,9 @@ const PasswordDetails = ({ route, navigation }) => {
           <View style={[styles.categoryPill, {
             marginLeft: "auto",
             backgroundColor: colors.categoryPillBg,
-            borderColor: colors.categoryPillBorder
+            borderColor: colors.categoryPillBorder,
+            shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
           }]}>
             {category === "Banking" ? (
               <Ionicons name="card-outline" size={22} color={catColors.accent} />
@@ -970,6 +985,7 @@ const PasswordDetails = ({ route, navigation }) => {
                 borderColor: catColors.iconBorder,
                 borderWidth: 0.5,
                 backgroundColor: catColors.iconBg,
+                shadowColor:isDark?"black":"#969696"
               },
             ]}
           >
@@ -1006,7 +1022,9 @@ const PasswordDetails = ({ route, navigation }) => {
             style={[styles.categoryPill, {
               marginLeft: "auto",
               backgroundColor: colors.categoryPillBg,
-              borderColor: colors.categoryPillBorder
+              borderColor: colors.categoryPillBorder,
+               shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
             }]}
             activeOpacity={0.7}
           >
@@ -1030,6 +1048,7 @@ const PasswordDetails = ({ route, navigation }) => {
                 borderColor: catColors.iconBorder,
                 borderWidth: 0.5,
                 backgroundColor: catColors.iconBg,
+                shadowColor:isDark?"black":"#969696"
               },
             ]}
           >
@@ -1048,7 +1067,9 @@ const PasswordDetails = ({ route, navigation }) => {
                 onPress={checkFingerprintForSharingPass}
                 style={[styles.categoryPill, {
                   backgroundColor: colors.categoryPillBg,
-                  borderColor: colors.categoryPillBorder
+                  borderColor: colors.categoryPillBorder,
+                   shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
                 }]}
                 activeOpacity={0.7}
               >
@@ -1070,6 +1091,7 @@ const PasswordDetails = ({ route, navigation }) => {
                   paddingHorizontal: showPass ? 20 : 8,
                   backgroundColor: isDark ? "#391414" : "#ffe6e6",
                   borderColor: isDark ? "#930000" : "#ff9999",
+                  shadowColor:isDark?"black":"#969696"
                 },
               ]}
             >
@@ -1085,7 +1107,9 @@ const PasswordDetails = ({ route, navigation }) => {
               onPress={() => copyToClipboard(password, "password")}
               style={[styles.categoryPill, {
                 backgroundColor: colors.categoryPillBg,
-                borderColor: colors.categoryPillBorder
+                borderColor: colors.categoryPillBorder,
+                 shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
               }]}
               activeOpacity={0.7}
             >
@@ -1112,6 +1136,7 @@ const PasswordDetails = ({ route, navigation }) => {
                   borderColor: catColors.iconBorder,
                   borderWidth: 0.5,
                   backgroundColor: catColors.iconBg,
+                   shadowColor:isDark?"black":"#969696",
                 },
               ]}
             >
@@ -1138,6 +1163,7 @@ const PasswordDetails = ({ route, navigation }) => {
                     paddingHorizontal: showPIN ? 20 : 8,
                     backgroundColor: isDark ? "#391414" : "#ffe6e6",
                     borderColor: isDark ? "#930000" : "#ff9999",
+                    shadowColor:isDark?"black":"#969696"
                   },
                 ]}
               >
@@ -1153,7 +1179,9 @@ const PasswordDetails = ({ route, navigation }) => {
               style={[styles.categoryPill, {
                 marginLeft: "auto",
                 backgroundColor: colors.categoryPillBg,
-                borderColor: colors.categoryPillBorder
+                borderColor: colors.categoryPillBorder,
+                 shadowColor:isDark?"black":"#969696",
+            borderWidth:isDark?1:0.5,
               }]}
               activeOpacity={0.7}
             >
@@ -1175,6 +1203,7 @@ const PasswordDetails = ({ route, navigation }) => {
                 borderColor: catColors.iconBorder,
                 borderWidth: 0.5,
                 backgroundColor: catColors.iconBg,
+                shadowColor:isDark?"black":"#969696"
               },
             ]}
           >
@@ -1194,6 +1223,7 @@ const PasswordDetails = ({ route, navigation }) => {
                   borderWidth: 0.5,
                   borderColor: catColors.pillBorder,
                   backgroundColor: catColors.pillBg,
+                  shadowColor:isDark?"black":"#969696"
                 },
               ]}
             >

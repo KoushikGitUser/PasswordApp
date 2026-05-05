@@ -36,6 +36,8 @@ export const getButtonStyles = (colors) => ({
     borderWidth: 1,
     borderColor: colors.cancelButtonBorder,
     elevation: 10,
+    
+    
   },
 });
 
@@ -59,5 +61,6 @@ export const buttonStyles = {
     borderWidth: 1,
     borderColor: "#5a5a5a",
     elevation: 10,
+
   },
 };

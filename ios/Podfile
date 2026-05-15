@@ -60,5 +60,35 @@ target 'Passwords' do
         end
       end
     end
+
+    # Workaround: fmt 11.x bundled with RN 0.79 fails to compile under Xcode 26
+    # because FMT_STRING expands to a consteval call that the new clang rejects.
+    # Force FMT_USE_CONSTEVAL=0 for the fmt pod and any pod that pulls fmt headers.
+    installer.pods_project.targets.each do |target|
+      if ['fmt', 'RCT-Folly', 'glog'].include?(target.name)
+        target.build_configurations.each do |config|
+          defs = config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] || ['$(inherited)']
+          defs = [defs] unless defs.is_a?(Array)
+          defs << 'FMT_USE_CONSTEVAL=0' unless defs.any? { |d| d.to_s.include?('FMT_USE_CONSTEVAL') }
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] = defs
+        end
+      end
+    end
+
+    # The build-setting alone isn't enough because fmt/base.h re-defines
+    # FMT_USE_CONSTEVAL unconditionally. Wrap that block in #ifndef so the
+    # external -D wins. Idempotent.
+    fmt_base = File.join(__dir__, 'Pods', 'fmt', 'include', 'fmt', 'base.h')
+    if File.exist?(fmt_base)
+      contents = File.read(fmt_base)
+      marker = '// Detect consteval, C++20 constexpr extensions and std::is_constant_evaluated.'
+      end_marker_block = "#elif FMT_GCC_VERSION >= 1002 || FMT_CLANG_VERSION >= 1101\n#  define FMT_USE_CONSTEVAL 1\n#else\n#  define FMT_USE_CONSTEVAL 0\n#endif"
+      already_patched = contents.include?('#ifndef FMT_USE_CONSTEVAL')
+      if !already_patched && contents.include?(marker) && contents.include?(end_marker_block)
+        contents = contents.sub(marker, "#{marker}\n#ifndef FMT_USE_CONSTEVAL")
+        contents = contents.sub(end_marker_block, "#{end_marker_block}\n#endif")
+        File.write(fmt_base, contents)
+      end
+    end
   end
 end

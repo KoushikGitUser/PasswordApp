@@ -33,7 +33,7 @@ import { isAutofillSupported, isAutofillEnabled } from "../Services/autofill";
 import { useTheme } from "../theme/ThemeContext";
 import { getButtonStyles } from "../styles/buttonStyles";
 
-const CategoryScreen = ({
+const CategoryScreen = ({ 
   navigation,
   setIsAuthenticated,
   setEnableAutoLock,
@@ -201,7 +201,7 @@ const CategoryScreen = ({
       >
         <BlurView
           intensity={40}
-          tint={isDark ? "dark" : "light"}
+          overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"}
           style={styles.blurContainer}
         >
           <TouchableOpacity
@@ -291,7 +291,7 @@ const CategoryScreen = ({
         visible={exitAppModalVisible}
         onRequestClose={() => setExitAppModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color:isDark? "white":"black", fontSize: 18, fontWeight: 800,marginLeft:8}}>
               Exit App

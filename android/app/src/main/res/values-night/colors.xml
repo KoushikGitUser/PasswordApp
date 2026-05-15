@@ -1,1 +1,8 @@
-<resources/>
+<resources>
+  <!-- Autofill suggestion colors when the system is in dark mode. -->
+  <color name="autofill_wrapper_bg">#3F3F3F</color>
+  <color name="autofill_card_bg">#3F3F3F</color>
+  <color name="autofill_wrapper_border">#9A9A9A</color>
+  <color name="autofill_text_primary">#FFFFFF</color>
+  <color name="autofill_text_secondary">#B0B0B0</color>
+</resources>

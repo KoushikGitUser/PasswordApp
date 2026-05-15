@@ -3,4 +3,12 @@
   <color name="iconBackground">#ffffff</color>
   <color name="colorPrimary">#023c69</color>
   <color name="colorPrimaryDark">#ffffff</color>
+
+  <!-- Autofill suggestion colors (light mode defaults). values-night/colors.xml
+       overrides these when the system is in dark mode. -->
+  <color name="autofill_wrapper_bg">#D3D3D3</color>
+  <color name="autofill_card_bg">#D3D3D3</color>
+  <color name="autofill_wrapper_border">#CECECE</color>
+  <color name="autofill_text_primary">#000000</color>
+  <color name="autofill_text_secondary">#5A5A5A</color>
 </resources>

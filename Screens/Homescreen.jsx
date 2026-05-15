@@ -300,7 +300,7 @@ const Homescreen = ({
         visible={firstPassAddAutoLockInfoModal}
         onRequestClose={() => setFirstPassAddAutoLockInfoModal(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text
               style={{
@@ -345,7 +345,7 @@ const Homescreen = ({
         visible={missingFieldsModalVisible}
         onRequestClose={() => setMissingFieldsModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint}  overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color: colors.error, fontSize: 18, fontWeight: 800 }}>
               Missing fields
@@ -379,7 +379,7 @@ const Homescreen = ({
         visible={exitAppModalVisible}
         onRequestClose={() => setExitAppModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color:isDark? "white":"black", fontSize: 18, fontWeight: 800,marginLeft:8 }}>
               Exit App
@@ -475,7 +475,7 @@ const Homescreen = ({
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor:isDark? colors.modalBackground:"#f3f3f3", borderColor: colors.border }]}>
             <TouchableOpacity
               onPress={() => {
@@ -646,7 +646,7 @@ const Homescreen = ({
         visible={categoryPickerVisible}
         onRequestClose={() => setCategoryPickerVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text
               style={{
@@ -709,7 +709,7 @@ const Homescreen = ({
         visible={infoModalVisible}
         onRequestClose={() => setInfoModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent]}>
             <ScrollView style={{ maxHeight: 400 }}>
               <Text

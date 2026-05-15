@@ -110,6 +110,7 @@ const AppPickerSheet = ({ visible, onClose, onPick, existingPackages = [] }) => 
         intensity={40}
         tint={isDark ? "dark" : "light"}
         style={styles.backdrop}
+        overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"}
       >
         <TouchableOpacity
           style={styles.dismissArea}

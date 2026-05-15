@@ -745,7 +745,7 @@ const Settings = ({
         visible={authNotAvailableModal}
         onRequestClose={() => setAuthNotAvailableModal(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color: colors.text, fontSize: 18, fontWeight: 800 }}>
               Authentication Not Available
@@ -778,7 +778,7 @@ const Settings = ({
         visible={infoModalVisible}
         onRequestClose={() => setInfoModalVisible(false)}
       >
-  <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}> 
+  <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}> 
           <TouchableOpacity
             style={styles.blurDismissArea}
             activeOpacity={1}
@@ -932,7 +932,7 @@ const Settings = ({
         visible={importModalVisible}
         onRequestClose={() => setImportModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border, }]}>
             <Text
               style={{
@@ -993,7 +993,7 @@ const Settings = ({
         visible={importModeModalVisible}
         onRequestClose={() => setImportModeModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text
               style={{
@@ -1125,7 +1125,7 @@ const Settings = ({
         visible={securityPinModalVisible}
         onRequestClose={() => setSecurityPinModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color: colors.text, fontSize: 16 }}>
               Add another level of security to protect your passwords, add a security PIN and you have to provide this PIN in lockscreen to open the app for extended security.
@@ -1155,7 +1155,7 @@ const Settings = ({
         visible={pinInputModalVisible}
         onRequestClose={() => setPinInputModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color: "white", fontSize: 18, fontWeight: 800, textAlign: "center", marginBottom: 10 }}>
               {pinMode === "update" ? "Update Security PIN" : "Set Security PIN"}
@@ -1219,7 +1219,7 @@ const Settings = ({
         visible={deletePinModalVisible}
         onRequestClose={() => setDeletePinModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color: colors.text, fontSize: 16 }}>
               Are you sure you want to delete your security PIN?
@@ -1260,7 +1260,7 @@ const Settings = ({
         visible={deleteAllDataModalVisible}
         onRequestClose={() => setDeleteAllDataModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color: "red", fontSize: 18, fontWeight: 800, marginBottom: 15 }}>
               Delete All Data
@@ -1307,7 +1307,7 @@ const Settings = ({
           setDeleteAllPinDigits(["", "", "", "", "", ""]);
         }}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color: "red", fontSize: 18, fontWeight: 800, textAlign: "center", marginBottom: 10 }}>
               Confirm Deletion
@@ -1375,6 +1375,7 @@ const Settings = ({
           intensity={40}
           tint={isDark ? "dark" : "light"}
           style={styles.blurContainer}
+          overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"}
         >
           <TouchableOpacity
             style={styles.blurDismissArea}
@@ -1469,7 +1470,7 @@ const Settings = ({
         visible={exportPassphraseModalVisible}
         onRequestClose={() => setExportPassphraseModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: isDark? colors.modalBackground:"#f3f3f3", borderColor: colors.border }]}>
             <Text
               style={{
@@ -1654,7 +1655,7 @@ const Settings = ({
         visible={importPassphraseModalVisible}
         onRequestClose={cancelImportFlow}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint}  overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: isDark? colors.modalBackground:"#f3f3f3", borderColor: colors.border }]}>
             <Text
               style={{
@@ -1769,7 +1770,7 @@ const Settings = ({
         visible={backUpModalVisible}
         onRequestClose={() => setbackUpModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text
               style={{
@@ -2551,6 +2552,7 @@ const Settings = ({
           intensity={40}
           tint={isDark ? "dark" : "light"}
           style={styles.appearanceModalBackdrop}
+          overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"}
         >
           <TouchableOpacity
             style={styles.appearanceModalDismiss}

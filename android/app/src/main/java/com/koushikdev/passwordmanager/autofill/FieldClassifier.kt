@@ -20,8 +20,10 @@ data class ClassifiedFields(
   val webDomain: String?,
   val packageName: String?,
 ) {
+  // Only fire the autofill UI on screens that actually have a password field.
+  // Rules out chat boxes, search inputs, "Enter name" forms, etc.
   val hasAny: Boolean
-    get() = usernameId != null || passwordId != null
+    get() = passwordId != null
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -170,6 +172,15 @@ object FieldClassifier {
   private enum class FieldKind { USERNAME, PASSWORD, UNKNOWN }
 
   private fun classifyNode(node: AssistStructure.ViewNode): FieldKind {
+    // 0. Respect explicit developer opt-out (e.g. a chat composer marked
+    //    importantForAutofill="no"). Inherits from ancestors.
+    val iFa = node.importantForAutofill
+    if (iFa == View.IMPORTANT_FOR_AUTOFILL_NO ||
+      iFa == View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
+    ) {
+      return FieldKind.UNKNOWN
+    }
+
     // 1. Android autofill hints (strongest signal)
     val hints = node.autofillHints
     if (hints != null) {
@@ -224,17 +235,31 @@ object FieldClassifier {
       return FieldKind.USERNAME
     }
 
-    // 4. Resource id name + hint text (heuristic fallback)
-    val idEntry = node.idEntry?.lowercase() ?: ""
-    val hintText = node.hint?.toString()?.lowercase() ?: ""
+    // 4. Resource id name + hint text (heuristic fallback).
+    // Word-boundary tokenization so PASSWORD_HINT_TOKENS doesn't .contains-match
+    // "pin" inside "shipping" or USERNAME_HINT_TOKENS match "email" inside
+    // "send email to friend".
+    val tokens = tokenize(node.idEntry) + tokenize(node.hint?.toString())
 
-    if (PASSWORD_HINT_TOKENS.any { idEntry.contains(it) || hintText.contains(it) }) {
+    if (PASSWORD_HINT_TOKENS.any { it in tokens }) {
       return FieldKind.PASSWORD
     }
-    if (USERNAME_HINT_TOKENS.any { idEntry.contains(it) || hintText.contains(it) }) {
+    if (USERNAME_HINT_TOKENS.any { it in tokens }) {
       return FieldKind.USERNAME
     }
 
     return FieldKind.UNKNOWN
+  }
+
+  // Splits "loginEmail" / "et_user_name" / "Enter your email" into lowercase
+  // word tokens. CamelCase boundaries become splits.
+  private fun tokenize(s: String?): Set<String> {
+    if (s.isNullOrEmpty()) return emptySet()
+    return s
+      .replace(Regex("([a-z])([A-Z])"), "$1 $2")
+      .split(Regex("[^A-Za-z]+"))
+      .filter { it.isNotEmpty() }
+      .map { it.lowercase() }
+      .toSet()
   }
 }

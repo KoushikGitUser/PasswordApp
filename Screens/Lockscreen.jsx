@@ -211,6 +211,7 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
           intensity={40}
           tint={isDark ? "dark" : "light"}
           style={styles.blurContainer}
+          overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"}
         >
           <View style={[styles.modalContent, {
             backgroundColor: colors.modalBackground,
@@ -251,6 +252,7 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
           intensity={40}
           tint={isDark ? "dark" : "light"}
           style={styles.blurContainer}
+          overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"}
         >
           <View style={[styles.modalContent, {
             alignItems: "center",
@@ -344,6 +346,7 @@ const Lockscreen = ({ navigation, onAuthenticated }) => {
           intensity={40}
           tint={isDark ? "dark" : "light"}
           style={styles.blurContainer}
+          overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"}
         >
           <View style={[styles.modalContent, {
             backgroundColor: colors.modalBackground,

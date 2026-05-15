@@ -480,7 +480,7 @@ const PasswordDetails = ({ route, navigation }) => {
         visible={authNotAvailableModal}
         onRequestClose={() => setAuthNotAvailableModal(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border }]}>
             <Text style={{ color: colors.text, fontSize: 18, fontWeight: 800 }}>
               Authentication Not Available
@@ -514,7 +514,7 @@ const PasswordDetails = ({ route, navigation }) => {
         visible={notUpdatedModalVisible}
         onRequestClose={() => setNotUpdatedModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border,paddingHorizontal:20}]}>
             <Text style={{ color: colors.text, fontSize: 18, fontWeight: 800 }}>
               Couldn't Update
@@ -548,7 +548,7 @@ const PasswordDetails = ({ route, navigation }) => {
         visible={deletePassModalVisible}
         onRequestClose={() => setDeletePassModalVisible(false)}
       >
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: colors.modalBackground, borderColor: colors.border,paddingHorizontal:20 }]}>
             <Text style={{ color: colors.text, fontSize: 16 }}>
               Are you sure you want to delete this password?
@@ -593,7 +593,7 @@ const PasswordDetails = ({ route, navigation }) => {
         onRequestClose={() => setModalVisible(false)}
       >
         <Toaster />
-        <BlurView blurType={colors.blurTint} blurAmount={10} style={styles.blurContainer}>
+        <BlurView blurType={colors.blurTint} overlayColor={isDark ? "#0000007f" : "#8d8d8d4d"} blurAmount={10} style={styles.blurContainer}>
           <View style={[styles.modalContent, { backgroundColor: isDark? colors.modalBackground:"#f3f3f3", borderColor: colors.border }]}>
             <TouchableOpacity
               onPress={() => {
